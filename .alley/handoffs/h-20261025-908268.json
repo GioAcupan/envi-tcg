@@ -1,0 +1,474 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-908268",
+  "kind": "report",
+  "created": "2026-10-25T12:58:36.135Z",
+  "summarized": true,
+  "parent": "h-20261025-3b6748",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "antigravity",
+    "model": null,
+    "session": "757e9a52-0653-4cd8-a1ed-c9e073597fc0"
+  },
+  "to": null,
+  "repo": {
+    "base": "733238934b2a0a0a3c8cdf4841c3cb2fa6c058e1",
+    "head": "1c3c2eb8d194a815207599bc5cf210c888f7d136",
+    "branch": "lane/sim-t9",
+    "worktree": ".worktrees/sim-t9",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-908268",
+      "commit": "7701b29b76b57076858c0ddd4b0dc7f4c3e1ae1e"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Audited all 45 SVGs in public/art/ by rendering a 160x120 card-viewport HTML/PNG contact sheet in headless Chrome, identified 28 wonky or off-style illustrations (such as caterpillar's leaf duck-bill, heron's taco-shell body and stick neck, o2.svg reading as 62, freshwater-snail's triangle cone shell, and overlapping circle seams in frog/grasshopper/riparian-tree/water-snake), and redrew all 28 from scratch as clean flat naturalist field-guide illustrations in the shared DESIGN.md palette.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Commit redrawn public/art/ SVGs and generate before/after contact sheets",
+      "evidence": [
+        {
+          "test": "Commit redrawn public/art/ SVGs and generate before/after contact sheets",
+          "result": "Commit 1c3c2eb8d194a815207599bc5cf210c888f7d136 on branch lane/sim-t9 (max file size 2,381 B < 6 KB); before/after contact sheets saved at C:/Users/gbacu/AppData/Local/Temp/claude/C--Users-gbacu-Documents-Gio-Files-PROGRAMMING-PROJECTS-envi-tcg/3d15743f-7919-4b25-9160-d90b39663cc4/scratchpad/t9/contact-sheet-before.png, contact-sheet-after.png, and contact-sheet-before-after.png (plus .html files)."
+        }
+      ]
+    },
+    {
+      "what": "public/art/aquatic-grazer.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/aquatic-grazer.svg — REDRAW",
+          "result": "Redrawn: previous version was a brown circle with a detached floating green ball and whisk sticks; redrawn as a flattened benthic mayfly nymph with 6 jointed femora/tibiae, segmented abdomen, 3 tail cerci, and head capsule grazing green biofilm on a river cobble."
+        }
+      ]
+    },
+    {
+      "what": "public/art/aquatic-plant.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/aquatic-plant.svg — REDRAW",
+          "result": "Redrawn: previous version had rigid railway-track root ticks and pointy triangle petals; redrawn with a notched floating water lily pad, multi-layered lotus blossom, feathery submerged macrophytes, fibrous roots, and O2 bubbles."
+        }
+      ]
+    },
+    {
+      "what": "public/art/aquatic-worm.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/aquatic-worm.svg — REDRAW",
+          "result": "Redrawn: previous version had a flat uncurved yellow bar pasted across an arch over a grey box; redrawn as a sinuous segmented oligochaete worm with a curved clitellum saddle burrowing through layered riverbed silt."
+        }
+      ]
+    },
+    {
+      "what": "public/art/bloom-algae.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/bloom-algae.svg — REDRAW",
+          "result": "Redrawn: previous version had three orange triangles sitting on a green stripe like traffic cones; redrawn as a dense swirling chartreuse/emerald surface algal scum mat choking the turbid water column below."
+        }
+      ]
+    },
+    {
+      "what": "public/art/c.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/c.svg — PASS",
+          "result": "Passed: crisp hexagonal Carbon icon with high-contrast C glyph and inner organic ring bond dashes."
+        }
+      ]
+    },
+    {
+      "what": "public/art/card-back.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/card-back.svg — PASS",
+          "result": "Passed: balanced field-guide lattice frame and central riparian sprout medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/caterpillar.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/caterpillar.svg — REDRAW",
+          "result": "Redrawn: previous version had a green leaf ellipse sticking directly out of the orange head like a duck bill; redrawn with the segmented green larva and prolegs perched clearly atop a broad chewed riparian leaf."
+        }
+      ]
+    },
+    {
+      "what": "public/art/chironomid-larva.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/chironomid-larva.svg — REDRAW",
+          "result": "Redrawn: previous version was a horseshoe stroke with dashed blocks and stub ticks; redrawn with overlapping crimson metameric segments, dark sclerotized head capsule, anterior/posterior prolegs, and anal blood-gill tubules."
+        }
+      ]
+    },
+    {
+      "what": "public/art/consumer-specialization.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/consumer-specialization.svg — REDRAW",
+          "result": "Redrawn: previous version had the two gold stars clipping across the top border of the medallion circle; redrawn with double filled trophic chevrons and twin gold specialization stars framed cleanly inside the medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/day.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/day.svg — PASS",
+          "result": "Passed: clean 8-ray botanical sun disc inside a warm golden medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/decomposer-fungus.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/decomposer-fungus.svg — REDRAW",
+          "result": "Redrawn: previous version had white cap spots clipping the top cap outline and rudimentary zigzag lines; redrawn with gilled woodland mushrooms, properly inset cap spots, moss patches, and a branching white mycelial network inside a decaying log."
+        }
+      ]
+    },
+    {
+      "what": "public/art/diatom.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/diatom.svg — REDRAW",
+          "result": "Redrawn: previous version was a plain yellow football with two green balls on the border; redrawn with an ornate golden naviculoid pennate diatom (raphe, central nodule, costae ribs) and a radial wheel centric diatom."
+        }
+      ]
+    },
+    {
+      "what": "public/art/drought.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/drought.svg — PASS",
+          "result": "Passed: clear parched cracked earth cross-section beneath a blazing sun."
+        }
+      ]
+    },
+    {
+      "what": "public/art/fallen-leaf.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/fallen-leaf.svg — PASS",
+          "result": "Passed: well-proportioned dry autumn leaf with crisp venation and dashed ground shadow."
+        }
+      ]
+    },
+    {
+      "what": "public/art/fast-growing-plant.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/fast-growing-plant.svg — REDRAW",
+          "result": "Redrawn: previous version had a sparse stick stem and self-intersecting top loop; redrawn as a vigorous emergent shoot with two pairs of veined lance leaves, apical bud, soil mound, and upward growth arrows."
+        }
+      ]
+    },
+    {
+      "what": "public/art/flood.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/flood.svg — REDRAW",
+          "result": "Redrawn: previous version had only a tiny green oval poking out of a wave; redrawn with a surging whitewater-crested flood wave submerging a leaning riparian tree and bending reeds."
+        }
+      ]
+    },
+    {
+      "what": "public/art/freshwater-shrimp.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/freshwater-shrimp.svg — REDRAW",
+          "result": "Redrawn: previous version looked like an orange banana with six vertical comb sticks; redrawn as an articulated amphipod/shrimp with overlapping tergite plates, tail fan, jointed pereopods, and sweeping antennae over a shredded leaf."
+        }
+      ]
+    },
+    {
+      "what": "public/art/freshwater-snail.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/freshwater-snail.svg — REDRAW",
+          "result": "Redrawn: previous version had a sharp flat-edged triangle cone shell; redrawn with a true whorled spiral shell, growth bands, gliding foot, and aquatic tentacles grazing green biofilm off a river cobble."
+        }
+      ]
+    },
+    {
+      "what": "public/art/frog.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/frog.svg — REDRAW",
+          "result": "Redrawn: previous version had overlapping circle outlines cutting across the neck and stick forelegs; redrawn with a unified head-and-torso silhouette, Z-folded hind leg, webbed forelegs, golden dorsolateral ridge, and bulging amphibian eyes."
+        }
+      ]
+    },
+    {
+      "what": "public/art/grasshopper.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/grasshopper.svg — REDRAW",
+          "result": "Redrawn: previous version had a detached V-stick hind leg and overlapping circle seams; redrawn with a proper orthopteran pronotum, folded forewing, segmented abdomen, and muscular chevron-marked hind femur/tibia perched on a sedge blade."
+        }
+      ]
+    },
+    {
+      "what": "public/art/green-algae.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/green-algae.svg — REDRAW",
+          "result": "Redrawn: previous version was two crossed straight sticks forming an X; redrawn with undulating multicellular Spirogyra filaments, chloroplast bands, a colonial chlorophyte sphere, and O2 micro-bubbles."
+        }
+      ]
+    },
+    {
+      "what": "public/art/heat-wave.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/heat-wave.svg — PASS",
+          "result": "Passed: crisp red mercury thermometer flanked by wavy heat-shimmer lines."
+        }
+      ]
+    },
+    {
+      "what": "public/art/heron.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/heron.svg — REDRAW",
+          "result": "Redrawn: previous version had a flat semi-ellipse taco body and a black line drawn down the center of a stick neck; redrawn as a Great Blue Heron with a unified S-curved feathered neck, occipital plume, folded slate wing plumage, dagger bill, and wading legs in marsh reeds."
+        }
+      ]
+    },
+    {
+      "what": "public/art/large-fish.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/large-fish.svg — REDRAW",
+          "result": "Redrawn: previous version had a floating white line inside the belly and crude triangle spikes; redrawn as a predatory river bass with fitted cream belly contour, spiny/soft dorsal fins, forked rayed tail, gill operculum, pectoral fin, and dorsal speckles."
+        }
+      ]
+    },
+    {
+      "what": "public/art/leaf-litter-plant.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/leaf-litter-plant.svg — REDRAW",
+          "result": "Redrawn: previous version was a bare stick with three lollipop leaves; redrawn as a branching deciduous shrub with green and turning-gold canopy leaves, drifting autumn leaves, and a rich carpet of fallen leaf litter on the soil."
+        }
+      ]
+    },
+    {
+      "what": "public/art/n.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/n.svg — PASS",
+          "result": "Passed: clean cobalt diamond Nitrogen icon with bold white N glyph and inner chevron frame."
+        }
+      ]
+    },
+    {
+      "what": "public/art/night.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/night.svg — PASS",
+          "result": "Passed: balanced silver-gold crescent moon and four-point stars in a midnight indigo medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/nitrogen-bacteria.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/nitrogen-bacteria.svg — PASS",
+          "result": "Passed: clear rod-shaped bacilli and N diamond badge in a petri medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/nutrient-rich-adaptation.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/nutrient-rich-adaptation.svg — REDRAW",
+          "result": "Redrawn: previous version had an oversized hexagon and diamond obscuring the leaf; redrawn with a central veined leaf flanked symmetrically by labeled C hexagon and N diamond badges below a gold adaptation star."
+        }
+      ]
+    },
+    {
+      "what": "public/art/o2.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/o2.svg — REDRAW",
+          "result": "Redrawn: previous version placed the curved specular highlight directly atop the O ring so O2 read visually as 62; redrawn with separated highlight and crisp O2 typography."
+        }
+      ]
+    },
+    {
+      "what": "public/art/oxygen-rich-adaptation.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/oxygen-rich-adaptation.svg — REDRAW",
+          "result": "Redrawn: previous version had an almond shape crammed into the lower-left corner; redrawn with a veined aquatic frond releasing a rising stream of specular-highlighted O2 bubbles beside a gold star."
+        }
+      ]
+    },
+    {
+      "what": "public/art/p-accumulator-adaptation.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/p-accumulator-adaptation.svg — REDRAW",
+          "result": "Redrawn: previous version had tiny top leaves crowding the upper circle border; redrawn with a centered shoot, soil horizon, branching root network cradling three P mineral prisms, and an apex gold star."
+        }
+      ]
+    },
+    {
+      "what": "public/art/p.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/p.svg — PASS",
+          "result": "Passed: crisp amber upward triangle Phosphorus icon with bold white P glyph and inner prism facet."
+        }
+      ]
+    },
+    {
+      "what": "public/art/phosphorus-bacteria.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/phosphorus-bacteria.svg — PASS",
+          "result": "Passed: recognizable cocci bacterial cluster and P triangle badge in a petri medallion."
+        }
+      ]
+    },
+    {
+      "what": "public/art/predatory-insect.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/predatory-insect.svg — PASS",
+          "result": "Passed: clean symmetrical dragonfly silhouette with four wings, compound eyes, and segmented abdomen."
+        }
+      ]
+    },
+    {
+      "what": "public/art/protected-adaptation.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/protected-adaptation.svg — PASS",
+          "result": "Passed: bold heraldic shield framing a centered botanical leaf."
+        }
+      ]
+    },
+    {
+      "what": "public/art/riparian-tree.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/riparian-tree.svg — REDRAW",
+          "result": "Redrawn: previous version had three overlapping circles with visible interior black rings and a root stick in the water; redrawn with a unified billowing canopy crown, sunlit foliage highlights, and bank-stabilizing buttress roots."
+        }
+      ]
+    },
+    {
+      "what": "public/art/river-grass.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/river-grass.svg — PASS",
+          "result": "Passed: crisp emergent sedge blades and cattail spadix rising from shallow water."
+        }
+      ]
+    },
+    {
+      "what": "public/art/small-fish.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/small-fish.svg — PASS",
+          "result": "Passed: clean golden-amber minnow profile swimming between water lines."
+        }
+      ]
+    },
+    {
+      "what": "public/art/snail.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/snail.svg — PASS",
+          "result": "Passed: recognizable coiled terrestrial/riparian snail shell and soft body with eyestalks."
+        }
+      ]
+    },
+    {
+      "what": "public/art/strong-rainfall.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/strong-rainfall.svg — REDRAW",
+          "result": "Redrawn: previous version had two orange triangles sitting on a puddle like traffic cones; redrawn with layered storm clouds, slanting rain sheets, raindrop splash crowns, and watershed bank runoff."
+        }
+      ]
+    },
+    {
+      "what": "public/art/super-decomposer.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/super-decomposer.svg — REDRAW",
+          "result": "Redrawn: previous version had colliding stems, caps, dashed ring, and wedged triangles; redrawn with a tiered 3-mushroom cluster on a decaying log base and cleanly spaced C, N, P nutrient badges rising in the upper arc."
+        }
+      ]
+    },
+    {
+      "what": "public/art/tubifex-worm.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/tubifex-worm.svg — REDRAW",
+          "result": "Redrawn: previous version was three vertical red sticks with floating brown dots; redrawn as five sinuous outlined crimson sludge worms waving from benthic silt chimney tubes."
+        }
+      ]
+    },
+    {
+      "what": "public/art/water-snake.svg — REDRAW",
+      "evidence": [
+        {
+          "test": "public/art/water-snake.svg — REDRAW",
+          "result": "Redrawn: previous version had a circle head outline cutting across the neck of a uniform tube; redrawn as a banded Nerodia water snake with a seamless neck transition, diamond head, tapering tail, dark crossband saddles, and forked tongue."
+        }
+      ]
+    },
+    {
+      "what": "public/art/zooplankton.svg — PASS",
+      "evidence": [
+        {
+          "test": "public/art/zooplankton.svg — PASS",
+          "result": "Passed: clear Daphnia water-flea silhouette with branched antennae and translucent carapace in a microscope ring."
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "45 audited, 28 redrawn, 17 passed; 59/59 unit & acceptance tests passing"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Biased toward redrawing any illustration with overlapping interior stroke seams, geometric shortcuts (triangle snail shell, X-stick algae, traffic-cone P triangles on weather/algae cards), or ambiguous silhouettes, resulting in 28 full redraws out of 45 SVGs.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": []
+}

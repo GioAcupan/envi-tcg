@@ -1,15 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Aquatic Grazer: Water-penny / mayfly nymph scraping algae & excess phosphorus from rock -->
+  <!-- Aquatic Grazer: Flattened benthic mayfly nymph scraping algae film from a river cobble -->
   <rect width="160" height="120" rx="6" fill="#EBF4F5"/>
-  <!-- Dorsal shield plates of grazing nymph -->
-  <ellipse cx="80" cy="62" rx="28" ry="20" fill="#7C4D25" stroke="#1B221B" stroke-width="2.2"/>
-  <path d="M56 62H104M80 42V82" stroke="#D6C7A9" stroke-width="1.8"/>
-  <!-- Six clinging legs -->
-  <path d="M64 46L48 34M80 42L80 26M96 46L112 34" stroke="#1B221B" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M64 78L48 90M80 82L80 98M96 78L112 90" stroke="#1B221B" stroke-width="2.5" stroke-linecap="round"/>
-  <!-- Three tail cerci -->
-  <path d="M52 62L26 50M52 62L24 62M52 62L26 74" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
-  <!-- Cleared algae & P particle -->
-  <circle cx="122" cy="62" r="8" fill="#52944E" stroke="#1B221B" stroke-width="1.8"/>
-  <polygon points="136,46 144,60 128,60" fill="#C6690A" stroke="#1B221B" stroke-width="1.5"/>
+  <!-- Submerged river cobble with green periphyton biofilm patch -->
+  <ellipse cx="82" cy="64" rx="62" ry="42" fill="#C6BCA6" stroke="#1B221B" stroke-width="2"/>
+  <path d="M92 32C116 34 134 48 132 66C130 82 112 94 94 90C102 76 104 50 92 32Z" fill="#68A864" stroke="#2E6F40" stroke-width="1.8"/>
+  <!-- Six jointed clinging legs (femur + tibia) -->
+  <g stroke="#1B221B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#9E6230">
+    <path d="M74 48L62 32L50 36L58 49Z"/>
+    <path d="M88 46L82 28L70 30L76 47Z"/>
+    <path d="M100 48L102 30L114 34L106 50Z"/>
+    <path d="M74 78L62 94L50 90L58 77Z"/>
+    <path d="M88 80L82 98L70 96L76 79Z"/>
+    <path d="M100 78L102 96L114 92L106 76Z"/>
+  </g>
+  <!-- Three caudal filaments (tail cerci) -->
+  <path d="M46 63L18 46M46 63L14 63M46 63L18 80" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Tapering segmented abdomen with lateral gill plates -->
+  <path d="M44 63C46 53 60 49 76 50V76C60 77 46 73 44 63Z" fill="#7C4D25" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M54 53V73M62 51V75M70 50V76" stroke="#1B221B" stroke-width="1.6"/>
+  <!-- Broad thoracic shield -->
+  <ellipse cx="86" cy="63" rx="16" ry="15" fill="#8C582B" stroke="#1B221B" stroke-width="2"/>
+  <path d="M76 54C84 58 84 68 76 72M88 49V77" stroke="#D6C7A9" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Flattened scraper head capsule, eyes & antennae -->
+  <path d="M98 52C110 51 116 56 116 63C116 70 110 75 98 74C94 68 94 58 98 52Z" fill="#7C4D25" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="107" cy="56" r="2.6" fill="#1B221B"/>
+  <circle cx="107" cy="70" r="2.6" fill="#1B221B"/>
+  <path d="M115 58L126 52M115 68L126 74" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
 </svg>

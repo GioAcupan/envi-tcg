@@ -1,20 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Leaf Litter Plant: Low riparian shrub shedding autumn/dry leaves onto forest floor -->
+  <!-- Leaf Litter Plant: Deciduous riparian shrub shedding autumn leaves onto the forest floor -->
   <rect width="160" height="120" rx="6" fill="#F4EFE0"/>
-  <!-- Soil & leaf litter ground -->
-  <path d="M8 98C40 92 120 92 152 98L156 114H4L8 98Z" fill="#8C6239" stroke="#1B221B" stroke-width="2"/>
-  <!-- Fallen leaves on ground -->
-  <path d="M28 102C34 97 44 99 46 104C40 108 32 106 28 102Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.5"/>
-  <path d="M108 103C115 98 125 100 127 105C120 109 112 107 108 103Z" fill="#D9820B" stroke="#1B221B" stroke-width="1.5"/>
-  <!-- Main woody stem -->
-  <path d="M80 96V34" stroke="#5C4024" stroke-width="4" stroke-linecap="round"/>
-  <path d="M80 68L54 50" stroke="#5C4024" stroke-width="3" stroke-linecap="round"/>
-  <path d="M80 58L108 42" stroke="#5C4024" stroke-width="3" stroke-linecap="round"/>
-  <!-- Living green leaves -->
-  <path d="M80 36C66 20 74 10 80 14C86 10 94 20 80 36Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
-  <path d="M54 50C34 44 30 30 44 28C56 26 62 38 54 50Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2"/>
-  <path d="M108 42C126 36 130 22 116 20C104 18 98 30 108 42Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
-  <!-- Drifting autumn leaf mid-air -->
-  <path d="M52 74C62 68 70 74 66 82C58 86 48 80 52 74Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.8"/>
-  <path d="M54 76L64 80" stroke="#1B221B" stroke-width="1.2"/>
+  <!-- Forest floor soil & accumulated fallen leaf litter carpet -->
+  <path d="M8 98C44 92 116 92 152 98L156 114H4L8 98Z" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
+  <path d="M20 102C28 95 42 96 46 103C36 108 24 107 20 102Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.6"/>
+  <path d="M52 105C60 99 74 100 78 106C68 110 56 109 52 105Z" fill="#D9820B" stroke="#1B221B" stroke-width="1.6"/>
+  <path d="M98 103C106 96 122 97 126 104C116 109 102 108 98 103Z" fill="#B45309" stroke="#1B221B" stroke-width="1.6"/>
+  <path d="M122 106C130 100 142 101 146 107C136 111 126 110 122 106Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.6"/>
+  <!-- Branching woody shrub stems -->
+  <path d="M80 96V36M80 74L50 52M80 62L112 44M64 62L58 42" stroke="#5C4024" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Canopy leaves (lush green + turning gold) -->
+  <path d="M80 40C66 26 68 12 80 8C92 12 94 26 80 40Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M52 54C32 52 24 38 34 28C46 28 54 40 52 54Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2"/>
+  <path d="M60 44C48 32 50 18 62 16C70 22 68 34 60 44Z" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <path d="M110 46C130 44 138 30 128 20C116 20 108 32 110 46Z" fill="#D9820B" stroke="#1B221B" stroke-width="2"/>
+  <path d="M96 52C106 38 102 24 92 22C84 28 88 42 96 52Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2"/>
+  <!-- Drifting autumn leaves with motion trail -->
+  <path d="M42 74C52 66 66 70 62 80C52 84 38 80 42 74Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.8"/>
+  <path d="M108 68C118 62 130 66 126 76C116 80 104 74 108 68Z" fill="#EAB308" stroke="#1B221B" stroke-width="1.8"/>
+  <path d="M46 62C42 66 42 70 46 72M116 54C120 58 120 62 116 65" stroke="#8C6239" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3"/>
 </svg>

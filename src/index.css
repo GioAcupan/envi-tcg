@@ -1,7 +1,283 @@
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; }
-button, input, select, textarea { font: inherit; }
-button { cursor: pointer; }
-img { max-width: 100%; }
-main { padding: 1rem; }
-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+:root {
+  /* === Surfaces (Day / Default Archival Paper) === */
+  --bg-canvas: #F5EFE2;          /* Warm herbarium sheet background */
+  --bg-board: #ECE3D0;           /* Riparian table mat */
+  --bg-zone-player: #E4DBC6;     /* Active player field mat */
+  --bg-zone-opponent: #DFE5E2;   /* Opponent field mat (subtle cool river tint) */
+  --bg-zone-center: #E8DEC8;     /* Shared center (Fallen Leaves FFA) */
+  --bg-card: #FCF9F2;            /* Card face ivory paper */
+  --bg-card-dead: #EAE3D5;       /* Desaturated decaying card surface */
+  --bg-card-processed: #E2D5C1;  /* Humus-tinted processed detritus surface */
+  --bg-panel: #FAF5E8;           /* Drawers, editor tables, referee panel */
+  --bg-header: #233127;          /* Deep forest ink top status bar */
+
+  /* === Ink & Borders === */
+  --ink-primary: #1B221B;        /* Main botanical ink text & linework */
+  --ink-secondary: #434E44;      /* Subtitles, tags, secondary labels */
+  --ink-muted: #6B766C;          /* Disabled text, empty slot hints */
+  --ink-on-dark: #F7F3E8;        /* Text inside dark header / archetype bars */
+  --border-ink: #2A332B;         /* Standard 1.5px–2px card & panel border */
+  --border-subtle: #C6BCA6;      /* Table grid lines & empty card slots */
+  --shadow-card: 2px 3px 0px #2A332B;
+  --shadow-card-hover: 4px 6px 0px #1B221B;
+  --shadow-modal: 6px 8px 0px #1B221B;
+
+  /* === PDF Archetype Palette (Matches docs/TCG_DRAFT.pdf p.1) === */
+  /* 1. Organisms (Producers, Consumers, Detritivores) — Warm Ochre / Terracotta Orange */
+  --arch-organism-header: #C85A17;
+  --arch-organism-bg: #FDF3EB;
+  --arch-organism-border: #9E420B;
+  --arch-producer-badge: #2E6F40;    /* Subtype accent: Photosynthetic Leaf Green */
+  --arch-consumer-badge: #B83B2A;    /* Subtype accent: Predatory Rust Red */
+  --arch-detritivore-badge: #7C4D25; /* Subtype accent: Benthic Umber Brown */
+
+  /* 2. Microbes (Fungi & Bacteria) — Spore Rose / Magenta Pink */
+  --arch-microbe-header: #A83868;
+  --arch-microbe-bg: #FCF0F5;
+  --arch-microbe-border: #7D234A;
+
+  /* 3. Wild Events — Riparian Moss / Sage Green */
+  --arch-event-header: #3A7537;
+  --arch-event-bg: #EFF7EE;
+  --arch-event-border: #255223;
+
+  /* 4. Evolution / Adaptation — Verdigris / Slate Teal */
+  --arch-adaptation-header: #1F6E7A;
+  --arch-adaptation-bg: #EDF7F8;
+  --arch-adaptation-border: #144B54;
+  --arch-special-star: #D9820B;      /* Gold indicator for upgraded organisms */
+
+  /* 5. Tokens (Fallen Leaf) — Dry Leaf Kraft */
+  --arch-token-header: #7A5835;
+  --arch-token-bg: #F5EDE0;
+  --arch-token-border: #5C4024;
+
+  /* === Nutrient Tokens (Shape + High-Contrast Color) === */
+  --nutrient-c-bg: #2E3D30;      /* Carbon (C) — Humic Charcoal Green (Hexagon) */
+  --nutrient-c-fg: #FAF6EC;
+  --nutrient-n-bg: #1E5AA8;      /* Nitrogen (N) — Cobalt Blue (Diamond) */
+  --nutrient-n-fg: #FFFFFF;
+  --nutrient-p-bg: #C6690A;      /* Phosphorus (P) — Mineral Amber Ochre (Triangle) */
+  --nutrient-p-fg: #FFFFFF;
+  --nutrient-o2-bg: #0D7A8A;     /* Oxygen (O₂) — Aerated Cyan-Teal (Double Bubble) */
+  --nutrient-o2-fg: #FFFFFF;
+
+  /* === Semantic Status Colors === */
+  --status-ok: #2A6F37;
+  --status-warn: #B8620A;
+  --status-danger: #B42318;
+  --status-ap: #C85A17;          /* Action Point pips */
+
+  /* === Layout & Geometry === */
+  --card-width: 160px;
+  --card-height: 224px;
+  --card-width-compact: 136px;
+  --card-height-compact: 190px;
+  --card-radius: 8px;
+  --stack-offset-y: 26px;        /* Vertical peek distance for attached cards */
+  --stack-offset-x: 6px;
+
+  /* === Typography & Projector Type Scale === */
+  --font-display: 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --text-xs: 0.75rem;     /* 12px — Card tags, subtype labels, log timestamps */
+  --text-sm: 0.8125rem;   /* 13px — Card ability rules text (line-height: 1.25) */
+  --text-base: 0.9375rem; /* 15px — Card title (bold), buttons, editor table cells */
+  --text-lg: 1.125rem;    /* 18px — Card cost numerals, stat strip numerals, zone titles */
+  --text-xl: 1.375rem;    /* 22px — Status bar nutrient pool counters, Round/Cycle title */
+  --text-2xl: 1.75rem;    /* 28px — Pass-the-device banner, Winner announcement, Event splash */
+}
+
+/* === Night Cycle Overrides (Projector-Safe Moonlight Wash) === */
+[data-cycle="night"],
+.game-shell--night,
+body:has([data-cycle="night"]) {
+  --bg-canvas: #DCE3EC;          /* Cool nocturnal field-station wash */
+  --bg-board: #CFD8E4;
+  --bg-zone-player: #C5D0DF;
+  --bg-zone-opponent: #C9D3E0;
+  --bg-zone-center: #D4DCE7;
+  --bg-header: #162032;          /* Deep midnight indigo status bar */
+  --border-subtle: #9AA8BC;
+}
+
+/* === Global Base & App Shell ("Riparian Field Guide") === */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-canvas);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.45;
+  overflow-x: hidden;
+  transition: background-color 450ms ease-in-out, color 450ms ease-in-out;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.ui-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+}
+
+/* App Shell Header & Tabs (rendered by src/App.tsx) */
+main {
+  max-width: 1880px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem 2rem;
+}
+
+main > h1 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.5rem 0;
+  color: var(--ink-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+main > h1::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E6F40' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z' fill='%23DCFCE7'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E");
+}
+
+main > nav[aria-label="Screens"] {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid var(--border-ink);
+}
+
+main > nav[aria-label="Screens"] button {
+  padding: 0.45rem 1rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 700;
+  background: var(--bg-panel);
+  color: var(--ink-primary);
+  border: 2px solid var(--border-ink);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+  transition: transform 120ms ease, background-color 150ms ease, box-shadow 120ms ease;
+}
+
+main > nav[aria-label="Screens"] button:hover {
+  background: var(--bg-board);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+main > nav[aria-label="Screens"] button[aria-pressed="true"] {
+  background: var(--bg-header);
+  color: var(--ink-on-dark);
+  border-color: var(--ink-primary);
+  box-shadow: 2px 3px 0px var(--arch-organism-header);
+}
+
+/* === Wave 3 Motion & Micro-Animations === */
+@keyframes card-play {
+  0% {
+    transform: translateY(-14px) scale(1.08);
+    box-shadow: 6px 10px 0px var(--ink-primary);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+@keyframes card-death-turn {
+  0% {
+    transform: rotate(0deg) scale(1.04);
+    filter: grayscale(0) sepia(0);
+  }
+  100% {
+    transform: rotate(90deg) scale(1);
+  }
+}
+
+@keyframes nutrient-tick {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.65);
+  }
+  45% {
+    transform: scale(1.24);
+    box-shadow: 0 0 0 5px rgba(217, 119, 6, 0.45);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+  }
+}
+
+@keyframes cycle-emblem-in {
+  0% {
+    transform: rotate(-45deg) scale(0.7);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes event-reveal {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(58, 117, 55, 0.6);
+  }
+  65% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 10px rgba(58, 117, 55, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(58, 117, 55, 0);
+  }
+}
+
+/* === Reduced Motion Fallback === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
