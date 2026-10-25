@@ -559,6 +559,9 @@
   animation: slide-in 180ms ease-out;
 }
 .sheet__close {
+  display: grid;
+  place-items: center;
+  padding: 0;
   position: absolute;
   z-index: 3;
   top: 6px;
@@ -570,7 +573,6 @@
   background: var(--bg-panel);
   box-shadow: 0 0 0 1.5px var(--border-subtle);
   color: var(--ink-primary);
-  font-size: 1.8rem;
   line-height: 1;
 }
 .sheet__close:hover { background: var(--bg-board); }
