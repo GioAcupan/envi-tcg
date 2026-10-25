@@ -13,7 +13,7 @@
 
 **Ships:** one static web app at a GitHub Pages URL where two players play a hotseat match of the PDF's game with the engine doing all bookkeeping, a referee panel overrides anything, an editor tunes every card number and game param, and the edited ruleset is exported/imported as a JSON file. Undo/redo. An in-app Interpretations list. A plain functional UI first, then skinned per a Gemini-made `DESIGN.md`.
 
-**Out:** online multiplayer, accounts, a server, AI opponents or batch simulation (possible later on the same engine seam; no Seeds item now), editing ability *logic* in the app, mobile-first layout (desktop/laptop/projector is the target; phones must not break but need not be pleasant), i18n.
+**Out:** online multiplayer, accounts, a server, AI opponents or batch simulation (possible later on the same engine seam; no Seeds item now), editing ability *logic* in the app, i18n. **Target device:** a tablet (landscape and portrait) first, phone optional, desktop must still work; the cards are the focus and must be visible without scrolling (operator, 2026-10-25, Seeds envi-tcg-9bf9; replaces the original desktop/projector-first target).
 
 **Architecture:** a pure TypeScript rules engine (`applyAction(state, action) → state`) consumed by a React UI that only dispatches actions and renders state. Card stats and params are plain data in a `Ruleset` object; card *abilities* are small hand-written handlers keyed by card id. Rejected: a free-form tabletop sandbox (no feedback on whether numbers work) and a data-driven effect language (weeks of work for ~30 cards).
 
