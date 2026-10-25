@@ -108,12 +108,14 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
   }
 
   return <section className="editor">
-    <h2>Ruleset editor</h2>
-    <p className="editor-banner">Changes apply when you start a new game.</p>
+    <div className="editor-header">
+      <h2>Ruleset editor</h2>
+      <p className="editor-banner">Changes apply when you start a new game.</p>
+    </div>
     {!canSave && <p className="editor-storage-warning">Changes won't be saved in this browser — export to keep them.</p>}
 
     <div className="editor-toolbar">
-      <label className="editor-field">
+      <label className="editor-field editor-field--name">
         <span>Ruleset name</span>
         <input value={ruleset.name} onChange={event => onChange({ ...ruleset, name: event.target.value })} />
       </label>
@@ -121,15 +123,14 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
         <button type="button" onClick={exportFile}>Export</button>
         <button type="button" onClick={() => fileInput.current?.click()}>Import</button>
         <input ref={fileInput} type="file" accept=".json,application/json" hidden onChange={importFile} />
-        <button type="button" onClick={resetToDefaults}>Reset to defaults</button>
+        <button type="button" className="editor-btn-reset" onClick={resetToDefaults}>Reset to defaults</button>
       </div>
+      <p className="editor-deck" aria-live="polite">
+        Deck total: <strong>{deckTotal}</strong> cards
+        {deckTotal !== DECK_SIZE && <span className="editor-hint"> (decks are usually {DECK_SIZE} cards)</span>}
+      </p>
     </div>
     {message && <p role={message.kind === 'error' ? 'alert' : 'status'} className={`editor-message editor-message-${message.kind}`}>{message.text}</p>}
-
-    <p className="editor-deck" aria-live="polite">
-      Deck total: {deckTotal} cards
-      {deckTotal !== DECK_SIZE && <span className="editor-hint"> (decks are usually {DECK_SIZE} cards)</span>}
-    </p>
 
     <h3>Parameters</h3>
     <div className="editor-params">
@@ -199,7 +200,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
       </label>
     </div>
 
-    <h3>Cards</h3>
+    <h3>Cards ({ruleset.cards.length} archetypes)</h3>
     <div className="editor-table-wrap">
       <table className="editor-table">
         <thead>
@@ -212,9 +213,9 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
           {ruleset.cards.map((card, index) => {
             const row = `(card ${index + 1})`;
             const set = (next: CardDef) => setCard(index, next);
-            return <tr key={index}>
+            return <tr key={index} className={`editor-row editor-row--${card.kind}`}>
               <td><input aria-label={`Name ${row}`} value={card.name} onChange={event => set({ ...card, name: event.target.value })} /></td>
-              <td className="editor-kind">{card.kind}</td>
+              <td className="editor-kind"><span className={`editor-kind-pill editor-kind-pill--${card.kind}`}>{card.kind}</span></td>
               <td><input aria-label={`Subtype ${row}`} value={card.subtype ?? ''}
                 onChange={event => set(withField(card, 'subtype', event.target.value || undefined))} /></td>
               <td><NumberInput label={`Trophic level ${row}`} value={card.trophicLevel}
