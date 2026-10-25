@@ -1,55 +1,1510 @@
-.game-shell { color: #1b221b; background: #f5efe2; padding: 1rem; font: 16px/1.45 system-ui, sans-serif; }
-.game-shell--night { background: #e8edef; }
-.game-shell h2, .game-shell h3, .game-shell p { margin: 0 0 .65rem; }
-.game-shell button, .game-shell input, .game-shell select { font: inherit; padding: .5rem .7rem; border: 1.5px solid #2a332b; border-radius: 3px; color: inherit; background: #fcf9f2; }
-.game-shell button { cursor: pointer; min-height: 42px; }
-.game-shell button:hover:not(:disabled) { background: #e3ebdc; }
-.game-shell button:disabled { cursor: not-allowed; color: #596157; background: #e3e1da; }
-.game-shell :focus-visible { outline: 3px solid #215e94; outline-offset: 3px; }
-.game-shell label { display: flex; flex-direction: column; gap: .25rem; }
-.game-shell input[type=checkbox] { width: auto; }
-.game-shell input[type=number] { width: 6rem; }
-.game-shell select { max-width: 100%; }
-.game-shell summary { cursor: pointer; font-weight: 700; padding: .5rem; }
-.game-status, .game-toolbar, .pool-bar, .card-actions, .target-picker, .referee-controls, .referee-card-controls, .referee-panel form, .referee-panel fieldset { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
-.game-status { justify-content: space-between; border-bottom: 2px solid #2a332b; margin-bottom: 1rem; padding-bottom: .75rem; }
-.player-statuses, .game-board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-.player-status, .zone-field, .zone-center, .zone-hand, .action-panel, .referee-panel, .game-log, .game-modifiers, .pending-choice { padding: 1rem; border: 1.5px solid #2a332b; margin-bottom: 1rem; background: #faf5e8; min-width: 0; }
-.player-status--active, .zone-field--active { border-left: 6px solid #2e6f40; }
-.pool-bar { gap: 1.5rem; }
-.nutrient { font-variant-numeric: tabular-nums; }
-.nutrient progress { display: block; width: 6rem; height: .7rem; accent-color: #2e6f40; }
-.card-row { display: flex; flex-wrap: wrap; gap: .85rem; align-items: flex-start; }
-.card { width: 190px; border: 2px solid #2a332b; background: #fcf9f2; box-shadow: 2px 3px 0 #2a332b; overflow-wrap: anywhere; }
-.game-shell .card-select { display: flex; flex-direction: column; gap: .35rem; text-align: left; border: 0; width: 100%; background: transparent; }
-.card-name { font-size: 1.05rem; }
-.card-kind { font-size: .8rem; font-weight: 700; text-transform: uppercase; }
-.card--producer { border-top: 6px solid #2e6f40; }
-.card--consumer { border-top: 6px solid #b83b2a; }
-.card--detritivore { border-top: 6px solid #7c4d25; }
-.card--microbe { border-top: 6px solid #a83868; }
-.card--dead, .card--processed { width: 245px; background: #eae3d5; border-style: dashed; }
-.card--processed { background: #e2d5c1; }
-.card--dead .card-status, .card--processed .card-status { font-weight: 800; text-transform: uppercase; }
-.card--selected { outline: 3px solid #215e94; outline-offset: 3px; }
-.card-text, .card-stats, .card-stored { font-size: .85rem; }
-.card-attachments, .card-adaptations { padding: .5rem .5rem .5rem 1.5rem; font-size: .85rem; border-top: 1px solid #2a332b; }
-.zone-center { background: #e8dec8; }
-.action-panel { position: sticky; top: 0; z-index: 2; border-width: 2px; }
-.target-picker { margin-bottom: .75rem; }
-.action-control { display: inline-block; position: relative; }
-.action-reason { display: none; position: absolute; top: 100%; left: 0; width: 220px; padding: .5rem; background: #233127; color: #fff; z-index: 5; }
-.action-control:hover .action-reason, .action-control:focus .action-reason { display: block; }
-.pass-device { min-height: 45vh; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #2a332b; background: #faf5e8; text-align: center; padding: 2rem; }
-.pass-device button { background: #233127; color: #fff; }
-.toast, .game-result, .pending-choice { padding: 1rem; border: 2px solid #8b3b1d; background: #fff3dc; margin-bottom: 1rem; }
-.toast button { margin-left: 1rem; }
-.referee-panel > label { margin: .75rem 0; }
-.referee-controls, .referee-card-controls { align-items: flex-end; }
-.referee-panel fieldset { border: 1px solid #2a332b; }
-.referee-panel form { padding: .5rem; }
-.referee-panel label:has(input[type=checkbox]) { flex-direction: row; }
-.game-log ol { max-height: 20rem; overflow: auto; }
-.game-log li { margin-bottom: .35rem; }
-.new-game[open] { padding: .75rem; border: 1px solid #2a332b; max-width: 25rem; }
-@media (max-width: 760px) { .player-statuses, .game-board { grid-template-columns: 1fr; } .action-panel { position: static; } .game-shell { padding: .5rem; } .card { width: 165px; } .card--dead, .card--processed { width: 215px; } }
+/* === Game Screen ("Riparian Field Guide") === */
+.game-shell {
+  color: var(--ink-primary);
+  background: var(--bg-board);
+  border: 2px solid var(--border-ink);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  padding: 1rem;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  transition: background-color 450ms ease-in-out, border-color 450ms ease-in-out;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.game-shell h2,
+.game-shell h3,
+.game-shell p {
+  margin: 0;
+}
+
+.game-shell * {
+  scroll-margin-top: 8.5rem;
+}
+
+/* Form Controls & Buttons */
+.game-shell button,
+.game-shell input,
+.game-shell select {
+  font: inherit;
+  padding: 0.42rem 0.75rem;
+  border: 1.5px solid var(--border-ink);
+  border-radius: 6px;
+  color: var(--ink-primary);
+  background: var(--bg-card);
+  font-weight: 600;
+}
+
+.game-shell button {
+  cursor: pointer;
+  min-height: 38px;
+  box-shadow: 1.5px 2px 0px var(--border-ink);
+  transition: transform 100ms ease, background-color 120ms ease, box-shadow 100ms ease;
+}
+
+.game-shell button:hover:not(:disabled) {
+  background: #E5EBD9;
+  transform: translateY(-1px);
+  box-shadow: 2.5px 3.5px 0px var(--ink-primary);
+}
+
+.game-shell button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0px var(--ink-primary);
+}
+
+.game-shell button:disabled {
+  cursor: not-allowed;
+  color: var(--ink-muted);
+  background: #E2DED3;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.game-shell :focus-visible {
+  outline: 3px solid var(--nutrient-n-bg);
+  outline-offset: 2px;
+}
+
+.game-shell label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--ink-secondary);
+}
+
+.game-shell input[type="checkbox"] {
+  width: auto;
+}
+
+.game-shell input[type="number"] {
+  width: 5.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-shell select {
+  max-width: 100%;
+}
+
+.game-shell summary {
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-base);
+  padding: 0.35rem 0.25rem;
+}
+
+/* === 1. Top Status Bar === */
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  background: var(--bg-header);
+  color: var(--ink-on-dark);
+  border: 2px solid var(--ink-primary);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.85rem;
+  box-shadow: var(--shadow-card);
+  transition: background-color 450ms ease-in-out;
+}
+
+.status-bar__cycle {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.cycle-emblem {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  animation: cycle-emblem-in 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.status-bar__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.status-bar__round-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.status-bar h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-on-dark);
+}
+
+.cycle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.cycle-pill__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.cycle-pill--day {
+  background: #FEF3C7;
+  color: #78350F;
+  border-color: #F59E0B;
+}
+
+.cycle-pill--night {
+  background: #1E293B;
+  color: #E2E8F0;
+  border-color: #93C5FD;
+}
+
+.status-bar__turn-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--text-base);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #E5E0D0;
+}
+
+.ap-pips {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ap-pip {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.15);
+  transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.ap-pip--filled {
+  background: #F59E0B;
+  border-color: #FEF3C7;
+  box-shadow: 0 0 5px rgba(245, 158, 11, 0.6);
+}
+
+.status-bar__modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.modifier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--arch-event-bg);
+  color: var(--ink-primary);
+  border: 2px solid var(--arch-event-border);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  animation: event-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.game-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.status-bar .game-toolbar > button,
+.status-bar .game-toolbar .action-control button {
+  background: var(--bg-panel);
+  color: var(--ink-primary);
+}
+
+.status-bar .game-toolbar .action-control button:not(:disabled) {
+  background: var(--arch-organism-header);
+  color: var(--ink-on-dark);
+  border-color: #1B221B;
+}
+
+.status-bar .game-toolbar .action-control button:hover:not(:disabled) {
+  background: #B04B0E;
+}
+
+.new-game {
+  position: relative;
+}
+
+.new-game summary {
+  list-style: none;
+  background: var(--bg-panel);
+  color: var(--ink-primary);
+  border: 1.5px solid var(--border-ink);
+  border-radius: 6px;
+  padding: 0.42rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  box-shadow: 1.5px 2px 0px var(--border-ink);
+}
+
+.new-game__popover {
+  margin-top: 0.45rem;
+  max-width: 24rem;
+  background: var(--bg-panel);
+  color: var(--ink-primary);
+  border: 2px solid var(--border-ink);
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* === 2. Dual Nutrient Pool Bars === */
+.player-statuses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.player-status {
+  padding: 0.75rem 0.9rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.player-status--active {
+  border-left: 7px solid var(--arch-producer-badge);
+  background: var(--bg-card);
+}
+
+.player-status__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+}
+
+.player-status h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.active-turn-badge {
+  color: var(--arch-producer-badge);
+  font-weight: 800;
+}
+
+.ap-counter {
+  color: var(--arch-organism-header);
+  font-weight: 800;
+}
+
+.player-zone-counts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.deck-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.deck-pill__icon {
+  width: 14px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.pool-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.nutrient {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-ink);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.nutrient--C { border-top: 4px solid var(--nutrient-c-bg); }
+.nutrient--N { border-top: 4px solid var(--nutrient-n-bg); }
+.nutrient--P { border-top: 4px solid var(--nutrient-p-bg); }
+.nutrient--O2 { border-top: 4px solid var(--nutrient-o2-bg); }
+
+.nutrient--tick {
+  animation: nutrient-tick 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nutrient__top {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.nutrient__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nutrient__value {
+  font-size: var(--text-base);
+  font-weight: 800;
+  color: var(--ink-primary);
+}
+
+.nutrient__threshold {
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+  font-weight: 600;
+}
+
+.nutrient progress {
+  display: block;
+  width: 100%;
+  height: 0.45rem;
+  border-radius: 99px;
+  overflow: hidden;
+  accent-color: var(--arch-producer-badge);
+}
+
+.nutrient--C progress { accent-color: var(--nutrient-c-bg); }
+.nutrient--N progress { accent-color: var(--nutrient-n-bg); }
+.nutrient--P progress { accent-color: var(--nutrient-p-bg); }
+
+/* === 3. Action Panel & Target Picker === */
+.action-panel {
+  position: sticky;
+  top: 0.35rem;
+  z-index: 20;
+  padding: 0.65rem 0.9rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.action-panel--picking {
+  border-color: var(--arch-adaptation-header);
+  background: var(--arch-adaptation-bg);
+}
+
+.action-panel__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.action-panel h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+}
+
+.action-panel__selected-meta {
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+}
+
+.action-panel__hint {
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+  font-style: italic;
+}
+
+.target-picker,
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.action-control {
+  display: inline-block;
+  position: relative;
+}
+
+.action-reason {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  width: 210px;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-header);
+  color: var(--ink-on-dark);
+  border: 1.5px solid var(--ink-primary);
+  border-radius: 6px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+  z-index: 40;
+  pointer-events: none;
+}
+
+.action-control:hover .action-reason,
+.action-control:focus .action-reason,
+.action-control:focus-within .action-reason {
+  display: block;
+}
+
+/* === 4. Board Zones (Fields, Shared Center, Hand) === */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.zone-field,
+.zone-center,
+.zone-hand {
+  padding: 0.85rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
+  min-width: 0;
+  box-shadow: var(--shadow-card);
+  transition: background-color 450ms ease-in-out;
+}
+
+.game-board .zone-field {
+  margin-bottom: 0;
+}
+
+.zone-field--active {
+  background: var(--bg-zone-player);
+  border-left: 7px solid var(--arch-producer-badge);
+}
+
+.zone-field--opponent {
+  background: var(--bg-zone-opponent);
+}
+
+.zone-center {
+  background: var(--bg-zone-center);
+  border-style: solid;
+}
+
+.zone-hand {
+  background: var(--bg-panel);
+  border-top: 4px solid var(--arch-organism-header);
+}
+
+.zone-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid var(--border-subtle);
+}
+
+.zone-header h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink-primary);
+}
+
+.zone-header__token-icon {
+  width: 22px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid var(--arch-token-border);
+}
+
+.zone-header__counts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.zone-header__deck-icon {
+  width: 16px;
+  height: 22px;
+  border-radius: 2px;
+}
+
+.zone-hand__privacy-note {
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+  font-style: italic;
+}
+
+.zone-empty {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-style: italic;
+  padding: 0.75rem 0.25rem;
+}
+
+/* === 5. Card Row, Card Stack & Card Frame Anatomy === */
+.card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+/* Stack Container (DESIGN.md §6.D) */
+.card-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: padding-bottom 180ms ease-out;
+}
+
+.card-stack--has-attachments {
+  padding-bottom: calc(var(--stack-count, 1) * var(--stack-offset-y));
+}
+
+.card-stack--has-attachments:hover,
+.card-stack--has-attachments:focus-within {
+  --stack-offset-y: 54px;
+}
+
+/* Sideways Slot for Dead & Processed Cards (DESIGN.md §6.B & §6.C) */
+.field-slot--sideways {
+  width: 228px;
+  min-height: 174px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* Outer Card Frame (160px × 224px) */
+.card {
+  width: var(--card-width);
+  min-height: var(--card-height);
+  border: 2px solid var(--border-ink);
+  border-radius: var(--card-radius);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 250ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.zone-field .card--alive {
+  animation: card-play 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Clickable Card Surface */
+.game-shell .card-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  text-align: left;
+  border: 0;
+  padding: 0;
+  width: 100%;
+  min-height: var(--card-height);
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  font-weight: normal;
+}
+
+.game-shell .card-select:hover:not(:disabled) {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Archetype Frame Variants (DESIGN.md §5) */
+/* 1. Organisms (Producer, Consumer, Detritivore) — Terracotta Orange */
+.card--organism {
+  background: var(--arch-organism-bg);
+  border-color: var(--arch-organism-border);
+}
+
+.card--organism .card__header {
+  background: var(--arch-organism-header);
+  color: var(--ink-on-dark);
+}
+
+.card__badge--producer {
+  background: var(--arch-producer-badge);
+  color: #FFFFFF;
+}
+
+.card__badge--consumer {
+  background: var(--arch-consumer-badge);
+  color: #FFFFFF;
+}
+
+.card__badge--detritivore {
+  background: var(--arch-detritivore-badge);
+  color: #FFFFFF;
+}
+
+/* 2. Microbes — Spore Rose Pink */
+.card--microbe {
+  background: var(--arch-microbe-bg);
+  border-color: var(--arch-microbe-border);
+}
+
+.card--microbe .card__header {
+  background: var(--arch-microbe-header);
+  color: var(--ink-on-dark);
+}
+
+.card__badge--microbe {
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink-on-dark);
+}
+
+/* 3. Wild Events — Riparian Moss Green */
+.card--event {
+  background: var(--arch-event-bg);
+  border: 3px double var(--arch-event-border);
+}
+
+.card--event .card__header {
+  background: var(--arch-event-header);
+  color: var(--ink-on-dark);
+}
+
+.card__badge--event {
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--ink-on-dark);
+}
+
+/* 4. Evolution / Adaptation — Verdigris Teal */
+.card--adaptation {
+  background: var(--arch-adaptation-bg);
+  border-color: var(--arch-adaptation-border);
+}
+
+.card--adaptation .card__header {
+  background: var(--arch-adaptation-header);
+  color: var(--ink-on-dark);
+}
+
+.card__badge--adaptation {
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--ink-on-dark);
+}
+
+/* 5. Tokens (Fallen Leaf) — Dry Leaf Kraft */
+.card--token {
+  width: var(--card-width-compact);
+  min-height: var(--card-height-compact);
+  background: var(--arch-token-bg);
+  border: 2px dashed var(--arch-token-border);
+}
+
+.card--token .card-select {
+  min-height: var(--card-height-compact);
+}
+
+.card--token .card__header {
+  background: var(--arch-token-header);
+  color: var(--ink-on-dark);
+}
+
+/* Upgraded / Specialized Organism Highlight */
+.card--upgraded {
+  box-shadow: 0 0 0 2px var(--arch-special-star), var(--shadow-card);
+}
+
+.card__special-star {
+  font-size: 0.85rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Selected & Valid Target States */
+.card--selected {
+  outline: 3px solid var(--nutrient-n-bg);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card--valid-target {
+  outline: 3px solid var(--arch-event-header);
+  outline-offset: 2px;
+  animation: event-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* === Sideways Dead & Processed Card States (DESIGN.md §6.B & §6.C) === */
+.field-slot--sideways > .card--dead,
+.field-slot--sideways > .card--processed {
+  width: var(--card-width);
+  height: var(--card-height);
+  min-height: var(--card-height);
+  transform: rotate(90deg);
+  transform-origin: center center;
+}
+
+.field-slot--sideways > .card--dead {
+  background: var(--bg-card-dead);
+  border: 2px dashed #6B5B45;
+  animation: card-death-turn 380ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.field-slot--sideways > .card--dead .card__art {
+  filter: grayscale(0.65) sepia(0.25) contrast(0.9);
+}
+
+.field-slot--sideways > .card--processed {
+  background: var(--bg-card-processed);
+  border: 3px double #5C3A21;
+  transform: rotate(90deg);
+}
+
+.field-slot--sideways > .card--processed .card__art {
+  filter: grayscale(0.3) sepia(0.4) contrast(0.95);
+}
+
+/* Counter-Rotated Status Stamp across Sideways Card */
+.card__status-banner {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 192px;
+  transform: translate(-50%, -50%) rotate(-85deg);
+  padding: 0.24rem 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 2px solid var(--ink-primary);
+  box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.45);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+  pointer-events: none;
+}
+
+.card--token .card__status-banner {
+  width: 168px;
+}
+
+.card__status-banner--dead {
+  background: #3F362C;
+  color: #FAF5E8;
+}
+
+.card__status-banner--processing {
+  background: #FEF3C7;
+  color: #78350F;
+  border-color: #B45309;
+}
+
+.card__status-banner--processed {
+  background: #166534;
+  color: #F0FDF4;
+  border-color: #052E16;
+}
+
+.card__status-sub {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* Upright Biomass HUD on Sideways Slot Corner */
+.card__sideways-hud {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.sideways-hud__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--ink-primary);
+  color: var(--ink-on-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  padding: 0.15rem 0.42rem;
+  border-radius: 4px;
+  border: 1.5px solid #FAF5E8;
+  box-shadow: 1.5px 2px 0px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.sideways-hud__shredded {
+  background: #F59E0B;
+  color: #1B221B;
+  font-size: 0.62rem;
+  font-weight: 900;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  border: 1px solid #1B221B;
+  white-space: nowrap;
+}
+
+/* === Inner Card Sections (DESIGN.md §5) === */
+/* 1. Header Strip */
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.15rem;
+  padding: 0.18rem 0.28rem;
+  min-height: 24px;
+  border-bottom: 1.5px solid var(--border-ink);
+}
+
+.card__costs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.cost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink-primary);
+  border: 1px solid var(--ink-primary);
+  border-radius: 4px;
+  padding: 0.04rem 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cost-badge--free,
+.cost-badge--ap {
+  font-size: 0.64rem;
+  font-weight: 800;
+}
+
+.card__cost-val {
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.nutrient-icon-xs {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.nutrient-icon-2xs {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.59rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  padding: 0.08rem 0.24rem;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.card__special-star {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.2rem;
+  color: #F59E0B;
+  font-size: 0.85rem;
+}
+
+.card__art-fallback-svg {
+  width: 28px;
+  height: 28px;
+  color: var(--ink-secondary);
+}
+
+/* 2. Card Title Bar */
+.card__title-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.2rem;
+  padding: 0.22rem 0.4rem;
+  background: rgba(255, 255, 255, 0.65);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink-primary);
+}
+
+.card__uid {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+}
+
+/* 3. Illustration Viewport */
+.card__art-frame {
+  position: relative;
+  height: 68px;
+  margin: 0.2rem 0.35rem;
+  border: 1.5px solid var(--border-ink);
+  border-radius: 4px;
+  background: var(--bg-card);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card--token .card__art-frame {
+  height: 54px;
+}
+
+.card__art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__art-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  color: var(--ink-secondary);
+}
+
+.card__art-fallback-icon {
+  font-size: 1.4rem;
+}
+
+.card__art-fallback-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* 4. Vital Stats Bar */
+.card__stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem;
+  padding: 0.18rem 0.35rem;
+  background: rgba(0, 0, 0, 0.045);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.06rem 0.25rem;
+  border-radius: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-primary);
+}
+
+.card__stat-val {
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Day / Night Producer & Upkeep Emphasis (DESIGN.md §8) */
+.stat-pill--day-halo {
+  background: #FEF9C3;
+  border-color: #CA8A04;
+  box-shadow: 0 0 0 2px #EAB308;
+  color: #713F12;
+}
+
+.stat-pill--night-dim {
+  opacity: 0.55;
+}
+
+.stat-pill--night-emphasis {
+  background: var(--nutrient-o2-bg);
+  color: #FFFFFF;
+  border-color: #164E63;
+  box-shadow: 0 0 0 1.5px #0D7A8A;
+}
+
+.stat-pill--stored {
+  background: #EFE9DA;
+  border-color: var(--border-ink);
+}
+
+.stored-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-weight: 800;
+}
+
+/* 5. Tags, Prey & Dynamic State Strip */
+.card__meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.35rem 0;
+  font-size: 0.68rem;
+}
+
+.card__tags {
+  color: var(--ink-secondary);
+  font-weight: 700;
+}
+
+.card__prey {
+  color: var(--arch-consumer-badge);
+  font-weight: 800;
+}
+
+.card__state-pill {
+  display: inline-block;
+  padding: 0.05rem 0.28rem;
+  border-radius: 3px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  border: 1px solid currentColor;
+}
+
+.card__state-pill--ready {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.card__state-pill--used {
+  background: #E5E7EB;
+  color: #4B5563;
+}
+
+.card__state-pill--shredded {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #D97706;
+}
+
+.card__state-pill--marks,
+.card__state-pill--special {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: var(--arch-special-star);
+}
+
+.card__state-pill--working {
+  background: #E0F2FE;
+  color: #075985;
+}
+
+/* 6. Rules Text Box */
+.card__text {
+  display: block;
+  padding: 0.22rem 0.4rem 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.22;
+  color: var(--ink-primary);
+  flex: 1;
+}
+
+.card-adaptations {
+  display: block;
+  margin: 0 0.35rem 0.25rem;
+  padding: 0.15rem 0.3rem;
+  background: #FEF3C7;
+  border: 1px solid var(--arch-special-star);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #78350F;
+}
+
+/* === Attached Card Stacks Beneath Host (DESIGN.md §6.D) === */
+.card-attachments {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: var(--card-width);
+  position: relative;
+}
+
+.card-attachment {
+  position: absolute;
+  top: calc((var(--att-index, 1) - 1) * var(--stack-offset-y) - 4px);
+  left: calc(var(--att-index, 1) * 3px);
+  width: calc(var(--card-width) - 6px);
+  background: var(--bg-card);
+  border: 2px solid var(--border-ink);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 2px 2px 0px var(--border-ink);
+  padding: 0.3rem 0.35rem 0.2rem;
+  font-size: 0.7rem;
+  z-index: 1;
+  transition: top 180ms ease-out, transform 180ms ease-out;
+}
+
+.card-attachment--adaptation {
+  background: var(--arch-adaptation-bg);
+  border-color: var(--arch-adaptation-border);
+  border-left: 4px solid var(--arch-special-star);
+}
+
+.card-attachment--producer,
+.card-attachment--consumer,
+.card-attachment--detritivore {
+  background: var(--arch-organism-bg);
+  border-color: var(--arch-organism-border);
+  border-left: 4px solid var(--arch-consumer-badge);
+}
+
+.card-attachment__strip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 800;
+}
+
+.card-attachment__thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  object-fit: cover;
+  border: 1px solid var(--border-ink);
+  flex-shrink: 0;
+}
+
+.card-attachment__title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-attachment__stored {
+  font-variant-numeric: tabular-nums;
+  background: #EFE9DA;
+  padding: 0 0.2rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-ink);
+  font-size: 0.64rem;
+}
+
+.card-attachment__detail {
+  display: none;
+  font-size: 0.64rem;
+  color: var(--ink-secondary);
+  margin-top: 0.15rem;
+  line-height: 1.15;
+}
+
+.card-stack--has-attachments:hover .card-attachment__detail,
+.card-stack--has-attachments:focus-within .card-attachment__detail {
+  display: block;
+}
+
+/* === Pass-the-Device Curtain, Toasts & Banners === */
+.pass-device {
+  min-height: 44vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 3px double var(--border-ink);
+  border-radius: 10px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-modal);
+  text-align: center;
+  padding: 2.25rem;
+}
+
+.pass-device__emblem {
+  width: 68px;
+  height: 95px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+}
+
+.pass-device h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+}
+
+.pass-device button {
+  background: var(--bg-header);
+  color: var(--ink-on-dark);
+  padding: 0.65rem 1.4rem;
+  font-size: var(--text-lg);
+}
+
+.toast,
+.game-result,
+.pending-choice {
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--status-warn);
+  border-radius: 8px;
+  background: #FFF7E6;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 0.85rem;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-color: var(--status-danger);
+  background: #FEF2F2;
+  color: #7F1D1D;
+  font-weight: 700;
+}
+
+.game-result {
+  border-color: var(--status-ok);
+  background: var(--arch-event-bg);
+}
+
+.game-result h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--arch-event-border);
+}
+
+.pending-choice {
+  border-color: var(--arch-event-border);
+  background: var(--arch-event-bg);
+  animation: event-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.choice-banner__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.game-modifiers {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--arch-event-border);
+  border-radius: 8px;
+  background: var(--arch-event-bg);
+  margin-bottom: 0.85rem;
+  animation: event-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.game-modifiers h3 {
+  font-family: var(--font-display);
+  margin-bottom: 0.35rem;
+}
+
+.game-modifiers ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+/* === 6. Bottom Drawers: Referee Panel & Field Journal Log === */
+.bottom-drawers {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.referee-panel,
+.game-log {
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--border-ink);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.referee-panel > p {
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+  margin: 0.35rem 0 0.65rem;
+}
+
+.referee-panel > label {
+  margin: 0.5rem 0;
+}
+
+.referee-controls,
+.referee-card-controls,
+.referee-panel form,
+.referee-panel fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.referee-controls {
+  margin-bottom: 0.65rem;
+}
+
+.referee-panel fieldset {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.45rem 0.65rem;
+}
+
+.referee-panel legend {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  padding: 0 0.25rem;
+}
+
+.referee-panel label:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.game-log ol {
+  max-height: 18rem;
+  overflow-y: auto;
+  margin: 0.5rem 0 0;
+  padding-left: 1.4rem;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.game-log li {
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+.log-round-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--bg-board);
+  border: 1px solid var(--border-ink);
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  margin-right: 0.25rem;
+}
+
+/* === Responsive Breakpoints (1024px Projector & Narrower) === */
+@media (max-width: 1120px) {
+  .pool-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bottom-drawers {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .player-statuses,
+  .game-board {
+    grid-template-columns: 1fr;
+  }
+  .action-panel {
+    position: static;
+  }
+  .game-shell {
+    padding: 0.65rem;
+  }
+}
