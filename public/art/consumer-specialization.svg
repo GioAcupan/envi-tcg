@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Consumer Specialization: Trophic apex crest with 2 specialization stars & evolution chevron -->
+  <!-- Consumer Specialization: Trophic apex crest with twin specialization stars & chevrons -->
   <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
-  <circle cx="80" cy="60" r="44" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2"/>
-  <!-- Upward evolution chevrons -->
-  <path d="M52 72L80 46L108 72" stroke="#C85A17" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M52 90L80 64L108 90" stroke="#1F6E7A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Two Specialization Marks (Stars) -->
-  <polygon points="56,22 60,32 70,32 62,38 65,48 56,42 47,48 50,38 42,32 52,32" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
-  <polygon points="104,22 108,32 118,32 110,38 113,48 104,42 95,48 98,38 90,32 100,32" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Outer and inner adaptation medallion rings -->
+  <circle cx="80" cy="60" r="46" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2.2"/>
+  <circle cx="80" cy="60" r="40" stroke="#144B54" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <!-- Double upward trophic rank chevrons (bold filled polygons) -->
+  <polygon points="50,76 80,50 110,76 102,83 80,64 58,83" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="56,92 80,71 104,92 97,98 80,83 63,98" fill="#1F6E7A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Two Specialization Marks (Stars) cleanly framed inside upper medallion -->
+  <polygon points="62,25 65,33 74,33 67,38 70,46 62,41 54,46 57,38 50,33 59,33" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <polygon points="98,25 101,33 110,33 103,38 106,46 98,41 90,46 93,38 86,33 95,33" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
 </svg>

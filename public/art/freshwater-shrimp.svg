@@ -1,14 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Freshwater Shrimp: Amphipod/Gammarus shredder curving over a dead leaf fragment -->
+  <!-- Freshwater Shrimp: Articulated amphipod/shrimp (Gammarus) shredding a dead leaf fragment -->
   <rect width="160" height="120" rx="6" fill="#EEF4F2"/>
-  <!-- Curled segmented crustacean carapace -->
-  <path d="M44 78C38 50 62 30 92 34C116 38 126 56 116 72C106 62 94 54 76 56C60 58 52 68 44 78Z" fill="#D9820B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <!-- Segment lines -->
-  <path d="M64 36L68 56M80 34L80 55M96 36L92 56M108 44L100 60" stroke="#1B221B" stroke-width="1.8"/>
-  <!-- Tail fan & walking legs -->
-  <path d="M44 78L30 84M44 78L36 92" stroke="#9E420B" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M72 58L68 78M82 58L80 78M92 60L92 80M102 64L104 82" stroke="#9E420B" stroke-width="2" stroke-linecap="round"/>
-  <!-- Long antennae & eye -->
-  <path d="M118 66L142 58M116 70L140 72" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="112" cy="60" r="2.8" fill="#1B221B"/>
+  <!-- Shredded decaying leaf fragment below -->
+  <path d="M74 96C86 84 114 82 134 92C120 106 90 108 74 96Z" fill="#8C6239" stroke="#1B221B" stroke-width="1.8"/>
+  <path d="M82 95L124 92" stroke="#5C4024" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Jointed walking legs (pereopods) & swimmerets underneath body -->
+  <g stroke="#9E420B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 66L52 78L56 88"/>
+    <path d="M70 62L66 76L72 86"/>
+    <path d="M80 60L80 76L86 86"/>
+    <path d="M92 60L96 76L104 84"/>
+    <path d="M102 62L110 74L104 82"/>
+  </g>
+  <!-- Tail uropods / telson fan -->
+  <path d="M40 78L24 84L30 72ZM42 82L28 94L38 88Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Articulated curved crustacean body (cephalothorax + abdominal pleon segments + tail) -->
+  <path d="M38 78C34 50 56 26 88 28C112 30 126 44 128 56L116 60C110 64 98 62 84 60C66 58 52 66 44 80L38 78Z" fill="#D9820B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Overlapping curved tergite segment plates -->
+  <path d="M54 38C58 46 60 54 58 64M68 31C72 42 72 50 70 60M84 28C86 40 86 50 82 60M100 31C100 42 98 52 94 61" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Long sweeping antennae & compound eye -->
+  <path d="M124 52C136 46 146 48 152 54M122 57C134 56 144 62 150 70" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="115" cy="46" r="3.2" fill="#1B221B"/>
+  <circle cx="116" cy="45" r="1" fill="#FFFFFF"/>
 </svg>

@@ -1,17 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Caterpillar: Segmented herbivorous larva chewing a riparian leaf -->
+  <!-- Caterpillar: Plump segmented herbivorous larva crawling along a chewed riparian leaf -->
   <rect width="160" height="120" rx="6" fill="#F8F3E6"/>
-  <!-- Twig & chewed leaf -->
-  <path d="M12 88L148 76" stroke="#5C4024" stroke-width="4" stroke-linecap="round"/>
-  <path d="M98 78C106 54 134 48 144 66C136 86 112 90 98 78Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="110" cy="64" r="6" fill="#F8F3E6" stroke="#1B221B" stroke-width="1.5"/>
-  <!-- Segmented caterpillar body -->
-  <circle cx="34" cy="74" r="11" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="50" cy="66" r="12" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="68" cy="62" r="12" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="86" cy="66" r="12" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="102" cy="68" r="11" fill="#C85A17" stroke="#1B221B" stroke-width="2"/>
-  <!-- Eye & antennae -->
-  <circle cx="106" cy="65" r="2.2" fill="#1B221B"/>
-  <path d="M108 58L114 48M102 58L104 48" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Broad riparian leaf blade with chewed notches on upper right edge -->
+  <path d="M14 86C28 62 66 52 108 56C106 63 114 68 120 62C120 69 128 72 134 66C142 70 148 76 150 82C126 104 68 108 24 92L14 86Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Leaf petiole & midrib veins -->
+  <path d="M8 90L24 88C64 84 110 82 146 82" stroke="#233127" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M48 86L64 74M76 84L94 72M104 83L120 74M60 86L76 96M92 84L108 94" stroke="#2E6F40" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Prolegs gripping leaf surface -->
+  <g fill="#2E6F40" stroke="#1B221B" stroke-width="1.6">
+    <circle cx="34" cy="68" r="3.5"/>
+    <circle cx="50" cy="63" r="3.5"/>
+    <circle cx="66" cy="60" r="3.5"/>
+    <circle cx="84" cy="61" r="3"/>
+    <circle cx="94" cy="63" r="3"/>
+  </g>
+  <!-- Segmented caterpillar body (tail to thorax) -->
+  <circle cx="32" cy="56" r="10.5" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="46" cy="51" r="11.5" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="62" cy="48" r="12" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="78" cy="49" r="11.5" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="93" cy="52" r="11" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
+  <!-- Spiracle dots along segments -->
+  <g fill="#FDE68A" stroke="#1B221B" stroke-width="1.2">
+    <circle cx="31" cy="57" r="2"/>
+    <circle cx="46" cy="52" r="2"/>
+    <circle cx="62" cy="49" r="2"/>
+    <circle cx="78" cy="50" r="2"/>
+    <circle cx="92" cy="53" r="2"/>
+  </g>
+  <!-- Distinct rounded head capsule, eye, antennae & nibbling mandible -->
+  <circle cx="107" cy="55" r="10" fill="#C85A17" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="111" cy="52" r="2.4" fill="#1B221B"/>
+  <circle cx="111.7" cy="51.3" r="0.8" fill="#FFFFFF"/>
+  <path d="M111 46L117 37M106 46L108 36" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
 </svg>

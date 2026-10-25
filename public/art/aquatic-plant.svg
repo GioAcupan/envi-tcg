@@ -1,20 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Aquatic Plant: Floating water lily pad, blossom, and submerged elodea stems -->
+  <!-- Aquatic Plant: Floating water lily pad, lotus blossom, and submerged elodea shoots -->
   <rect width="160" height="120" rx="6" fill="#E6F3F5"/>
-  <!-- Submerged water zone -->
-  <rect x="0" y="54" width="160" height="66" rx="4" fill="#B5DEE6"/>
-  <path d="M4 54H156" stroke="#0D7A8A" stroke-width="2" stroke-dasharray="6 4"/>
-  <!-- Submerged stems and whorls -->
-  <path d="M52 114C50 92 56 74 54 54" stroke="#2E6F40" stroke-width="3" stroke-linecap="round"/>
-  <path d="M104 114C108 92 100 74 104 54" stroke="#2E6F40" stroke-width="3" stroke-linecap="round"/>
-  <path d="M42 84L53 78L64 84M42 98L52 92L63 98" stroke="#2E6F40" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- Floating lily pad -->
-  <path d="M80 54L92 46C116 47 132 52 130 58C128 65 98 68 68 67C38 66 26 60 30 53C34 47 56 45 72 47L80 54Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <!-- Water lily flower -->
-  <path d="M80 48C70 36 68 24 80 16C92 24 90 36 80 48Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="2"/>
-  <path d="M80 48C64 42 58 30 66 22C74 28 76 38 80 48Z" fill="#FDE68A" stroke="#1B221B" stroke-width="1.8"/>
-  <path d="M80 48C96 42 102 30 94 22C86 28 84 38 80 48Z" fill="#FDE68A" stroke="#1B221B" stroke-width="1.8"/>
-  <!-- O2 bubbles -->
-  <circle cx="122" cy="82" r="4" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.5"/>
-  <circle cx="130" cy="70" r="2.8" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.5"/>
+  <!-- Submerged water column -->
+  <rect x="0" y="56" width="160" height="64" rx="4" fill="#B5DEE6"/>
+  <path d="M6 56H154" stroke="#0D7A8A" stroke-width="2" stroke-dasharray="6 4"/>
+  <!-- Submerged feathery macrophytes & roots -->
+  <path d="M42 114C40 94 46 78 44 60" stroke="#2E6F40" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M32 74C38 69 44 69 52 74M30 88C38 83 44 83 54 88M32 102C39 97 45 97 52 102" stroke="#2E6F40" stroke-width="2" stroke-linecap="round"/>
+  <path d="M80 64C78 82 82 98 78 114M80 82C72 90 68 100 66 110M80 86C88 94 92 102 94 112" stroke="#3A7537" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Notched floating lily pad -->
+  <path d="M84 56L102 47C126 48 142 53 138 60C134 67 104 70 72 69C40 68 20 62 24 55C28 48 54 46 74 48L84 56Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M80 57L52 56M80 57L64 63M80 57L106 61" stroke="#2E6F40" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Multi-petalled water lily blossom -->
+  <path d="M64 49C54 42 52 30 62 24C70 28 74 38 76 49Z" fill="#FDE68A" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M96 49C106 42 108 30 98 24C90 28 86 38 84 49Z" fill="#FDE68A" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M70 50C62 38 64 22 73 16C79 24 80 36 80 50Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M90 50C98 38 96 22 87 16C81 24 80 36 80 50Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M80 51C71 37 71 20 80 12C89 20 89 37 80 51Z" fill="#FFFFFF" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <ellipse cx="80" cy="46" rx="6" ry="3" fill="#EAB308" stroke="#1B221B" stroke-width="1.5"/>
+  <!-- Rising O2 bubbles -->
+  <circle cx="122" cy="88" r="4.5" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.6"/>
+  <circle cx="132" cy="74" r="3" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.5"/>
 </svg>

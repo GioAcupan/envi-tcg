@@ -1,16 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Riparian Tree: Sturdy riverbank willow/alder with deep roots anchoring the bank -->
+  <!-- Riparian Tree: Sturdy riverbank alder/willow with unified crown & bank-stabilizing roots -->
   <rect width="160" height="120" rx="6" fill="#F5EFE2"/>
-  <!-- Riverbank and water edge -->
-  <path d="M90 96H160V120H90V96Z" fill="#B5DEE6"/>
-  <path d="M0 90C45 88 78 92 106 120H0V90Z" fill="#8C6239" stroke="#1B221B" stroke-width="2"/>
-  <!-- Trunk and roots -->
-  <path d="M56 94C56 76 58 58 58 44H72C72 58 76 76 84 96" fill="#6E4726" stroke="#1B221B" stroke-width="2.2"/>
-  <path d="M56 92L38 106M66 94L62 110M78 94L98 108" stroke="#5C3A21" stroke-width="3" stroke-linecap="round"/>
-  <!-- Broad leafy canopy -->
-  <circle cx="44" cy="44" r="22" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="86" cy="42" r="24" fill="#2E6F40" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="64" cy="28" r="22" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
-  <!-- Canopy leaf texture lines -->
-  <path d="M54 24C60 20 68 20 74 24M34 44C40 40 48 40 52 44M80 42C86 38 94 38 98 42" stroke="#1B221B" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- River channel on right -->
+  <path d="M84 92H160V120H84V92Z" fill="#B5DEE6"/>
+  <path d="M104 102H148M114 110H142" stroke="#0D7A8A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Sloping earthen riverbank on left -->
+  <path d="M0 86C44 84 78 88 96 98L108 120H0V86Z" fill="#8C6239" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M8 86C38 84 68 86 88 94" stroke="#4E8C4A" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Woody trunk, boughs & anchor roots embedded inside bank -->
+  <path d="M48 88C54 74 56 58 55 44H69C68 58 72 74 80 91C70 90 58 89 48 88Z" fill="#6E4726" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M52 88C44 96 32 104 20 108M62 89C60 98 56 106 50 112M74 90C80 98 86 106 92 112" stroke="#432818" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Unified multi-lobed leafy canopy silhouette (no interior circle seams!) -->
+  <path d="M26 58C14 54 12 36 24 28C26 16 40 10 52 14C60 6 78 6 86 16C100 14 112 24 108 38C116 46 110 60 96 60C82 64 42 64 26 58Z" fill="#3A7537" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Upper sunlit crown highlight & foliage tuft arcs -->
+  <path d="M30 28C34 18 46 14 54 17C62 10 76 10 84 18C94 17 104 23 102 33C86 26 48 26 30 28Z" fill="#52944E"/>
+  <path d="M36 42C44 36 54 36 60 42M70 38C78 32 88 32 94 38M52 24C60 19 70 19 76 24" stroke="#1B221B" stroke-width="1.6" stroke-linecap="round"/>
 </svg>

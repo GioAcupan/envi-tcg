@@ -1,14 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Tubifex Worm: Colony of red sludge/collector worms waving from silt tubes -->
-  <rect width="160" height="120" rx="6" fill="#EFEBE1"/>
-  <!-- Silt mound & vertical mud tubes -->
-  <path d="M16 98C50 86 110 86 144 98H16Z" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
-  <!-- Waving collector worms -->
-  <path d="M58 92C52 72 64 52 50 28" stroke="#B83B2A" stroke-width="5.5" stroke-linecap="round"/>
-  <path d="M80 90C84 66 72 44 82 20" stroke="#9E2A1C" stroke-width="6" stroke-linecap="round"/>
-  <path d="M102 92C108 72 96 54 112 30" stroke="#B83B2A" stroke-width="5.5" stroke-linecap="round"/>
-  <!-- Fine detritus particles being collected -->
-  <circle cx="42" cy="44" r="3" fill="#5C4024"/>
-  <circle cx="96" cy="34" r="3.5" fill="#5C4024"/>
-  <circle cx="68" cy="38" r="2.5" fill="#5C4024"/>
+  <!-- Tubifex Worm: Colony of sinuous crimson sludge worms waving from benthic silt tubes -->
+  <rect width="160" height="120" rx="6" fill="#EBF4F5"/>
+  <!--Sinuous crimson collector worms waving in water column (outlined double-strokes) -->
+  <g stroke-linecap="round">
+    <!-- Far-left worm -->
+    <path d="M40 88C30 70 48 54 34 34" stroke="#1B221B" stroke-width="7.5"/>
+    <path d="M40 88C30 70 48 54 34 34" stroke="#DC2626" stroke-width="4.5"/>
+    <!-- Mid-left worm -->
+    <path d="M60 84C52 62 70 46 58 22" stroke="#1B221B" stroke-width="8.5"/>
+    <path d="M60 84C52 62 70 46 58 22" stroke="#B91C1C" stroke-width="5.5"/>
+    <!-- Center worm -->
+    <path d="M80 82C90 58 68 38 84 16" stroke="#1B221B" stroke-width="9"/>
+    <path d="M80 82C90 58 68 38 84 16" stroke="#EF4444" stroke-width="6"/>
+    <!-- Mid-right worm -->
+    <path d="M100 84C110 64 92 46 106 24" stroke="#1B221B" stroke-width="8.5"/>
+    <path d="M100 84C110 64 92 46 106 24" stroke="#B91C1C" stroke-width="5.5"/>
+    <!-- Far-right worm -->
+    <path d="M120 88C130 72 114 54 128 36" stroke="#1B221B" stroke-width="7.5"/>
+    <path d="M120 88C130 72 114 54 128 36" stroke="#DC2626" stroke-width="4.5"/>
+  </g>
+  <!-- Silt chimney tubes & benthic sediment mound at base -->
+  <g fill="#8C6239" stroke="#1B221B" stroke-width="1.8">
+    <rect x="34" y="82" width="12" height="14" rx="3"/>
+    <rect x="54" y="78" width="12" height="16" rx="3"/>
+    <rect x="74" y="76" width="12" height="18" rx="3"/>
+    <rect x="94" y="78" width="12" height="16" rx="3"/>
+    <rect x="114" y="82" width="12" height="14" rx="3"/>
+  </g>
+  <path d="M12 104C44 86 116 86 148 104H12Z" fill="#7A5835" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
 </svg>

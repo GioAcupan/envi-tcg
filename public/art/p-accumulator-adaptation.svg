@@ -1,13 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Phosphorus-Accumulator Adaptation: Root & leaf system storing mineral Phosphorus (P) prisms -->
+  <!-- Phosphorus-Accumulator Adaptation: Root system locking mineral Phosphorus (P) prisms -->
   <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
-  <circle cx="80" cy="60" r="44" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2"/>
-  <!-- Root & shoot -->
-  <path d="M80 24V92M80 62L56 84M80 68L104 88" stroke="#2E6F40" stroke-width="4" stroke-linecap="round"/>
-  <path d="M80 42C62 38 56 24 68 20C76 18 80 28 80 42Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
-  <path d="M80 42C98 38 104 24 92 20C84 18 80 28 80 42Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
-  <!-- Stored P mineral triangles -->
-  <polygon points="56,64 68,86 44,86" fill="#C6690A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <polygon points="104,64 116,86 92,86" fill="#C6690A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <polygon points="80,74 92,96 68,96" fill="#EAB308" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="80" cy="60" r="46" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2.2"/>
+  <circle cx="80" cy="60" r="41" stroke="#144B54" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Soil horizon line across medallion -->
+  <path d="M36 58C64 54 96 54 124 58" stroke="#7A5835" stroke-width="2" stroke-linecap="round"/>
+  <!-- Crown foliage comfortably inside upper medallion -->
+  <path d="M80 56V32" stroke="#2E6F40" stroke-width="3" stroke-linecap="round"/>
+  <path d="M80 48C64 46 54 36 60 28C70 28 77 36 80 48Z" fill="#3A7537" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M80 48C96 46 106 36 100 28C90 28 83 36 80 48Z" fill="#52944E" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Branching root network below soil line -->
+  <path d="M80 56V78M80 60L56 76M80 60L104 76" stroke="#5C4024" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Three P mineral triangle badges cleanly anchored at root tips -->
+  <polygon points="56,66 66,84 46,84" fill="#C6690A" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <polygon points="104,66 114,84 94,84" fill="#C6690A" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <polygon points="80,74 91,93 69,93" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Gold Adaptation Star at top -->
+  <polygon points="80,13 82.8,20 90,20 84.2,24.2 86.5,31 80,26.8 73.5,31 75.8,24.2 70,20 77.2,20" fill="#EAB308" stroke="#1B221B" stroke-width="1.6" stroke-linejoin="round"/>
 </svg>

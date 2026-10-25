@@ -1,13 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Bloom Algae: Dense surface mat of cyanobacteria/algae swirling over eutrophic water -->
-  <rect width="160" height="120" rx="6" fill="#E5F2E0"/>
-  <!-- Eutrophic water below -->
-  <rect x="0" y="56" width="160" height="64" rx="4" fill="#9BC495"/>
-  <!-- Thick swirling algal bloom surface mat -->
-  <path d="M0 44C28 34 52 54 84 44C116 34 136 50 160 42V72C132 80 108 64 76 72C44 80 24 66 0 74V44Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
-  <path d="M18 56C40 48 64 64 92 54C116 46 134 58 148 54" stroke="#84CC16" stroke-width="4" stroke-linecap="round"/>
-  <!-- Eutrophic P sparkles / warning droplets -->
-  <polygon points="44,24 52,38 36,38" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
-  <polygon points="82,18 90,32 74,32" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
-  <polygon points="118,24 126,38 110,38" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Bloom Algae: Thick surface mat of eutrophic algae choking the water column -->
+  <rect width="160" height="120" rx="6" fill="#EBF5EE"/>
+  <!-- Shaded turbid water column below the surface mat -->
+  <rect x="0" y="48" width="160" height="72" rx="4" fill="#6B9E78"/>
+  <path d="M0 84C42 78 98 90 160 82V120H0V84Z" fill="#4A7856"/>
+  <!-- Suspended algal colonies & depleted O2/gas bubbles below -->
+  <g fill="#A3E635" stroke="#1B221B" stroke-width="1.5">
+    <circle cx="34" cy="78" r="5"/>
+    <circle cx="44" cy="84" r="3.5"/>
+    <circle cx="82" cy="92" r="5.5"/>
+    <circle cx="94" cy="86" r="4"/>
+    <circle cx="128" cy="76" r="5"/>
+  </g>
+  <!-- Dense swirling surface algal scum mat -->
+  <path d="M0 36C28 28 54 44 82 36C110 28 134 42 160 34V62C132 70 108 54 80 64C52 74 26 58 0 66V36Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2"/>
+  <path d="M0 44C32 36 62 52 94 42C122 34 142 46 160 42V54C136 60 114 48 86 56C56 64 28 50 0 56V44Z" fill="#68A864" stroke="#1B221B" stroke-width="1.6"/>
+  <!-- Bright chartreuse bloom streaks & frothy surface scum -->
+  <path d="M16 42C36 38 52 46 72 42M96 39C114 35 130 43 146 39" stroke="#BEF264" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M24 54C46 50 66 58 88 52M112 51C126 48 138 53 150 50" stroke="#A3E635" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Surface gas blisters -->
+  <circle cx="58" cy="34" r="4" fill="#BEF264" stroke="#1B221B" stroke-width="1.6"/>
+  <circle cx="106" cy="33" r="4.5" fill="#BEF264" stroke="#1B221B" stroke-width="1.6"/>
+  <circle cx="116" cy="36" r="3" fill="#D9F99D" stroke="#1B221B" stroke-width="1.4"/>
 </svg>

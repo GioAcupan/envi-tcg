@@ -1,13 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Aquatic Worm: Benthic oligochaete burrowing through river sediment -->
-  <rect width="160" height="120" rx="6" fill="#F3EDE0"/>
-  <!-- Sediment cross-section -->
-  <path d="M0 72C40 68 120 76 160 70V120H0V72Z" fill="#C6BCA6" stroke="#1B221B" stroke-width="2"/>
-  <!-- Burrowing segmented worm -->
-  <path d="M26 94C46 94 48 44 74 44C100 44 98 88 128 84" stroke="#1B221B" stroke-width="13" stroke-linecap="round"/>
-  <path d="M26 94C46 94 48 44 74 44C100 44 98 88 128 84" stroke="#C85A17" stroke-width="9" stroke-linecap="round"/>
-  <!-- Clitellum saddle band -->
-  <path d="M66 44H82" stroke="#FDE68A" stroke-width="9" stroke-linecap="round"/>
-  <!-- Segment rings -->
-  <path d="M44 70L50 74M54 52L60 56M90 54L84 58M104 74L98 78" stroke="#5C3A21" stroke-width="1.6"/>
+  <!-- Aquatic Worm: Benthic oligochaete worm burrowing through layered riverbed silt -->
+  <rect width="160" height="120" rx="6" fill="#EBF4F5"/>
+  <!-- Layered benthic sediment cross-section -->
+  <path d="M0 64C36 58 76 68 116 62C136 59 148 61 160 64V120H0V64Z" fill="#D5CBB8" stroke="#1B221B" stroke-width="2"/>
+  <path d="M0 86C44 82 96 92 160 84V120H0V86Z" fill="#B5A68E" stroke="#5C4024" stroke-width="1.5"/>
+  <!-- Dark burrow tunnel shadow in silt -->
+  <path d="M24 102C48 102 44 68 68 52" stroke="#7A6852" stroke-width="16" stroke-linecap="round"/>
+  <path d="M98 58C110 78 112 96 136 94" stroke="#7A6852" stroke-width="15" stroke-linecap="round"/>
+  <!-- Sinuous segmented oligochaete body -->
+  <path d="M24 102C48 102 42 36 78 36C112 36 104 94 136 94" stroke="#1B221B" stroke-width="14" stroke-linecap="round"/>
+  <path d="M24 102C48 102 42 36 78 36C112 36 104 94 136 94" stroke="#C85A17" stroke-width="10" stroke-linecap="round"/>
+  <!-- Curved clitellum saddle following body arch -->
+  <path d="M64 39C72 35 84 35 92 39" stroke="#1B221B" stroke-width="15" stroke-linecap="round"/>
+  <path d="M64 39C72 35 84 35 92 39" stroke="#FDE68A" stroke-width="11" stroke-linecap="round"/>
+  <!-- Annular segment lines fitted to body width -->
+  <g stroke="#7C2D12" stroke-width="1.6" stroke-linecap="round">
+    <path d="M35 92L43 97"/>
+    <path d="M41 78L50 81"/>
+    <path d="M45 62L54 65"/>
+    <path d="M51 48L59 53"/>
+    <path d="M97 48L105 43"/>
+    <path d="M103 62L112 59"/>
+    <path d="M108 76L117 73"/>
+    <path d="M117 89L124 83"/>
+  </g>
+  <!-- Detritus particles in sediment -->
+  <circle cx="24" cy="76" r="2.5" fill="#5C4024"/>
+  <circle cx="76" cy="98" r="3" fill="#5C4024"/>
+  <circle cx="142" cy="74" r="2.5" fill="#5C4024"/>
 </svg>

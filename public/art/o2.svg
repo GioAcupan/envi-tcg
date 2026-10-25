@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <!-- Oxygen (O2): Paired Aerated Bubbles Silhouette -->
-  <circle cx="25" cy="30" r="20" fill="#0D7A8A" stroke="#1B221B" stroke-width="3"/>
+  <!-- Oxygen (O2): Paired Aerated Bubbles with distinct O and subscript 2 -->
+  <circle cx="24" cy="28" r="19" fill="#0D7A8A" stroke="#1B221B" stroke-width="3"/>
   <circle cx="44" cy="40" r="14" fill="#1294A6" stroke="#1B221B" stroke-width="3"/>
-  <path d="M16 22C18 17 22 15 26 15" stroke="#CCFBF1" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="24" cy="31" r="8.5" stroke="#FFFFFF" stroke-width="4"/>
-  <path d="M40 37C40 34.8 41.8 33.5 44 33.5C46.2 33.5 47.8 34.8 47.8 36.8C47.8 38.5 46.2 39.8 41 44.5H48.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Specular highlight dot in upper-left margin (separated cleanly from O glyph) -->
+  <circle cx="13" cy="16" r="2.5" fill="#CCFBF1"/>
+  <!-- Bold O glyph -->
+  <circle cx="24" cy="29" r="8" stroke="#FFFFFF" stroke-width="4"/>
+  <!-- Crisp subscript 2 glyph -->
+  <path d="M40 36.5C40 34.3 41.8 33 44 33C46.2 33 47.8 34.3 47.8 36.3C47.8 38.2 46 39.5 40.5 44.5H48.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
