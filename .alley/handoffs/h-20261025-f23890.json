@@ -1,0 +1,106 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-f23890",
+  "kind": "report",
+  "created": "2026-10-25T12:42:57.883Z",
+  "summarized": true,
+  "parent": "h-20261025-3a9d0f",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "unknown",
+    "model": null,
+    "session": null
+  },
+  "to": null,
+  "repo": {
+    "base": null,
+    "head": "75fd11ecb91fc1afde15a97187733ae77691ae7e",
+    "branch": "lane/sim-t7",
+    "worktree": ".worktrees/sim-t7",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-f23890",
+      "commit": "f0b55bb7a58960329886ed3b558856d8d2f61b6e"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "T7 done: added .github/workflows/pages.yml (copied from the plan's yaml block) and README.md (title, play link, local run, ruleset export/import, rules source). Committed as 75fd11e on lane/sim-t7. Verified the YAML against the plan block with a script; exact match after CRLF normalization.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Create .github/workflows/pages.yml with the exact yaml block from the T7 section of the plan",
+      "evidence": [
+        {
+          "test": "Create .github/workflows/pages.yml with the exact yaml block from the T7 section of the plan",
+          "result": "75fd11e; plan block vs file exact match after CRLF normalization (plan file is CRLF in working copy, repo index stores LF)"
+        }
+      ]
+    },
+    {
+      "what": "Create README.md with title, one-paragraph description, play link, Run locally (npm install, npm run dev), ruleset Export/Import sharing, and rules source docs/TCG_DRAFT.pdf plus Interpretations tab mention",
+      "evidence": [
+        {
+          "commit": "75fd11e"
+        }
+      ]
+    },
+    {
+      "what": "Commit only owned files with message 'T7: GitHub Pages workflow and README'",
+      "evidence": [
+        {
+          "test": "Commit only owned files with message 'T7: GitHub Pages workflow and README'",
+          "result": "75fd11e: 2 files changed, 56 insertions; TASK.md left untracked; no push"
+        }
+      ]
+    },
+    {
+      "what": "Verify YAML against plan",
+      "evidence": [
+        {
+          "test": "Verify YAML against plan",
+          "result": "python script: plan T7 yaml block (791 bytes with CRLF) vs pages.yml (757 bytes, LF); equal after CRLF->LF normalization and trailing newline strip"
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "no tests for this task; YAML diffed against the plan (exact match after CRLF normalization)"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Wrote both files with LF line endings, matching the repo index (i/lf); the working copy is CRLF via checkout, so git warns on commit but stores LF.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "README Interpretations mention phrased as 'Rules the app had to guess are listed in the app's Interpretations tab', as instructed; no check that the tab exists yet (T3 owns it).",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Used the exact yaml block from the plan, including the github-pages environment and deploy job, with no additions.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "Hand-off checks (npm run typecheck, npm test, npm run build) not run: no code changed and no node_modules in the worktree; the workflow's own build job runs npm test and npm run build on push.",
+    "Did not write the 'report' hand-off record (parent h-20261025-3a9d0f) because the parent instructions specified this JSON report instead; the parent should register it if the hand-off record is still required."
+  ],
+  "questions": []
+}

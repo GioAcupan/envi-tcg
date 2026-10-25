@@ -1,0 +1,119 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-effe8e",
+  "kind": "report",
+  "created": "2026-10-25T12:59:38.612Z",
+  "summarized": true,
+  "parent": "h-20261025-cb5156",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "codex",
+    "model": "gpt-6.1-sol",
+    "session": "01a17318-c2f1-7fa0-aad1-cb5781b0b1ec"
+  },
+  "to": null,
+  "repo": {
+    "base": "28e20f2d9f49599a5c2c04614bd1f32d5af3c01f",
+    "head": "190f509ba70f8e10cf8d75edba51d88776f333d3",
+    "branch": "lane/sim-t5",
+    "worktree": ".worktrees/sim-t5",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-effe8e",
+      "commit": "f30edb0785a8a2465065279fcbf5262338255d22"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Implemented the complete T5 hotseat game UI and committed it as 190f509. Typecheck, 59 tests, build, and all game-action browser assertions pass. Outcome is failed only because the strict zero-console-errors smoke criterion encounters the app-shell favicon.ico 404, which the coordinator instructed this lane to leave untouched.",
+  "outcome": "failed",
+  "done": [
+    {
+      "what": "Hotseat board, status/progress, source-target actions, hand cover, choices, modifiers, log, error toast, new match, undo/redo, and all referee operations",
+      "evidence": [
+        {
+          "commit": "190f509ba70f8e10cf8d75edba51d88776f333d3"
+        }
+      ]
+    },
+    {
+      "what": "Required checks",
+      "evidence": [
+        {
+          "test": "Required checks",
+          "result": "npm run typecheck: exit 0; npm test: exit 0, 5 files / 59 tests passed; npm run build: exit 0; git diff --check: exit 0"
+        }
+      ]
+    },
+    {
+      "what": "Chromium smoke with default ruleset seed 64",
+      "evidence": [
+        {
+          "test": "Chromium smoke with default ruleset seed 64",
+          "result": "Producer play; undo returned producer to hand; redo restored field; Caterpillar ate Aquatic Plant with attachment; Freshwater Snail assigned Fallen Leaf; Nitrogen Bacteria decomposed processed leaf; every RefereeOp and all setCardField variants; six endTurns; win display; params.undoEnabled=false disabled Undo. No page exceptions; sole console error was GET /favicon.ico 404. Smoke script: C:/Users/gbacu/AppData/Local/Temp/t5-smoke.cjs"
+        }
+      ]
+    },
+    {
+      "what": "Desktop and mobile visual inspection",
+      "evidence": [
+        {
+          "test": "Desktop and mobile visual inspection",
+          "result": "C:/Users/gbacu/AppData/Local/Temp/t5-smoke-desktop.png and C:/Users/gbacu/AppData/Local/Temp/t5-smoke-mobile.png"
+        }
+      ]
+    },
+    {
+      "what": "Alley closeout and dev server cleanup",
+      "evidence": [
+        {
+          "test": "Alley closeout and dev server cleanup",
+          "result": "alley review: no policy changes, modified pre-existing tests, proposals, or store changes; independent documentation review outstanding for coordinator. Vite stopped and port 5175 has no listener."
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "5 Vitest files; 59 tests passed; typecheck/build/diff-check passed. Chromium action assertions passed, but strict smoke failed on the unowned favicon 404."
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Hide private card identities in draw log entries; allow explicit referee private-card reveal only while its panel is mounted.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Use source-card selection plus a target dropdown or board click; all legality remains in checkAction.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Hide private content behind the cover on initial setup, turn or choice-player changes, and undo/redo.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Write only the requested external lane report; leave Alley handoff-store recording to the coordinator to preserve owned-file boundaries.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "Strict zero-console-errors browser acceptance is unmet due to app-shell /favicon.ico 404; coordinator explicitly directed leaving index.html untouched and reporting the gap.",
+    "Independent lane/documentation review remains coordinator-owned; deterministic Alley review completed."
+  ],
+  "questions": []
+}
