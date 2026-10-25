@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Fallen Leaf (Token): Dry autumn oak/alder leaf resting on water/soil storing 1 Carbon -->
+  <rect width="160" height="120" rx="6" fill="#F5EDE0"/>
+  <!-- Subtle water/soil ripple -->
+  <ellipse cx="80" cy="70" rx="54" ry="26" fill="#E6DBC8" stroke="#8C6239" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- Curled dry autumn leaf -->
+  <path d="M36 78C42 42 84 26 124 36C116 74 82 92 36 78Z" fill="#C85A17" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Midrib & veins -->
+  <path d="M26 84L114 40" stroke="#5C3A21" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M58 68L52 52M78 58L70 42M96 49L90 36M64 65L82 72M84 55L102 60" stroke="#5C3A21" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

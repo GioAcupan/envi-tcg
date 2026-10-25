@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Heron: Great Blue Heron wading in shallow river reeds (TL4 Apex Consumer) -->
+  <rect width="160" height="120" rx="6" fill="#F4EFE2"/>
+  <!-- Shallow water ripples -->
+  <path d="M16 104H144M32 112H128" stroke="#0D7A8A" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Long wading legs -->
+  <path d="M72 74L68 104M84 74L88 104" stroke="#C6690A" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Plumed body & folded wing -->
+  <path d="M42 74C46 52 74 48 94 58C90 74 66 80 42 74Z" fill="#64748B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M52 66C64 58 78 58 86 64" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- S-curved neck, crest & dagger bill -->
+  <path d="M88 56C98 46 86 28 96 20" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M88 56C98 46 86 28 96 20" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Head & crest -->
+  <path d="M92 20L76 16L88 24Z" fill="#1B221B"/>
+  <circle cx="96" cy="20" r="6" fill="#E2E8F0" stroke="#1B221B" stroke-width="2"/>
+  <!-- Long yellow spear beak -->
+  <polygon points="101,17 132,21 101,24" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <circle cx="97" cy="19.5" r="1.8" fill="#1B221B"/>
+</svg>

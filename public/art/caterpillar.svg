@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Caterpillar: Segmented herbivorous larva chewing a riparian leaf -->
+  <rect width="160" height="120" rx="6" fill="#F8F3E6"/>
+  <!-- Twig & chewed leaf -->
+  <path d="M12 88L148 76" stroke="#5C4024" stroke-width="4" stroke-linecap="round"/>
+  <path d="M98 78C106 54 134 48 144 66C136 86 112 90 98 78Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="110" cy="64" r="6" fill="#F8F3E6" stroke="#1B221B" stroke-width="1.5"/>
+  <!-- Segmented caterpillar body -->
+  <circle cx="34" cy="74" r="11" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="50" cy="66" r="12" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="68" cy="62" r="12" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="86" cy="66" r="12" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="102" cy="68" r="11" fill="#C85A17" stroke="#1B221B" stroke-width="2"/>
+  <!-- Eye & antennae -->
+  <circle cx="106" cy="65" r="2.2" fill="#1B221B"/>
+  <path d="M108 58L114 48M102 58L104 48" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Zooplankton: Daphnia (water flea) & copepod in a microscope droplet -->
+  <rect width="160" height="120" rx="6" fill="#E8F4F6"/>
+  <circle cx="80" cy="60" r="46" fill="#CBE8EE" stroke="#0D7A8A" stroke-width="2" stroke-dasharray="4 4"/>
+  <!-- Branched swimming antennae -->
+  <path d="M68 32L48 18M48 18L38 22M48 18L46 10" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M78 30L94 14M94 14L104 18M94 14L96 8" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Translucent carapace body -->
+  <path d="M62 34C48 44 48 72 66 86L76 98L80 86C98 78 102 52 88 36C80 26 70 28 62 34Z" fill="#FDE68A" stroke="#1B221B" stroke-width="2.2"/>
+  <!-- Internal gut tract (fed on algae) -->
+  <path d="M72 40C68 52 68 66 74 78" stroke="#3A7537" stroke-width="5" stroke-linecap="round"/>
+  <!-- Compound eye -->
+  <circle cx="68" cy="36" r="4.5" fill="#1B221B"/>
+  <circle cx="66.5" cy="34.5" r="1.5" fill="#FFFFFF"/>
+</svg>

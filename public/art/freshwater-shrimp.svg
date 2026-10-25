@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Freshwater Shrimp: Amphipod/Gammarus shredder curving over a dead leaf fragment -->
+  <rect width="160" height="120" rx="6" fill="#EEF4F2"/>
+  <!-- Curled segmented crustacean carapace -->
+  <path d="M44 78C38 50 62 30 92 34C116 38 126 56 116 72C106 62 94 54 76 56C60 58 52 68 44 78Z" fill="#D9820B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Segment lines -->
+  <path d="M64 36L68 56M80 34L80 55M96 36L92 56M108 44L100 60" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Tail fan & walking legs -->
+  <path d="M44 78L30 84M44 78L36 92" stroke="#9E420B" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M72 58L68 78M82 58L80 78M92 60L92 80M102 64L104 82" stroke="#9E420B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Long antennae & eye -->
+  <path d="M118 66L142 58M116 70L140 72" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="112" cy="60" r="2.8" fill="#1B221B"/>
+</svg>

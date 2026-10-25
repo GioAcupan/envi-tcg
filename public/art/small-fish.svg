@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Small Fish: Freshwater minnow / sunfish darting through river current -->
+  <rect width="160" height="120" rx="6" fill="#E6F3F5"/>
+  <path d="M18 32C42 28 66 36 90 32M70 96C94 92 118 100 142 96" stroke="#0D7A8A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Dorsal & ventral fins -->
+  <path d="M64 46L82 32L90 46Z" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 74L80 86L88 74Z" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Tail fin -->
+  <path d="M44 60L22 42L28 60L22 78L44 60Z" fill="#D9820B" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Streamlined fish body -->
+  <path d="M40 60C54 40 98 40 126 60C98 80 54 80 40 60Z" fill="#EAB308" stroke="#1B221B" stroke-width="2.2"/>
+  <path d="M52 60H104" stroke="#B45309" stroke-width="2" stroke-dasharray="4 3"/>
+  <!-- Gill & eye -->
+  <path d="M102 50C98 56 98 64 102 70" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="112" cy="57" r="3.5" fill="#1B221B"/>
+  <circle cx="113" cy="56" r="1.2" fill="#FFFFFF"/>
+</svg>

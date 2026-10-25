@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Protected Adaptation: Botanical carapace shield & thorns guarding an organism from predators -->
+  <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
+  <!-- Carapace shield -->
+  <path d="M80 16L122 32V62C122 86 102 102 80 108C58 102 38 86 38 62V32L80 16Z" fill="#1F6E7A" stroke="#1B221B" stroke-width="2.4" stroke-linejoin="round"/>
+  <path d="M80 24L114 37V61C114 80 98 93 80 99C62 93 46 80 46 61V37L80 24Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Guarded leaf inside shield -->
+  <path d="M80 82C66 72 64 52 80 38C96 52 94 72 80 82Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M80 82V46" stroke="#FAF6EC" stroke-width="2" stroke-linecap="round"/>
+</svg>
