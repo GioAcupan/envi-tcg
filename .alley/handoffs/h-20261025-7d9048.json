@@ -1,0 +1,133 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-7d9048",
+  "kind": "report",
+  "created": "2026-10-25T12:27:25.587Z",
+  "summarized": true,
+  "parent": "h-20261025-d0ac8b",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "codex",
+    "model": "gpt-6.1-sol",
+    "session": "01a172f9-b613-72c3-bca0-07cdcf756292"
+  },
+  "to": null,
+  "repo": {
+    "base": "e52e83cdc7122fa878244b53eeb4700998a9e5f7",
+    "head": "a96910a5abc72e74d1090cacedaa11239eddc011",
+    "branch": "lane/sim-t1",
+    "worktree": ".worktrees/sim-t1",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-7d9048",
+      "commit": "04f56a602e32a501857f8fcbc2db1320c84c279f"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Scaffolded the React 18 simulator, verbatim seams, throwing stubs, default data and frozen acceptance tests. Typecheck and build pass, while 28 tests fail with not implemented and D7 fails on the intentionally empty array as approved by the coordinator. Independent wave review and later implementation lanes remain.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Committed all 22 owned scaffold and acceptance files; TASK.md remains untracked",
+      "evidence": [
+        {
+          "commit": "7eca4f11abc4e0f448003436f141b5cf10529ac7"
+        }
+      ]
+    },
+    {
+      "what": "Typecheck",
+      "evidence": [
+        {
+          "test": "Typecheck",
+          "result": "npm run typecheck: exit 0 (tsc --noEmit)"
+        }
+      ]
+    },
+    {
+      "what": "Production build with relative asset paths",
+      "evidence": [
+        {
+          "test": "Production build with relative asset paths",
+          "result": "npm run build: exit 0; Vite 8.3.5 built dist/index.html and assets successfully"
+        }
+      ]
+    },
+    {
+      "what": "Acceptance red state imports and runs cleanly",
+      "evidence": [
+        {
+          "test": "Acceptance red state imports and runs cleanly",
+          "result": "npm test: exit 1; 3 test files, 30 tests, 1 passed, 29 failed; 28 not implemented errors and 1 D7 empty-array assertion failure, explicitly approved in coordinator reply"
+        }
+      ]
+    },
+    {
+      "what": "Verbatim seam types and exact default card data",
+      "evidence": [
+        {
+          "test": "Verbatim seam types and exact default card data",
+          "result": "Python verification: spec 3.1/3.2 type blocks match verbatim; all 38 Appendix B rows match numbers, tags, canEat and copies; total copies 40; every installed dependency pinned exactly"
+        }
+      ]
+    },
+    {
+      "what": "Alley closeout scan",
+      "evidence": [
+        {
+          "test": "Alley closeout scan",
+          "result": "alley review: no policy changes, no modified pre-existing tests, no pending proposals, no uncommitted Seeds/Mulch changes; independent documentation review outstanding for coordinator"
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "30 acceptance tests across 3 files: 1 passed (default card data), 28 fail with not implemented, 1 expected D7 assertion failure; typecheck and build pass."
+        }
+      ]
+    },
+    {
+      "what": "Orchestrator fix-round commit",
+      "evidence": [
+        {
+          "commit": "a96910a"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Used current npm package versions pinned exactly, with React and React DOM constrained to 18.3.1.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Added a play helper that prepares scenarios through referee operations and normal play actions, keeping GameState construction entirely behind engine seams.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": [
+    {
+      "text": "Please perform independent wave and documentation review before merging; the deterministic Alley review does not perform it.",
+      "blocks": [],
+      "attemptsLeft": null,
+      "deadline": null,
+      "options": []
+    }
+  ]
+}
