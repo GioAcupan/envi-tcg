@@ -1,12 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Freshwater Snail: Ramshorn / Physa grazer snail scraping green biofilm off a river pebble -->
+  <!-- Freshwater Snail: Aquatic pond/ramshorn snail grazing green algae off a submerged stone -->
   <rect width="160" height="120" rx="6" fill="#E8F4F2"/>
-  <!-- Algae-coated river cobble -->
-  <path d="M20 98C28 76 132 76 140 98H20Z" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
-  <!-- Planorbid / conical freshwater shell -->
-  <path d="M44 66L92 32C108 42 110 66 92 76L44 66Z" fill="#9E420B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M62 54L74 72M78 43L90 68" stroke="#FDE68A" stroke-width="2" stroke-linecap="round"/>
-  <!-- Grazer foot & tentacles -->
-  <path d="M54 80H116C122 80 124 72 116 70H60L54 80Z" fill="#5C4024" stroke="#1B221B" stroke-width="2"/>
-  <path d="M118 71L132 60M114 71L126 56" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Submerged river cobble with green algal biofilm -->
+  <path d="M16 104C22 80 138 80 144 104H16Z" fill="#9AA89C" stroke="#1B221B" stroke-width="2"/>
+  <path d="M24 94C46 82 114 82 136 94C112 90 48 90 24 94Z" fill="#52944E"/>
+  <!-- Soft dark-speckled snail foot & head gliding right -->
+  <path d="M40 84C42 76 56 74 82 74H112C120 74 126 66 130 68C134 70 132 82 122 84H40Z" fill="#5C4024" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Aquatic tentacles & basal eye spots -->
+  <path d="M126 68C132 58 138 52 144 50M122 69C126 60 130 54 134 50" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="124" cy="71" r="1.8" fill="#1B221B"/>
+  <!-- Rounded whorled spiral shell (planorbid/lymnaeid spiral, no triangle!) -->
+  <path d="M98 68C104 46 88 26 66 28C44 30 32 48 38 66C42 78 58 82 76 80C90 78 96 74 98 68Z" fill="#B45309" stroke="#1B221B" stroke-width="2.2"/>
+  <!-- Inner spiral suture & growth bands -->
+  <path d="M86 68C90 52 80 38 66 38C52 38 44 50 48 62C52 70 64 72 72 66C78 60 76 50 68 50C62 50 58 55 62 60" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M52 36C58 42 60 50 56 58M76 32C78 40 76 48 70 54" stroke="#FDE68A" stroke-width="1.6" stroke-linecap="round"/>
 </svg>

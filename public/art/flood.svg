@@ -1,10 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Flood: Surging river crest sweeping organic matter downstream -->
-  <rect width="160" height="120" rx="6" fill="#E6F2F5"/>
-  <!-- Crested flood waves -->
-  <path d="M0 56C24 30 56 26 78 44C62 44 54 56 64 66C92 42 124 38 160 58V120H0V56Z" fill="#0D7A8A" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M0 82C32 66 64 92 96 76C124 62 144 78 160 74V120H0V82Z" fill="#1E5AA8" stroke="#1B221B" stroke-width="2"/>
-  <!-- Whitewater foam & swept leaf -->
-  <path d="M44 38C56 32 70 36 78 44M104 46C116 42 130 46 138 52" stroke="#FAF6EC" stroke-width="3" stroke-linecap="round"/>
-  <path d="M92 64C102 56 114 60 110 70C102 74 90 70 92 64Z" fill="#52944E" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Flood: Surging river wave overtopping the bank and submerging riparian trees & reeds -->
+  <rect width="160" height="120" rx="6" fill="#E3F0F4"/>
+  <!-- Slanted rain lines in sky -->
+  <path d="M22 14L14 28M52 12L44 26M84 14L76 28" stroke="#64748B" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Partially submerged leaning riparian tree & bending reeds -->
+  <path d="M98 40C96 26 110 18 124 20C138 18 148 28 144 40C140 48 104 50 98 40Z" fill="#3A7537" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M114 78L122 38M120 48L111 39M121 44L131 37" stroke="#5C4024" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 72C28 56 38 46 46 42M32 74C36 60 46 52 54 48" stroke="#2E6F40" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Rear surging flood wave -->
+  <path d="M0 54C26 32 62 30 86 50C72 50 66 58 72 64C98 46 130 44 160 62V120H0V54Z" fill="#0D7A8A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Whitewater foam cap on crest -->
+  <path d="M40 36C58 31 74 36 86 50C76 48 68 51 64 56C58 46 48 40 40 36Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Foreground churning river current -->
+  <path d="M0 80C34 66 68 92 104 76C128 66 146 74 160 78V120H0V80Z" fill="#1E5AA8" stroke="#1B221B" stroke-width="2"/>
+  <path d="M18 96C42 90 66 102 92 94M112 96C128 92 142 96 150 94" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+  <!-- Swept floating leaf in current -->
+  <path d="M62 78C70 72 82 74 80 82C72 86 60 84 62 78Z" fill="#68A864" stroke="#1B221B" stroke-width="1.6"/>
 </svg>

@@ -1,20 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
   <!-- Heron: Great Blue Heron wading in shallow river reeds (TL4 Apex Consumer) -->
   <rect width="160" height="120" rx="6" fill="#F4EFE2"/>
-  <!-- Shallow water ripples -->
-  <path d="M16 104H144M32 112H128" stroke="#0D7A8A" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- Long wading legs -->
-  <path d="M72 74L68 104M84 74L88 104" stroke="#C6690A" stroke-width="2.8" stroke-linecap="round"/>
-  <!-- Plumed body & folded wing -->
-  <path d="M42 74C46 52 74 48 94 58C90 74 66 80 42 74Z" fill="#64748B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M52 66C64 58 78 58 86 64" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
-  <!-- S-curved neck, crest & dagger bill -->
-  <path d="M88 56C98 46 86 28 96 20" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
-  <path d="M88 56C98 46 86 28 96 20" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
-  <!-- Head & crest -->
-  <path d="M92 20L76 16L88 24Z" fill="#1B221B"/>
-  <circle cx="96" cy="20" r="6" fill="#E2E8F0" stroke="#1B221B" stroke-width="2"/>
-  <!-- Long yellow spear beak -->
-  <polygon points="101,17 132,21 101,24" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
-  <circle cx="97" cy="19.5" r="1.8" fill="#1B221B"/>
+  <!-- Background marsh reeds on left -->
+  <path d="M26 104C24 84 20 64 16 48M32 104C32 82 36 64 40 50" stroke="#3A7537" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="18" cy="56" rx="2.5" ry="9" transform="rotate(-12 18 56)" fill="#5C4024"/>
+  <!-- Shallow water surface & ripples -->
+  <path d="M12 104H148M28 111H132" stroke="#0D7A8A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Long wading legs with knee joints -->
+  <path d="M72 72L68 88L66 104M82 72L88 87L86 104" stroke="#C6690A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Unified heron body, S-curved neck & head silhouette -->
+  <path d="M38 72C46 54 66 48 84 50C90 45 90 36 87 27C84 19 88 12 98 12C105 12 108 16 106 22C103 25 97 24 97 30C97 38 105 48 100 60C96 69 84 74 68 74C54 74 46 75 38 72Z" fill="#94A3B8" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Dark occipital crest plume -->
+  <path d="M92 13C82 11 74 14 70 19C78 17 85 17 91 18Z" fill="#1B221B"/>
+  <!-- White crown & neck stripe -->
+  <path d="M91 16C95 13 102 13 105 17C102 20 95 20 91 16Z" fill="#FAF6EC"/>
+  <path d="M93 26C91 34 93 43 95 50" stroke="#FAF6EC" stroke-width="2" stroke-linecap="round"/>
+  <!-- Folded slate-blue wing plumage -->
+  <path d="M44 71C50 56 70 52 86 56C82 68 64 73 44 71Z" fill="#475569" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M54 63C64 59 74 59 80 63M58 68C66 65 74 65 78 68" stroke="#CBD5E1" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Long dagger-like yellow spear bill & fierce eye -->
+  <polygon points="105,15 136,19 105,22" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <line x1="105" y1="18.5" x2="128" y2="19" stroke="#1B221B" stroke-width="1.2"/>
+  <circle cx="100" cy="17" r="1.8" fill="#1B221B"/>
 </svg>

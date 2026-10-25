@@ -1,16 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Decomposer Fungus: Saprophytic mushrooms & branching white mycelium on decaying wood -->
+  <!-- Decomposer Fungus: Woodland saprophytic mushrooms & branching white mycelium in rotting log -->
   <rect width="160" height="120" rx="6" fill="#FCF0F5"/>
-  <!-- Decaying log & mycelial hyphae -->
-  <rect x="16" y="88" width="128" height="22" rx="6" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
-  <path d="M56 90L40 104M72 90L76 106M98 90L116 104" stroke="#FAF6EC" stroke-width="2" stroke-linecap="round"/>
-  <!-- Fungal stalks -->
-  <path d="M60 88V52H72V88M98 88V62H108V88" fill="#FAF6EC" stroke="#1B221B" stroke-width="2"/>
-  <!-- Mushroom caps -->
-  <path d="M36 54C38 28 94 28 96 54H36Z" fill="#A83868" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M82 64C84 44 122 44 124 64H82Z" fill="#C25283" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <!-- Spore dots -->
-  <circle cx="58" cy="40" r="3" fill="#FAF6EC"/>
-  <circle cx="74" cy="44" r="2.5" fill="#FAF6EC"/>
-  <circle cx="104" cy="54" r="2.5" fill="#FAF6EC"/>
+  <!-- Decaying log cross-section with moss patches -->
+  <rect x="14" y="84" width="132" height="26" rx="7" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
+  <path d="M20 84C28 79 40 79 48 84H20ZM114 84C122 79 132 79 140 84H114Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="1.6"/>
+  <!-- Branching white mycelial hyphae network inside wood -->
+  <g stroke="#FAF6EC" stroke-width="1.8" stroke-linecap="round">
+    <path d="M62 86L48 96L34 98M48 96L54 104"/>
+    <path d="M66 86L72 98L84 104M72 98L64 105"/>
+    <path d="M100 86L94 96L104 104M104 86L116 96L128 102"/>
+  </g>
+  <!-- Tall & secondary mushroom stalks -->
+  <path d="M56 84C57 68 58 54 58 44H70C70 54 71 68 72 84H56Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="2"/>
+  <path d="M96 84C97 72 98 62 98 54H108C108 62 109 72 110 84H96Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="2"/>
+  <!-- Gill undersides -->
+  <ellipse cx="64" cy="46" rx="28" ry="6" fill="#F3E5AB" stroke="#1B221B" stroke-width="1.8"/>
+  <ellipse cx="103" cy="56" rx="21" ry="5" fill="#F3E5AB" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Domed spore-rose mushroom caps -->
+  <path d="M36 46C36 22 92 22 92 46C76 43 52 43 36 46Z" fill="#A83868" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M82 56C82 36 124 36 124 56C112 53 94 53 82 56Z" fill="#C25283" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Interior cap spots (well inside cap outlines) -->
+  <ellipse cx="54" cy="35" rx="4" ry="2.5" fill="#FAF6EC"/>
+  <ellipse cx="68" cy="31" rx="3.5" ry="2.2" fill="#FAF6EC"/>
+  <ellipse cx="77" cy="38" rx="3" ry="2" fill="#FAF6EC"/>
+  <ellipse cx="98" cy="46" rx="3.2" ry="2" fill="#FAF6EC"/>
+  <ellipse cx="110" cy="48" rx="2.8" ry="1.8" fill="#FAF6EC"/>
 </svg>

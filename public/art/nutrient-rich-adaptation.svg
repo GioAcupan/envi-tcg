@@ -1,13 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Nutrient-Rich Adaptation: Golden ⭐ producer leaf enriched with Carbon (C) & Nitrogen (N) -->
+  <!-- Nutrient-Rich Adaptation: Botanical leaf emblem flanked by C hexagon, N diamond & gold star -->
   <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
-  <circle cx="80" cy="60" r="44" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2"/>
-  <!-- Lush producer leaf -->
-  <path d="M46 88C44 50 76 24 114 26C112 64 84 90 46 88Z" fill="#3A7537" stroke="#1B221B" stroke-width="2.2"/>
-  <path d="M46 88L98 40" stroke="#FAF6EC" stroke-width="2.2" stroke-linecap="round"/>
-  <!-- C hexagon & N diamond badges -->
-  <polygon points="52,32 64,39 64,53 52,60 40,53 40,39" fill="#2E3D30" stroke="#1B221B" stroke-width="2"/>
-  <polygon points="108,64 122,78 108,92 94,78" fill="#1E5AA8" stroke="#1B221B" stroke-width="2"/>
-  <!-- Special Gold Star -->
-  <polygon points="114,16 118,26 128,26 120,32 123,42 114,36 105,42 108,32 100,26 110,26" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <circle cx="80" cy="62" r="45" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2.2"/>
+  <circle cx="80" cy="62" r="40" stroke="#144B54" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Central upright botanical leaf -->
+  <path d="M80 94C60 80 58 52 80 34C102 52 100 80 80 94Z" fill="#3A7537" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M80 92V42M80 74L70 64M80 62L90 52" stroke="#FAF6EC" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Left Carbon (C) Hexagon Badge -->
+  <polygon points="48,54 59,60 59,73 48,79 37,73 37,60" fill="#2E3D30" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M51 62C46 60 43 63 43 66.5C43 70 46 73 51 71" stroke="#FAF6EC" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Right Nitrogen (N) Diamond Badge -->
+  <polygon points="112,53 125,66 112,79 99,66" fill="#1E5AA8" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M108 71V61L116 71V61" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Apex Gold Adaptation Star -->
+  <polygon points="80,12 83.5,21 93,21 85.5,26.5 88.5,35.5 80,30 71.5,35.5 74.5,26.5 67,21 76.5,21" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
 </svg>

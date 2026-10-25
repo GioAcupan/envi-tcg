@@ -1,17 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Strong Rainfall: Heavy storm cloud, driving rain, and phosphorus (P) watershed runoff -->
+  <!-- Strong Rainfall: Heavy storm clouds, driving rain sheets, splash crowns & watershed runoff -->
   <rect width="160" height="120" rx="6" fill="#EFF7EE"/>
-  <!-- Storm cloud -->
-  <path d="M40 48C30 48 24 40 26 32C28 22 38 18 46 22C52 12 68 10 78 18C88 10 106 12 112 24C124 24 132 32 130 42C128 48 120 48 112 48H40Z" fill="#64748B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <!-- Slanting rain streaks -->
-  <g stroke="#1E5AA8" stroke-width="2.5" stroke-linecap="round">
-    <line x1="46" y1="56" x2="36" y2="82"/>
-    <line x1="68" y1="56" x2="58" y2="82"/>
-    <line x1="90" y1="56" x2="80" y2="82"/>
-    <line x1="112" y1="56" x2="102" y2="82"/>
+  <!-- Rear & front dark storm clouds -->
+  <path d="M56 42C48 42 42 36 44 28C46 20 56 16 64 20C70 10 86 8 96 16C106 10 122 12 126 22C136 22 142 30 140 38C138 42 132 42 124 42H56Z" fill="#475569" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M26 48C16 48 12 40 14 32C16 22 26 18 34 22C40 12 56 10 66 18C76 12 92 14 98 24C108 24 116 32 114 42C112 48 104 48 96 48H26Z" fill="#64748B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Driving rain sheets -->
+  <g stroke="#1E5AA8" stroke-width="2.2" stroke-linecap="round">
+    <line x1="34" y1="54" x2="22" y2="82"/>
+    <line x1="52" y1="54" x2="40" y2="84"/>
+    <line x1="70" y1="54" x2="58" y2="86"/>
+    <line x1="88" y1="54" x2="76" y2="84"/>
+    <line x1="106" y1="50" x2="94" y2="82"/>
+    <line x1="124" y1="48" x2="112" y2="80"/>
   </g>
-  <!-- Runoff wave & +2 P mineral triangles -->
-  <path d="M0 94C36 88 72 100 108 94C132 90 148 94 160 96V120H0V94Z" fill="#0D7A8A" stroke="#1B221B" stroke-width="2"/>
-  <polygon points="56,84 68,106 44,106" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
-  <polygon points="104,84 116,106 92,106" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Sloped watershed bank on left & rising river below -->
+  <path d="M0 78C26 80 48 88 64 98H0V78Z" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
+  <path d="M0 94C36 86 76 100 116 90C136 86 150 90 160 94V120H0V94Z" fill="#0D7A8A" stroke="#1B221B" stroke-width="2"/>
+  <!-- Raindrop splash crowns & runoff ripples -->
+  <path d="M54 89L50 83M58 89L62 83M90 87L86 81M94 87L98 81M112 85L108 79M116 85L120 79" stroke="#FAF6EC" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M24 106H72M92 104H142" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
 </svg>

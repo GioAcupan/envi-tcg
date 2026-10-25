@@ -1,18 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
   <!-- Large Fish: Predatory river bass / trout (TL4 Tertiary Consumer) -->
   <rect width="160" height="120" rx="6" fill="#E3F0F4"/>
-  <!-- Spiny dorsal & pelvic fins -->
-  <path d="M52 38L64 22L76 30L88 22L102 38Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M62 82L78 98L92 82Z" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
-  <!-- Broad caudal tail -->
-  <path d="M34 60L10 34L18 60L10 86L34 60Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
-  <!-- Muscular body -->
-  <path d="M30 60C48 30 108 30 142 56L128 62L140 68C108 90 48 90 30 60Z" fill="#52944E" stroke="#1B221B" stroke-width="2.4" stroke-linejoin="round"/>
-  <!-- Pale belly & lateral stripe -->
-  <path d="M40 66C66 78 102 78 128 66" stroke="#FAF6EC" stroke-width="5" stroke-linecap="round"/>
-  <path d="M38 56H116" stroke="#1B221B" stroke-width="2.5" stroke-dasharray="6 4"/>
-  <!-- Gill cover & fierce eye -->
-  <path d="M108 44C102 54 102 66 108 74" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
-  <circle cx="122" cy="50" r="4" fill="#FDE68A" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="123" cy="50" r="1.8" fill="#1B221B"/>
+  <!-- Water current lines -->
+  <path d="M16 22H52M108 102H144" stroke="#0D7A8A" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Spiny anterior & soft posterior dorsal fins -->
+  <path d="M54 42L62 24L72 30L80 23L90 36L104 42Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Pelvic & anal fins -->
+  <path d="M52 76L44 92L66 80ZM84 80L80 96L98 80Z" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Broad forked caudal tail fin with fin rays -->
+  <path d="M36 60L12 34L20 60L12 86L36 60Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M32 58L16 42M32 62L16 78" stroke="#1B221B" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Streamlined muscular fusiform body -->
+  <path d="M32 60C48 34 106 32 142 56L130 61L140 66C106 88 48 86 32 60Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Cream belly shading fitted cleanly to lower contour -->
+  <path d="M35 63C54 74 102 74 134 65C104 84 52 82 35 63Z" fill="#FAF6EC" stroke="#1B221B" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- Dark lateral band & dorsal speckles -->
+  <path d="M38 58C68 54 100 54 124 58" stroke="#233127" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 4"/>
+  <g fill="#233127">
+    <circle cx="64" cy="48" r="1.8"/>
+    <circle cx="76" cy="46" r="2"/>
+    <circle cx="88" cy="48" r="1.8"/>
+    <circle cx="100" cy="49" r="1.6"/>
+  </g>
+  <!-- Gill operculum, pectoral fin & predator eye -->
+  <path d="M110 43C103 53 103 65 110 74" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M104 65L90 73L94 61Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <circle cx="123" cy="51" r="4" fill="#FDE68A" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="124" cy="51" r="1.8" fill="#1B221B"/>
 </svg>

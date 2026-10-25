@@ -1,17 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
-  <!-- Grasshopper: Meadow grasshopper with powerful jumping hind legs -->
+  <!-- Grasshopper: Riparian meadow grasshopper perched on a sedge blade -->
   <rect width="160" height="120" rx="6" fill="#F7F2E4"/>
-  <path d="M16 98L144 86" stroke="#68A864" stroke-width="3" stroke-linecap="round"/>
-  <!-- Hind jumping leg -->
-  <path d="M62 72L42 36L28 92" stroke="#3A7537" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M62 72L42 36L28 92" stroke="#1B221B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Abdomen, forewing & thorax -->
-  <ellipse cx="64" cy="70" rx="32" ry="11" transform="rotate(-10 64 70)" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
-  <path d="M84 56H104V76H84V56Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
-  <!-- Head & antennae -->
-  <ellipse cx="112" cy="66" rx="10" ry="13" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
-  <circle cx="115" cy="62" r="3" fill="#1B221B"/>
-  <path d="M118 55L138 38M114 54L128 34" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
-  <!-- Front legs -->
-  <path d="M92 76L86 92M106 76L114 90" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Angled sedge blade perch -->
+  <path d="M12 100C56 94 104 88 148 82" stroke="#3A7537" stroke-width="4" stroke-linecap="round"/>
+  <!-- Tapering segmented abdomen beneath wing -->
+  <path d="M32 68C44 62 68 60 88 64C88 74 62 78 36 76C31 75 29 71 32 68Z" fill="#84CC16" stroke="#1B221B" stroke-width="2"/>
+  <path d="M46 65V76M58 63V76M70 63V75" stroke="#3A7537" stroke-width="1.5"/>
+  <!-- Long folded forewing (tegmen) -->
+  <path d="M26 62C48 48 76 46 96 54C88 66 56 70 28 68C24 67 23 64 26 62Z" fill="#52944E" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M36 62C56 55 74 54 88 57" stroke="#BEF264" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Saddle-shaped pronotum (thoracic shield) & head (unified, clean overlap) -->
+  <path d="M88 50C94 46 104 46 108 52V70C102 72 92 70 88 66V50Z" fill="#3A7537" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M104 48C114 46 122 52 120 64C119 72 112 74 106 70V48Z" fill="#68A864" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Compound eye & long antennae -->
+  <ellipse cx="114" cy="56" rx="3.2" ry="4.5" transform="rotate(-15 114 56)" fill="#1B221B"/>
+  <ellipse cx="115" cy="54.5" rx="1" ry="1.5" fill="#FFFFFF"/>
+  <path d="M117 49C126 38 136 32 146 28M113 48C120 36 128 28 136 24" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Front & middle walking legs gripping stem -->
+  <path d="M106 70L112 80L108 87M94 69L92 80L86 90" stroke="#1B221B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Powerful hind jumping leg (muscular femur anchored at abdomen + spined tibia to stem) -->
+  <path d="M78 66C66 52 54 34 46 32C40 31 38 36 44 46C52 58 64 68 74 70Z" fill="#68A864" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M52 40L58 48M60 48L66 56" stroke="#2E6F40" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M43 35L32 94L42 95" stroke="#3A7537" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M43 35L32 94L42 95" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
