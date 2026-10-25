@@ -1,0 +1,34 @@
+/* Ruleset editor. Plain layout only; the skin wave restyles these classes. */
+.editor { display: flex; flex-direction: column; gap: 0.75rem; }
+.editor h3 { margin: 1rem 0 0.25rem; }
+.editor-banner { margin: 0; padding: 0.5rem 0.75rem; background: #fff8dc; border: 1px solid #e0c86a; border-radius: 4px; }
+.editor-storage-warning { margin: 0; padding: 0.5rem 0.75rem; background: #fde8e8; border: 1px solid #d99; border-radius: 4px; }
+.editor-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+.editor-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.editor-message { margin: 0; padding: 0.5rem 0.75rem; border-radius: 4px; }
+.editor-message-ok { background: #eef7ee; border: 1px solid #9c9; }
+.editor-message-error { background: #fde8e8; border: 1px solid #d99; }
+.editor-deck { margin: 0; font-weight: 600; }
+.editor-hint { font-weight: normal; color: #6b5300; }
+
+.editor-field { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.9rem; }
+.editor-field input, .editor-field textarea { min-width: 0; }
+.editor-check { display: flex; align-items: center; gap: 0.4rem; }
+
+.editor-params { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-start; }
+.editor-params > .editor-field { width: 11rem; }
+.editor-group { display: flex; flex-wrap: wrap; gap: 0.5rem; border: 1px solid #ccc; border-radius: 4px; padding: 0.5rem 0.75rem; }
+.editor-group .editor-field { width: 6rem; }
+.editor-group legend { padding: 0 0.25rem; font-weight: 600; }
+
+.editor-table-wrap { overflow-x: auto; max-width: 100%; border: 1px solid #ccc; border-radius: 4px; }
+.editor-table { border-collapse: collapse; font-size: 0.85rem; }
+.editor-table th, .editor-table td { border-bottom: 1px solid #e3e3e3; padding: 0.3rem 0.4rem; text-align: left; vertical-align: top; }
+.editor-table th { position: sticky; top: 0; background: #f5f5f5; white-space: nowrap; }
+.editor-table input, .editor-table textarea { width: 100%; box-sizing: border-box; }
+.editor-table input[type='number'] { width: 4.5rem; }
+.editor-table td:nth-child(1) input { width: 10rem; }
+.editor-table td:nth-child(3) input { width: 7rem; }
+.editor-table td:nth-child(10) input, .editor-table td:nth-child(11) input { width: 9rem; }
+.editor-table textarea { width: 22rem; min-width: 14rem; }
+.editor-kind { white-space: nowrap; color: #555; }
