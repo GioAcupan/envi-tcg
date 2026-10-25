@@ -93,7 +93,7 @@
 /* === Night Cycle Overrides (Projector-Safe Moonlight Wash) === */
 [data-cycle="night"],
 .game-shell--night,
-body:has([data-cycle="night"]) {
+body:has(.app-game:not([hidden]) [data-cycle="night"]) {
   --bg-canvas: #DCE3EC;          /* Cool nocturnal field-station wash */
   --bg-board: #CFD8E4;
   --bg-zone-player: #C5D0DF;
@@ -147,25 +147,35 @@ img {
 }
 
 /* App Shell Header & Tabs (rendered by src/App.tsx) */
-main {
+/* The game screen fills the viewport itself (see src/ui/game/game.css); the other screens are ordinary pages. */
+.app-page {
   max-width: 1880px;
   margin: 0 auto;
-  padding: 0.75rem 1.25rem 2rem;
+  padding: 0.5rem 1rem 2rem;
 }
 
-main > h1 {
+.app-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-ink);
+}
+
+.app-bar h1 {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  margin: 0 0 0.5rem 0;
-  color: var(--ink-primary);
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-main > h1::before {
+.app-bar h1::before {
   content: "";
   display: inline-block;
   width: 22px;
@@ -175,17 +185,18 @@ main > h1::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E6F40' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z' fill='%23DCFCE7'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E");
 }
 
-main > nav[aria-label="Screens"] {
+.app-bar nav {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 2px solid var(--border-ink);
 }
 
-main > nav[aria-label="Screens"] button {
-  padding: 0.45rem 1rem;
+.app-bar nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1rem;
+  text-decoration: none;
   font-family: var(--font-sans);
   font-size: var(--text-base);
   font-weight: 700;
@@ -197,17 +208,28 @@ main > nav[aria-label="Screens"] button {
   transition: transform 120ms ease, background-color 150ms ease, box-shadow 120ms ease;
 }
 
-main > nav[aria-label="Screens"] button:hover {
+.app-bar nav a:hover {
   background: var(--bg-board);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-card-hover);
 }
 
-main > nav[aria-label="Screens"] button[aria-pressed="true"] {
+.app-bar nav a[aria-current="page"] {
   background: var(--bg-header);
   color: var(--ink-on-dark);
   border-color: var(--ink-primary);
   box-shadow: 2px 3px 0px var(--arch-organism-header);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* === Wave 3 Motion & Micro-Animations === */

@@ -1,243 +1,257 @@
-import { useEffect, useRef, useState } from 'react';
-import type { Action, Nutrient, Pool, Ruleset } from '../../engine';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { checkAction } from '../../engine';
+import type { Action, CardInstance, GameState, LogEntry, Nutrient, PlayerState, Pool, Ruleset } from '../../engine';
 import { useGame } from '../useGame';
-import { Card } from '../common/Card';
 import { ActionButton } from '../common/ActionButton';
+import { art, defOf, isSideways } from '../common/Card';
+import { Sheet } from '../common/Sheet';
+import { BoardCard, type Mark } from './BoardCard';
+import { CardCloseup } from './CardCloseup';
 import { RefereePanel } from './RefereePanel';
+import { TARGET_VERB, targetedAction, targetPrompt, validTargets, type TargetKind } from './actions';
 import './game.css';
 
-const NUTRIENT_KEYS: readonly Nutrient[] = ['C', 'N', 'P', 'O2'];
+const NUTRIENTS: readonly Nutrient[] = ['C', 'N', 'P', 'O2'];
+type Drawer = 'match' | 'log' | 'referee';
+const DRAWER_TABS: [Drawer, string][] = [['match', 'Match'], ['log', 'Log'], ['referee', 'Referee']];
 
-/** Hotseat board. The hand and private controls mount only after the current player accepts the device. */
-export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
-  const game = useGame(ruleset);
-  const { state } = game;
-  const baseUrl = import.meta.env.BASE_URL;
-  const [revealedTurn, setRevealedTurn] = useState('');
-  const [selection, setSelection] = useState<{ turn: string; source: string; target: string; pickingTarget: boolean }>({ turn: '', source: '', target: '', pickingTarget: false });
-  const [seed, setSeed] = useState('');
-  const [dismissedError, setDismissedError] = useState<GameStateError>(null);
+/** Draw entries name the drawn card, which would leak the hand in hotseat play. */
+const logText = (entry: LogEntry) =>
+  entry.text.includes(' draws ') || entry.text.includes(' replaces an opening ') ? 'Private draw (card identity hidden)' : entry.text;
 
-  // Track nutrient pool changes to trigger @keyframes nutrient-tick on changed pills
-  const prevPoolsRef = useRef<[Pool, Pool]>([
-    { ...state.players[0].pool },
-    { ...state.players[1].pool },
-  ]);
-  const [poolTicks, setPoolTicks] = useState<Record<string, number>>({});
+/** Counts changes per `${player}-${nutrient}` so the HUD can replay its tick animation. */
+function usePoolTicks(players: GameState['players']) {
+  const previous = useRef<[Pool, Pool]>([{ ...players[0].pool }, { ...players[1].pool }]);
+  const [ticks, setTicks] = useState<Record<string, number>>({});
   useEffect(() => {
-    const updates: Record<string, number> = {};
-    for (const p of state.players) {
-      for (const n of NUTRIENT_KEYS) {
-        if (prevPoolsRef.current[p.id][n] !== p.pool[n]) {
-          updates[`${p.id}-${n}`] = (poolTicks[`${p.id}-${n}`] ?? 0) + 1;
-        }
-      }
-    }
-    prevPoolsRef.current = [
-      { ...state.players[0].pool },
-      { ...state.players[1].pool },
-    ];
-    if (Object.keys(updates).length > 0) {
-      setPoolTicks(prev => ({ ...prev, ...updates }));
-    }
-  }, [state.players]);
+    const changed = players.flatMap(p => NUTRIENTS.filter(n => previous.current[p.id][n] !== p.pool[n]).map(n => `${p.id}-${n}`));
+    previous.current = [{ ...players[0].pool }, { ...players[1].pool }];
+    if (changed.length) setTicks(t => ({ ...t, ...Object.fromEntries(changed.map(k => [k, (t[k] ?? 0) + 1])) }));
+  }, [players]);
+  return ticks;
+}
 
-  const player = state.pendingChoice?.player ?? state.activePlayer;
-  const turn = `${state.round}-${state.activePlayer}-${player}`;
-  const covered = revealedTurn !== turn && state.phase !== 'gameOver';
-  const source = selection.turn === turn ? state.cards[selection.source] : undefined;
-  const sourceDef = state.ruleset.cards.find(d => d.id === source?.defId);
-  const target = selection.turn === turn && state.cards[selection.target] ? selection.target : '';
-  const cards = Object.values(state.cards);
-  const targets = cards.filter(c => c.zone === 'field' || c.zone === 'center');
-  const select = (uid: string) => setSelection(s => s.turn === turn && s.pickingTarget
-    ? { ...s, target: uid, pickingTarget: false }
-    : { turn, source: uid, target: '', pickingTarget: false });
-  const dispatch = (action: Action) => { setDismissedError(null); game.dispatch(action); };
-  const button = (action: Action, label: string) => <ActionButton state={state} action={action} dispatch={dispatch}>{label}</ActionButton>;
-  const face = (uid: string) => <Card key={uid} card={state.cards[uid]} state={state} selected={source?.uid === uid || target === uid} onSelect={() => select(uid)} />;
+/** Slim per-player status strip: AP pips, pools with win targets, pile counts. */
+function Hud({ state, p, ticks, opponent }: { state: GameState; p: PlayerState; ticks: Record<string, number>; opponent?: boolean }) {
+  const params = state.ruleset.params;
+  return <div className={`hud${p.id === state.activePlayer ? ' hud--active' : ''}`} aria-label={`${p.name} status`}>
+    <span className="hud__who">
+      <strong>{p.name}</strong>
+      <span className="hud__ap" role="img" aria-label={`${p.ap} AP left`}>
+        {Array.from({ length: Math.max(params.apPerTurn, p.ap) }, (_, i) => <span key={i} className={i < p.ap ? 'on' : ''} />)}
+      </span>
+    </span>
+    <span className="hud__pools">{NUTRIENTS.map(n => {
+      const target = n === 'O2' ? undefined : params.winThreshold[n];
+      const tick = ticks[`${p.id}-${n}`] ?? 0;
+      const label = n === 'O2' ? 'O₂' : n;
+      return <span key={`${n}-${tick}`} className={`pool pool--${n}${tick ? ' pool--tick' : ''}`}
+        title={target === undefined ? `${label} ${p.pool[n]}` : `${label} ${p.pool[n]} of ${target} to win`}
+        style={target === undefined ? undefined : { '--pct': `${Math.min(100, (p.pool[n] / (target || 1)) * 100)}%` } as CSSProperties}>
+        <img src={art(n.toLowerCase())} alt={label} /><b>{p.pool[n]}</b>{target !== undefined && <small>/{target}</small>}
+      </span>;
+    })}</span>
+    <span className="hud__piles">
+      <span title="Deck"><img src={art('card-back')} alt="Deck" />{p.deck.length}</span>
+      {opponent && <span title="Hand">✋{p.hand.length}</span>}
+      <span title="Discard">🗑{p.discard.length}</span>
+    </span>
+  </div>;
+}
 
-  const maxAp = state.ruleset.params.apPerTurn;
-  const activeAp = state.players[state.activePlayer].ap;
-
-  return <section className={`game-shell game-shell--${state.isDay ? 'day' : 'night'}`} data-cycle={state.isDay ? 'day' : 'night'} aria-label="Match">
-    <header className="game-status status-bar">
-      <div className="status-bar__cycle">
-        <img
-          key={state.isDay ? 'day' : 'night'}
-          className="cycle-emblem"
-          src={`${baseUrl}art/${state.isDay ? 'day' : 'night'}.svg`}
-          alt={state.isDay ? 'Day cycle' : 'Night cycle'}
-        />
-        <div className="status-bar__titles">
-          <div className="status-bar__round-row">
-            <h2>Round {state.round} · {state.isDay ? 'Day' : 'Night'}</h2>
-            <span className={`cycle-pill cycle-pill--${state.isDay ? 'day' : 'night'}`}>
-              <img src={`${baseUrl}art/${state.isDay ? 'day' : 'night'}.svg`} alt="" className="cycle-pill__icon" />
-              {state.isDay ? 'DAY — Photosynthesis Active' : 'NIGHT — Respiration Only'}
-            </span>
-          </div>
-          <p className="status-bar__turn-meta">
-            <span>{state.players[player].name}'s {state.pendingChoice ? 'choice' : 'turn'} · {activeAp} AP left</span>
-            <span className="ap-pips" aria-hidden="true">
-              {Array.from({ length: Math.max(maxAp, activeAp) }, (_, i) => (
-                <span key={i} className={`ap-pip${i < activeAp ? ' ap-pip--filled' : ''}`} />
-              ))}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {!!state.modifiers.length && (
-        <div className="status-bar__modifiers" aria-label="Queued environmental modifiers">
-          {state.modifiers.map((m, i) => (
-            <span key={`${m.id}-${i}`} className="modifier-badge">
-              <svg className="ui-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="9 1 3 9 8 9 7 15 13 7 8 7 9 1" /></svg>
-              <span>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}: {m.effect} ({m.appliesTo})</span>
-            </span>
-          ))}
-        </div>
-      )}
-
-      <div className="game-toolbar">
-        <button type="button" disabled={!game.canUndo} title={!state.ruleset.params.undoEnabled ? 'Undo is disabled in this ruleset' : !game.canUndo ? 'No earlier action' : 'Restore previous action'} onClick={() => { game.undo(); setRevealedTurn(''); }}>Undo</button>
-        <button type="button" disabled={!game.canRedo} title={!state.ruleset.params.undoEnabled ? 'Undo is disabled in this ruleset' : !game.canRedo ? 'No action to redo' : 'Restore next action'} onClick={() => { game.redo(); setRevealedTurn(''); }}>Redo</button>
-        {!covered && button({ type: 'endTurn', player: state.activePlayer }, 'End turn')}
-        <details className="new-game"><summary>New game</summary><div className="new-game__popover"><p>Starts a fresh match using {ruleset.name}. The current match will be replaced.</p><label>Seed (optional)<input type="number" value={seed} onChange={e => setSeed(e.target.value)} /></label><button type="button" onClick={e => { e.currentTarget.closest('details')?.removeAttribute('open'); game.newGame(seed === '' ? undefined : Number(seed)); setRevealedTurn(''); setSelection({ turn: '', source: '', target: '', pickingTarget: false }); }}>Start new game</button></div></details>
-      </div>
-    </header>
-
-    <div className="player-statuses">{state.players.map(p => <section className={`player-status${p.id === state.activePlayer ? ' player-status--active' : ''}`} key={p.id} aria-label={`${p.name} resources`}>
-      <div className="player-status__header">
-        <h3>
-          {p.name} {p.id === state.activePlayer && <span className="active-turn-badge">· Active</span>} · <span className="ap-counter">{p.ap} AP</span>
-        </h3>
-        <p className="player-zone-counts">
-          <span className="deck-pill">
-            <img src={`${baseUrl}art/card-back.svg`} alt="" className="deck-pill__icon" />
-            Deck {p.deck.length}
-          </span>
-          <span>· Hand {p.hand.length}</span>
-          <span>· Discard {p.discard.length}</span>
-        </p>
-      </div>
-      <div className="pool-bar">{NUTRIENT_KEYS.map(n => {
-        const tickCount = poolTicks[`${p.id}-${n}`] ?? 0;
-        return (
-          <div
-            key={`${n}-${tickCount}`}
-            className={`nutrient nutrient--${n}${tickCount > 0 ? ' nutrient--tick' : ''}`}
-          >
-            <div className="nutrient__top">
-              <img src={`${baseUrl}art/${n.toLowerCase()}.svg`} alt="" className="nutrient__icon" />
-              <strong className="nutrient__value">{n === 'O2' ? 'O₂' : n}: {p.pool[n]}</strong>
-              {n !== 'O2' && <span className="nutrient__threshold"> / {state.ruleset.params.winThreshold[n]}</span>}
-            </div>
-            {n !== 'O2' && (
-              <progress
-                aria-label={`${p.name} ${n} win progress`}
-                value={p.pool[n]}
-                max={state.ruleset.params.winThreshold[n] || 1}
-              />
-            )}
-          </div>
-        );
-      })}</div>
-    </section>)}</div>
-
-    {state.phase === 'gameOver' && <div role="status" className="game-result"><h2>{state.winner === 'draw' ? 'Draw — both players reached the threshold' : `${state.players[state.winner as 0 | 1].name} wins!`}</h2><p>The match is complete. Review the log, undo, or start a new game.</p></div>}
-
-    {covered ? <div className="pass-device pass-device-overlay" role="dialog" aria-modal="true" aria-labelledby="pass-title">
-      <img src={`${baseUrl}art/card-back.svg`} alt="" className="pass-device__emblem" />
-      <h2 id="pass-title">Pass the device to {state.players[player].name}</h2>
-      <p>Hands are hidden during hotseat transitions. Continue when {state.players[player].name} has the screen.</p>
-      <button type="button" autoFocus onClick={() => setRevealedTurn(turn)}>I'm ready — reveal my hand</button>
-    </div> : <>
-      {state.lastError && dismissedError !== state && <div className="toast" role="alert"><span>{state.lastError}</span><button type="button" onClick={() => setDismissedError(state)}>Dismiss</button></div>}
-      {state.pendingChoice && <section className="pending-choice choice-banner" aria-label="Pending choice"><h3>{state.players[state.pendingChoice.player].name}: {state.pendingChoice.prompt}</h3><div className="choice-banner__options">{state.pendingChoice.options.length ? state.pendingChoice.options.map(uid => <span key={uid}>{button({ type: 'choose', player: state.pendingChoice!.player, uid }, `${state.ruleset.cards.find(d => d.id === state.cards[uid].defId)?.name} (${uid})`)}</span>) : button({ type: 'choose', player: state.pendingChoice.player, uid: null }, 'Continue without an organism')}</div></section>}
-      <section className={`action-panel${selection.pickingTarget ? ' action-panel--picking' : ''}`} aria-label="Card actions">
-        <div className="action-panel__head">
-          <h3>{sourceDef ? `${sourceDef.name} (${source!.uid})` : 'Select a card in hand or field to act'}</h3>
-          {source && (
-            <span className="action-panel__selected-meta">
-              Zone: <strong>{source.zone}</strong>
-              {target && state.cards[target] && (
-                <> · Target: <strong>{state.ruleset.cards.find(d => d.id === state.cards[target].defId)?.name} ({target})</strong></>
-              )}
-            </span>
-          )}
-        </div>
-        {source && <>
-          <div className="target-picker"><label>Action target<select aria-label="Action target" value={target} onChange={e => setSelection(s => ({ ...s, target: e.target.value, pickingTarget: false }))}><option value="">Choose a target</option>{targets.map(c => <option key={c.uid} value={c.uid}>{state.ruleset.cards.find(d => d.id === c.defId)?.name} · {c.uid} · {c.status} · {c.owner === null ? 'shared' : state.players[c.owner].name}</option>)}</select></label><button type="button" aria-pressed={selection.pickingTarget} onClick={() => setSelection(s => ({ ...s, pickingTarget: !s.pickingTarget }))}>{selection.pickingTarget ? 'Cancel target selection' : 'Pick target on board'}</button></div>
-          <div className="card-actions">{source.zone === 'hand' ? <>
-            {button({ type: 'play', player, uid: source.uid }, 'Play card')}
-            {['adaptation', 'microbe', 'detritivore'].includes(sourceDef!.kind) && button({ type: 'play', player, uid: source.uid, targetUid: target || 'choose-target' }, 'Play on target')}
-            {button({ type: 'discardDraw', player, uid: source.uid }, 'Discard and draw')}
-          </> : <>
-            {(sourceDef!.kind === 'consumer' || !!sourceDef!.canEat?.length) && button({ type: 'eat', player, eaterUid: source.uid, preyUid: target }, 'Eat target')}
-            {sourceDef!.kind === 'detritivore' && button({ type: 'assign', player, detritivoreUid: source.uid, deadUid: target }, 'Assign to detritus')}
-            {sourceDef!.kind === 'microbe' && button({ type: 'decompose', player, microbeUid: source.uid, detritusUid: target }, 'Decompose target')}
-            {sourceDef!.kind === 'producer' && <p className="action-panel__hint">Photosynthesis and aging happen automatically between rounds.</p>}
-          </>}</div>
-        </>}
-      </section>
-
-      <div className="game-board board">{state.players.map(p => {
-        const fieldCards = cards.filter(c => c.zone === 'field' && c.owner === p.id);
-        const isActive = p.id === state.activePlayer;
-        return (
-          <section
-            key={p.id}
-            className={`zone-field ${isActive ? 'zone-field--active' : 'zone-field--opponent'}`}
-            aria-label={`${p.name} field`}
-          >
-            <div className="zone-header">
-              <h3>{p.name}'s field {isActive ? '· Active Habitat' : '· Opponent Habitat'}</h3>
-              <span className="zone-header__counts">
-                <img src={`${baseUrl}art/card-back.svg`} alt="" className="zone-header__deck-icon" />
-                Deck: {p.deck.length} · Discard: {p.discard.length}
-              </span>
-            </div>
-            <div className="card-row">{fieldCards.map(c => face(c.uid))}</div>
-            {!fieldCards.length && <p className="zone-empty">No organisms in play.</p>}
-          </section>
-        );
-      })}</div>
-
-      <section className="zone-center" aria-label="Shared center">
-        <div className="zone-header">
-          <h3>
-            <img src={`${baseUrl}art/fallen-leaf.svg`} alt="" className="zone-header__token-icon" />
-            <span>Shared Riparian Center · Dead Matter (FFA)</span>
-          </h3>
-          <span className="zone-header__counts">{state.center.length} detritus token{state.center.length === 1 ? '' : 's'}</span>
-        </div>
-        <div className="card-row">{state.center.map(face)}</div>
-        {!state.center.length && <p className="zone-empty">No shared detritus.</p>}
-      </section>
-
-      {state.phase !== 'gameOver' && (
-        <section className="zone-hand" aria-label={`${state.players[player].name} hand`}>
-          <div className="zone-header">
-            <h3>{state.players[player].name}'s hand ({state.players[player].hand.length} cards)</h3>
-            <p className="zone-hand__privacy-note">The other player's hand is hidden.</p>
-          </div>
-          <div className="card-row">{state.players[player].hand.map(face)}</div>
-          {!state.players[player].hand.length && <p className="zone-empty">Your hand is empty. End your turn or use the referee panel.</p>}
-        </section>
-      )}
-
-      {!!state.modifiers.length && <section className="game-modifiers"><h3>Active & Queued Environmental Effects</h3><ul>{state.modifiers.map((m, i) => <li key={`${m.id}-${i}`}><strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect} · {m.appliesTo}{m.activeRound !== undefined ? ` (round ${m.activeRound})` : ''}{m.player !== undefined ? ` · ${state.players[m.player].name}` : ' · both players'}</li>)}</ul></section>}
-
-      <div className="bottom-drawers">
-        <RefereePanel state={state} dispatch={dispatch} />
-        <details className="game-log log-drawer" open>
-          <summary>Field Journal Log · {state.log.length} entries · seed {state.seed}</summary>
-          <ol>{state.log.map((entry, i) => <li key={i}><strong className="log-round-badge">R{entry.round}</strong> <span>{entry.text.includes(' draws ') || entry.text.includes(' replaces an opening ') ? 'Private draw (card identity hidden)' : entry.text}</span></li>)}</ol>
-        </details>
-      </div>
-    </>}
+/** A row of cards sized from the row's own box (see game.css "Card sizing"). */
+function Zone({ className, label, cards, render, empty }: {
+  className: string; label: string; cards: CardInstance[]; render: (c: CardInstance) => ReactNode; empty?: string;
+}) {
+  const side = cards.filter(isSideways).length;
+  const vars = { '--n': Math.max(cards.length, 1), '--n-side': side, '--n-up': cards.length - side } as CSSProperties;
+  return <section className={`zone ${className}`} aria-label={label} style={vars}>
+    <div className="zone__row">{cards.map(render)}</div>
+    {!cards.length && empty && <p className="zone__empty">{empty}</p>}
   </section>;
 }
 
-type GameStateError = ReturnType<typeof useGame>['state'] | null;
+/** Hotseat board. The viewing player's side is at the bottom; their hand mounts only after they accept the device.
+ *  Tap a card for its closeup; targeted actions then pick a highlighted card on the board. */
+export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
+  const game = useGame(ruleset);
+  const { state } = game;
+  const [revealedTurn, setRevealedTurn] = useState('');
+  const [seed, setSeed] = useState('');
+  const [dismissedError, setDismissedError] = useState<GameState | null>(null);
+  const [closeup, setCloseup] = useState<{ turn: string; uid: string } | null>(null);
+  const [targeting, setTargeting] = useState<{ turn: string; kind: TargetKind; source: string } | null>(null);
+  const [drawer, setDrawer] = useState<Drawer | null>(null);
+  const [hint, setHint] = useState<{ text: string; at: number } | null>(null);
+  const ticks = usePoolTicks(state.players);
+
+  const player = state.pendingChoice?.player ?? state.activePlayer;
+  const turn = `${state.round}-${state.activePlayer}-${player}`;
+  const over = state.phase === 'gameOver';
+  const covered = revealedTurn !== turn && !over;
+  const me = state.players[player];
+  const them = state.players[player === 0 ? 1 : 0];
+  const aim = !covered && targeting?.turn === turn && state.cards[targeting.source] ? targeting : null;
+  const valid = aim ? validTargets(state, aim.kind, player, aim.source) : [];
+  const options = state.pendingChoice?.options ?? [];
+  const open = !covered && closeup?.turn === turn && state.cards[closeup.uid] ? closeup.uid : '';
+  const name = (uid: string) => defOf(state, state.cards[uid]).name;
+  const last = state.log[state.log.length - 1];
+
+  useEffect(() => {
+    if (!hint) return;
+    const t = window.setTimeout(() => setHint(null), 2600);
+    return () => window.clearTimeout(t);
+  }, [hint]);
+  useEffect(() => {
+    if (!aim || open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setTargeting(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [!!aim, !!open]);
+
+  const dispatch = (action: Action) => {
+    setDismissedError(null); setHint(null); setCloseup(null); setTargeting(null);
+    game.dispatch(action);
+  };
+  const startTargeting = (kind: TargetKind, source: string) => { setCloseup(null); setTargeting({ turn, kind, source }); };
+  const inspect = (c: CardInstance) => setCloseup({ turn, uid: c.uid });
+  const tap = (c: CardInstance) => {
+    if (aim) {
+      if (c.uid === aim.source) return setTargeting(null);
+      if (c.zone === 'hand') { setTargeting(null); return inspect(c); }
+      const action = targetedAction(aim.kind, player, aim.source, c.uid);
+      const reason = checkAction(state, action);
+      return reason ? setHint({ text: `${name(c.uid)}: ${reason}`, at: Date.now() }) : dispatch(action);
+    }
+    // Pending choices (Flood) arrive unasked, so a tap only opens the closeup; its Choose button commits.
+    inspect(c);
+  };
+  const markOf = (c: CardInstance): Mark => {
+    if (aim) return c.uid === aim.source ? 'source' : valid.includes(c.uid) ? 'target' : 'dim';
+    if (state.pendingChoice) return options.includes(c.uid) ? 'target' : undefined;
+    return open === c.uid ? 'source' : undefined;
+  };
+  const card = (c: CardInstance) => <BoardCard key={c.uid} card={c} state={state} mark={markOf(c)} onTap={() => tap(c)} onInspect={() => inspect(c)} />;
+  const fieldOf = (p: PlayerState) => Object.values(state.cards).filter(c => c.zone === 'field' && c.owner === p.id);
+  const startNewGame = () => {
+    game.newGame(seed === '' ? undefined : Number(seed));
+    setRevealedTurn(''); setCloseup(null); setTargeting(null); setDrawer(null);
+  };
+
+  // While the board waits for a tap, the prompt takes over the bottom bar, so Cancel sits where End turn was.
+  let prompt: ReactNode;
+  if (aim) {
+    prompt = <div className="prompt prompt--aim" role="status">
+      <p><b>{TARGET_VERB[aim.kind]} · {name(aim.source)}</b> {targetPrompt(state, aim.kind, aim.source)} ({valid.length} lit)</p>
+      <button type="button" className="btn" onClick={() => setTargeting(null)}>Cancel</button>
+    </div>;
+  } else if (state.pendingChoice && !covered) {
+    const choice = state.pendingChoice;
+    prompt = <div className="prompt prompt--choice" role="status">
+      <p><b>{state.players[choice.player].name}</b> {choice.prompt}{options.length ? ' Tap a lit card, then Choose.' : ''}</p>
+      {!options.length && <ActionButton state={state} action={{ type: 'choose', player: choice.player, uid: null }} dispatch={dispatch}>Continue</ActionButton>}
+    </div>;
+  }
+
+  return <section className="game" data-cycle={state.isDay ? 'day' : 'night'} aria-label="Match">
+    <h1 className="sr-only">envi-tcg Playtest Simulator</h1>
+    <header className="bar bar--top">
+      <button type="button" className="icon-btn" aria-label="Menu" onClick={() => setDrawer('match')}>☰</button>
+      <button type="button" className="icon-btn" aria-label="Undo" title="Undo" disabled={!game.canUndo} onClick={game.undo}>↶</button>
+      <Hud state={state} p={them} ticks={ticks} opponent />
+    </header>
+
+    <Zone className="zone--field zone--opponent" label={`${them.name} field`} cards={fieldOf(them)} render={card} empty={`${them.name}: no organisms in play`} />
+
+    <div className="center">
+      <div className="center__status turn">
+        <img key={String(state.isDay)} className="turn__emblem" src={art(state.isDay ? 'day' : 'night')} alt="" />
+        <p><b>Round {state.round} · {state.isDay ? 'Day' : 'Night'}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
+      </div>
+      <Zone className="zone--center" label="Shared center" cards={state.center.map(uid => state.cards[uid])} render={card} empty="No shared detritus" />
+      <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
+        {state.modifiers.length > 0 && <span className="center__mods">⚡ {state.modifiers.length} effect{state.modifiers.length === 1 ? '' : 's'}</span>}
+        <span className="center__last">{last ? logText(last) : 'Log'}</span>
+      </button>
+    </div>
+
+    <Zone className="zone--field zone--mine" label={`${me.name} field`} cards={fieldOf(me)} render={card} empty="No organisms in play yet. Tap a card in your hand to play it." />
+
+    <footer className="bar bar--bottom">
+      {prompt ?? <Hud state={state} p={me} ticks={ticks} />}
+      {!covered && !over && !prompt && <ActionButton state={state} action={{ type: 'endTurn', player: state.activePlayer }} dispatch={dispatch} className="act--end">End turn</ActionButton>}
+    </footer>
+
+    {over
+      ? <div className="zone zone--hand game-over" role="status">
+        <h2>{state.winner === 'draw' ? 'Draw: both players reached the threshold' : `${state.players[state.winner as 0 | 1].name} wins!`}</h2>
+        <p><button type="button" className="btn" onClick={() => setDrawer('log')}>Review log</button> <button type="button" className="btn btn--primary" onClick={() => setDrawer('match')}>New game…</button></p>
+      </div>
+      : <Zone className="zone--hand" label={`${me.name} hand`} cards={covered ? [] : me.hand.map(uid => state.cards[uid])} render={card} empty={covered ? undefined : 'Your hand is empty.'} />}
+
+    {!covered && ((state.lastError && dismissedError !== state) || hint) && <div className="toast" role="alert">
+      <span>{hint?.text ?? state.lastError}</span>
+      <button type="button" className="btn" onClick={() => { setHint(null); setDismissedError(state); }}>OK</button>
+    </div>}
+
+    {covered && <div className="pass-device" role="dialog" aria-modal="true" aria-labelledby="pass-title">
+      <img src={art('card-back')} alt="" className="pass-device__emblem" />
+      <h2 id="pass-title">Pass the device to {me.name}</h2>
+      <p>Hands stay hidden between hotseat turns. Continue when {me.name} has the screen.</p>
+      <button type="button" className="btn btn--primary" autoFocus onClick={() => setRevealedTurn(turn)}>I'm {me.name}: reveal my hand</button>
+      {game.canUndo && <button type="button" className="btn" onClick={game.undo}>Undo last action</button>}
+    </div>}
+
+    {open && <CardCloseup
+      state={state} uid={open} player={player} dispatch={dispatch}
+      pickTarget={aim && valid.includes(open) ? { label: `Choose as target for ${name(aim.source)}`, pick: () => dispatch(targetedAction(aim.kind, player, aim.source, open)) } : undefined}
+      onTarget={kind => startTargeting(kind, open)}
+      onOpen={uid => setCloseup({ turn, uid })}
+      onClose={() => setCloseup(null)} />}
+
+    {drawer && <Sheet label="Game menu" drawer onClose={() => setDrawer(null)}>
+      <nav className="tabs" aria-label="Menu sections">
+        {DRAWER_TABS.map(([id, label]) => <button key={id} type="button" className="tabs__tab" aria-pressed={drawer === id} onClick={() => setDrawer(id)}>{label}</button>)}
+      </nav>
+      {drawer === 'match' && <div className="drawer__body">
+        <section>
+          <h3>Round {state.round} · {state.isDay ? 'Day' : 'Night'}</h3>
+          <p className="muted">Ruleset “{state.ruleset.name}” · seed {state.seed}</p>
+          <div className="row">
+            <button type="button" className="btn" disabled={!game.canUndo} title={state.ruleset.params.undoEnabled ? undefined : 'Undo is disabled in this ruleset'} onClick={game.undo}>↶ Undo</button>
+            <button type="button" className="btn" disabled={!game.canRedo} onClick={game.redo}>↷ Redo</button>
+          </div>
+        </section>
+        <section>
+          <h3>Environmental effects</h3>
+          {state.modifiers.length ? <ul className="mods">{state.modifiers.map((m, i) => <li key={`${m.id}-${i}`}>
+            <strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect} · {m.appliesTo}
+            {m.activeRound !== undefined ? ` (round ${m.activeRound})` : ''}{m.player !== undefined ? ` · ${state.players[m.player].name}` : ' · both players'}
+          </li>)}</ul> : <p className="muted">None active or queued.</p>}
+        </section>
+        <section>
+          <h3>New game</h3>
+          <p className="muted">Starts a fresh match with {ruleset.name}; the current match is replaced.</p>
+          <div className="row">
+            <label>Seed (optional)<input type="number" value={seed} onChange={e => setSeed(e.target.value)} /></label>
+            <button type="button" className="btn btn--primary" onClick={startNewGame}>Start new game</button>
+          </div>
+        </section>
+        <section>
+          <h3>Other screens</h3>
+          <div className="row">
+            <a className="btn" href="#editor" onClick={() => setDrawer(null)}>Ruleset editor</a>
+            <a className="btn" href="#interpretations" onClick={() => setDrawer(null)}>Interpretations</a>
+          </div>
+        </section>
+      </div>}
+      {drawer === 'log' && <div className="drawer__body">
+        <h3>Field journal · {state.log.length} entries</h3>
+        <ol className="log" reversed>{[...state.log].reverse().map((entry, i) =>
+          <li key={state.log.length - i}><span className="log__round">R{entry.round}</span> {logText(entry)}</li>)}</ol>
+      </div>}
+      {drawer === 'referee' && <div className="drawer__body"><RefereePanel state={state} dispatch={dispatch} /></div>}
+    </Sheet>}
+  </section>;
+}

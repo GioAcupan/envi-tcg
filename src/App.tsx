@@ -1,30 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { defaultRuleset, loadRuleset, saveRuleset } from './ruleset';
 import { GameScreen } from './ui/game/GameScreen';
 import { EditorScreen } from './ui/editor/EditorScreen';
 import { InterpretationsScreen } from './ui/interpretations/InterpretationsScreen';
 
-/** App entry point: holds the editable ruleset shared by the three screens. */
+/** Screens are addressed by URL hash, so the game's own menu can link to them without extra props. */
+const SCREENS = [{ hash: '', label: 'Game' }, { hash: '#editor', label: 'Ruleset editor' }, { hash: '#interpretations', label: 'Interpretations' }];
+const currentHash = () => SCREENS.some(s => s.hash === window.location.hash) ? window.location.hash : '';
+
+/** App entry point: holds the editable ruleset shared by the three screens. The game screen fills the
+ *  viewport and stays mounted while the other screens are open, so a match survives a visit to the editor. */
 export default function App() {
   const [ruleset, setRuleset] = useState(() => {
     try { return loadRuleset(); }
     catch { return defaultRuleset(); }
   });
-  const [tab, setTab] = useState('Game');
+  const [hash, setHash] = useState(currentHash);
+  useEffect(() => {
+    const onHash = () => setHash(currentHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
 
-  return <main>
-    <h1>envi-tcg Playtest Simulator</h1>
-    <nav aria-label="Screens">
-      {['Game', 'Ruleset editor', 'Interpretations'].map(label =>
-        <button key={label} aria-pressed={tab === label} onClick={() => setTab(label)}>{label}</button>,
-      )}
-    </nav>
-    {tab === 'Game' && <GameScreen ruleset={ruleset} />}
-    {tab === 'Ruleset editor' && <EditorScreen ruleset={ruleset} onChange={r => {
-      setRuleset(r);
-      try { saveRuleset(r); }
-      catch { /* Keep edits usable while storage is stubbed or unavailable. */ }
-    }} />}
-    {tab === 'Interpretations' && <InterpretationsScreen />}
-  </main>;
+  return <>
+    <div className="app-game" hidden={hash !== ''}><GameScreen ruleset={ruleset} /></div>
+    {hash !== '' && <main className="app-page">
+      <header className="app-bar">
+        <h1>envi-tcg Playtest Simulator</h1>
+        <nav aria-label="Screens">
+          {SCREENS.map(s => <a key={s.label} href={s.hash || '#'} aria-current={hash === s.hash ? 'page' : undefined}>{s.label}</a>)}
+        </nav>
+      </header>
+      {hash === '#editor' && <EditorScreen ruleset={ruleset} onChange={r => {
+        setRuleset(r);
+        try { saveRuleset(r); }
+        catch { /* Keep edits usable while storage is stubbed or unavailable. */ }
+      }} />}
+      {hash === '#interpretations' && <InterpretationsScreen />}
+    </main>}
+  </>;
 }

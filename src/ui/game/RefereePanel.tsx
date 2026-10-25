@@ -15,7 +15,7 @@ export function RefereePanel({ state, dispatch }: { state: GameState; dispatch: 
   };
   const pool = (data: FormData): Pool => ({ C: Number(data.get('C')), N: Number(data.get('N')), P: Number(data.get('P')), O2: Number(data.get('O2')) });
   const poolInputs = (value: Pool) => (['C', 'N', 'P', 'O2'] as const).map(n => <label key={n}>{n}<input name={n} type="number" step="1" required defaultValue={value[n]} /></label>);
-  return <details className="referee-panel"><summary>Referee panel</summary>
+  return <section className="referee-panel" aria-label="Referee panel">
     <p>Overrides bypass rules, are recorded in the log, and can change the winner.</p>
     <label>Referee player<select aria-label="Referee player" value={player} onChange={e => setPlayer(Number(e.target.value) as PlayerId)}>{state.players.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
     <div className="referee-controls">
@@ -37,5 +37,5 @@ export function RefereePanel({ state, dispatch }: { state: GameState; dispatch: 
       {(['lifespanLeft', 'marks'] as const).map(field => <form key={field} onSubmit={e => submit(e, data => op({ kind: 'setCardField', uid, field, value: Number(data.get(field)) }))}><label>{field === 'lifespanLeft' ? 'Lifespan left' : 'Marks'}<input type="number" name={field} defaultValue={card[field] ?? 0} required /></label><button>Set {field === 'lifespanLeft' ? 'lifespan' : 'marks'}</button></form>)}
       <form onSubmit={e => submit(e, data => op({ kind: 'setCardField', uid, field: 'stored', value: pool(data) }))}><fieldset><legend>Stored nutrients</legend>{poolInputs(card.stored)}<button>Set stored nutrients</button></fieldset></form>
     </div>}
-  </details>;
+  </section>;
 }
