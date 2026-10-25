@@ -1,0 +1,67 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-3b6748",
+  "kind": "brief",
+  "created": "2026-10-25T12:40:54.062Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T9"
+  },
+  "repo": {
+    "base": null,
+    "head": "a564acb802117862f4942073cca48ae83e9052af",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl",
+      "plans/2026-10-25-envi-tcg-sim.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-3b6748",
+      "commit": "923591f06f3883f1b94f33a9b7871f9f5f6e3779"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-a4c4",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 3,
+    "task": "T9"
+  },
+  "contract": {
+    "label": "open",
+    "owns": [
+      "public/art/"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "60m"
+  },
+  "lessons": [],
+  "summary": "Art revision round: audit every SVG in public/art/ (from T4) by rendering it, find the ones that look wonky or off-style, and redraw them so the set is recognizable and consistent with src/ui/DESIGN.md.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T9 — SVG art revision round (plans/2026-10-25-envi-tcg-sim.md#t9). Read the T9 section and src/ui/DESIGN.md.",
+    "acceptance": [
+      "Every SVG in public/art/ audited by rendering it, with a pass/redraw verdict and a one-line reason for each redraw in the lane report",
+      "Each redrawn file keeps its name, stays < 6 KB, flat, viewBox-scaled, with no raster or external refs",
+      "A before/after contact sheet path outside the worktree is given in the report"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}

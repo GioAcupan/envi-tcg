@@ -1,0 +1,68 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-693753",
+  "kind": "brief",
+  "created": "2026-10-25T13:01:09.898Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T8"
+  },
+  "repo": {
+    "base": null,
+    "head": "82110f5e95cf0c2e28fea6fb2f111019afb53645",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-693753",
+      "commit": "7ee49d9a409f50fc8e7de2b6d6d8bfafd0fe13fe"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-84a6",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 3,
+    "task": "T8"
+  },
+  "contract": {
+    "label": "open",
+    "owns": [
+      "src/ui/",
+      "src/index.css"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "60m"
+  },
+  "lessons": [],
+  "summary": "Skin the working UI per src/ui/DESIGN.md: tokens in src/index.css, card frames per kind with public/art/<id>.svg art, Day/Night treatment and the DESIGN.md animations, without changing any behavior or interfaces.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T8 — Apply the design skin and animations (plans/2026-10-25-envi-tcg-sim.md#t8). Read the T8 section and src/ui/DESIGN.md.",
+    "acceptance": [
+      "npm run typecheck, npm test, npm run build stay green",
+      "No dispatch call, engine import or component prop interface changes; class names may be added",
+      "Card frames per kind use public/art/<id>.svg with a kind-icon fallback; animations respect prefers-reduced-motion",
+      "Board looks per DESIGN.md in Day and Night with alive, dead and attached cards (orchestrator screenshots); a full match still plays"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
