@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Leaf Litter Plant: Low riparian shrub shedding autumn/dry leaves onto forest floor -->
+  <rect width="160" height="120" rx="6" fill="#F4EFE0"/>
+  <!-- Soil & leaf litter ground -->
+  <path d="M8 98C40 92 120 92 152 98L156 114H4L8 98Z" fill="#8C6239" stroke="#1B221B" stroke-width="2"/>
+  <!-- Fallen leaves on ground -->
+  <path d="M28 102C34 97 44 99 46 104C40 108 32 106 28 102Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.5"/>
+  <path d="M108 103C115 98 125 100 127 105C120 109 112 107 108 103Z" fill="#D9820B" stroke="#1B221B" stroke-width="1.5"/>
+  <!-- Main woody stem -->
+  <path d="M80 96V34" stroke="#5C4024" stroke-width="4" stroke-linecap="round"/>
+  <path d="M80 68L54 50" stroke="#5C4024" stroke-width="3" stroke-linecap="round"/>
+  <path d="M80 58L108 42" stroke="#5C4024" stroke-width="3" stroke-linecap="round"/>
+  <!-- Living green leaves -->
+  <path d="M80 36C66 20 74 10 80 14C86 10 94 20 80 36Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M54 50C34 44 30 30 44 28C56 26 62 38 54 50Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2"/>
+  <path d="M108 42C126 36 130 22 116 20C104 18 98 30 108 42Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <!-- Drifting autumn leaf mid-air -->
+  <path d="M52 74C62 68 70 74 66 82C58 86 48 80 52 74Z" fill="#C85A17" stroke="#1B221B" stroke-width="1.8"/>
+  <path d="M54 76L64 80" stroke="#1B221B" stroke-width="1.2"/>
+</svg>

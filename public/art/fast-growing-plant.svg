@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Fast-Growing Plant: Vigorous herbaceous shoot with unfurling tendrils and sun rays -->
+  <rect width="160" height="120" rx="6" fill="#F6F2E4"/>
+  <path d="M12 106H148" stroke="#5C4024" stroke-width="3" stroke-linecap="round"/>
+  <!-- Upward growth chevrons -->
+  <path d="M36 42L44 34L52 42M110 34L118 26L126 34" stroke="#D9820B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Vigorous central shoot -->
+  <path d="M80 106C80 78 76 52 82 22" stroke="#3A7537" stroke-width="4" stroke-linecap="round"/>
+  <!-- Paired leaves -->
+  <path d="M80 78C60 76 48 64 54 54C64 52 76 62 80 78Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <path d="M80 68C100 66 112 54 106 44C96 42 84 52 80 68Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M81 46C64 42 58 30 66 22C74 22 82 32 81 46Z" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <!-- Unfurling fiddlehead / apex bud -->
+  <path d="M82 22C86 12 98 14 96 22C94 28 86 26 88 20" stroke="#2E6F40" stroke-width="3" stroke-linecap="round"/>
+</svg>

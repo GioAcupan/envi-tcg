@@ -1,0 +1,141 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-6682a7",
+  "kind": "report",
+  "created": "2026-10-25T12:40:52.851Z",
+  "summarized": true,
+  "parent": "h-20261025-6af433",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "unknown",
+    "model": null,
+    "session": null
+  },
+  "to": null,
+  "repo": {
+    "base": null,
+    "head": "b6ff5df20a290031bacfa37a4807eb158ebe2452",
+    "branch": "lane/sim-t3",
+    "worktree": ".worktrees/sim-t3",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-6682a7",
+      "commit": "4197220e714daf14b1646acb4a53d11cb2fb99e8"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "T3 implemented on lane/sim-t3: ruleset storage (load/save/export/import with defaults fill and version check), defaultRuleset as a structuredClone deep copy, and 17 interpretations plus 5 major entries from Appendix A. Own lane tests cover corrupt storage, missing localStorage, version 2 rejection and save/load round-trip. Typecheck and build pass; the only failing test is the expected frozen newGame case waiting on T2.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "src/ruleset/index.ts: loadRuleset, saveRuleset, exportRuleset, importRuleset per spec §3.3; localStorage key envi-tcg.ruleset.v1; defensive storage access; importRuleset deep-fills params and card fields (tags, text, cost C/N, copies), keeps unknown fields, defaults missing name to 'Imported ruleset'; defaultRuleset returns structuredClone",
+      "evidence": [
+        {
+          "test": "src/ruleset/index.ts: loadRuleset, saveRuleset, exportRuleset, importRuleset per spec §3.3; localStorage key envi-tcg.ruleset.v1; defensive storage access; importRuleset deep-fills params and card fields (tags, text, cost C/N, copies), keeps unknown fields, defaults missing name to 'Imported ruleset'; defaultRuleset returns structuredClone",
+          "result": "commit b6ff5df"
+        }
+      ]
+    },
+    {
+      "what": "src/data/interpretations.ts: R1-R5 (major true) and I1-I17 (major false), one plain-English entry per Appendix A tag",
+      "evidence": [
+        {
+          "test": "src/data/interpretations.ts: R1-R5 (major true) and I1-I17 (major false), one plain-English entry per Appendix A tag",
+          "result": "commit b6ff5df; tests/acceptance/interpretations.test.ts passes"
+        }
+      ]
+    },
+    {
+      "what": "tests/ruleset.lane.test.ts: corrupt JSON -> defaults; no localStorage -> defaults and saveRuleset no throw; version 2 -> ok:false; save then load returns saved ruleset",
+      "evidence": [
+        {
+          "test": "tests/ruleset.lane.test.ts: corrupt JSON -> defaults; no localStorage -> defaults and saveRuleset no throw; version 2 -> ok:false; save then load returns saved ruleset",
+          "result": "4/4 pass in npx vitest run tests/ruleset.lane.test.ts"
+        }
+      ]
+    },
+    {
+      "what": "Checks: npm ci, npm run typecheck, npm run build",
+      "evidence": [
+        {
+          "test": "Checks: npm ci, npm run typecheck, npm run build",
+          "result": "npm ci added 49 packages, 0 vulnerabilities; tsc --noEmit clean; vite build succeeded"
+        }
+      ]
+    },
+    {
+      "what": "Frozen tests unchanged; only owned files committed",
+      "evidence": [
+        {
+          "test": "Frozen tests unchanged; only owned files committed",
+          "result": "git status clean apart from untracked TASK.md (not committed); commit touches src/ruleset/index.ts, src/data/interpretations.ts, tests/ruleset.lane.test.ts"
+        }
+      ]
+    },
+    {
+      "what": "Vitest run of the three ruleset files: 9 passed, 1 failed (expected)",
+      "evidence": [
+        {
+          "test": "Vitest run of the three ruleset files: 9 passed, 1 failed (expected)",
+          "result": "Test Files 1 failed | 2 passed; failing case 'builds identical 40-card decks...' throws 'not implemented' from src/engine/index.ts newGame (T2 lane)"
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "tests/acceptance/ruleset.test.ts 4 pass / 1 fail (newGame, expected); tests/acceptance/interpretations.test.ts 1 pass; tests/ruleset.lane.test.ts 4 pass. Total 9 pass, 1 fail (expected, T2 dependency)."
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "importRuleset: a nested params object that is present but not an object falls back to the default copy; a non-object value is kept as-is for leaf params",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "importRuleset: a card whose cost is missing or not an object gets cost {C:0,N:0}; non-number cost C/N and copies are coerced to 0 instead of rejecting the file",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "defaultRuleset kept as written except the return value is structuredClone(ruleset), so each call returns a fresh deep copy",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Interpretation texts follow Appendix A wording; I15 reads the PDF's Algae/Biofilm token as an alive algae card that a snail or grazer can eat; I9 notes the dropped 'opponent's' wording",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Commit carries the Co-Authored-By attribution line from the session reminder after the requested subject line",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "Frozen test 'D5 defaults > builds identical 40-card decks...' fails until the T2 engine lane implements newGame; this lane cannot make it pass.",
+    "The Alley 'report' hand-off record for h-20261025-6af433 was not written with the alley CLI; this JSON file is the lane report requested by the parent."
+  ],
+  "questions": [
+    {
+      "text": "Should importRuleset reject wrongly typed params or card fields (for example a string where a number is expected) instead of falling back to defaults or coercing to 0?",
+      "blocks": [],
+      "attemptsLeft": null,
+      "deadline": null,
+      "options": []
+    }
+  ]
+}

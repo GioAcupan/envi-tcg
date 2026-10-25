@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Bloom Algae: Dense surface mat of cyanobacteria/algae swirling over eutrophic water -->
+  <rect width="160" height="120" rx="6" fill="#E5F2E0"/>
+  <!-- Eutrophic water below -->
+  <rect x="0" y="56" width="160" height="64" rx="4" fill="#9BC495"/>
+  <!-- Thick swirling algal bloom surface mat -->
+  <path d="M0 44C28 34 52 54 84 44C116 34 136 50 160 42V72C132 80 108 64 76 72C44 80 24 66 0 74V44Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M18 56C40 48 64 64 92 54C116 46 134 58 148 54" stroke="#84CC16" stroke-width="4" stroke-linecap="round"/>
+  <!-- Eutrophic P sparkles / warning droplets -->
+  <polygon points="44,24 52,38 36,38" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
+  <polygon points="82,18 90,32 74,32" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
+  <polygon points="118,24 126,38 110,38" fill="#C6690A" stroke="#1B221B" stroke-width="1.8"/>
+</svg>

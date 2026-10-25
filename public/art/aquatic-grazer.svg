@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Aquatic Grazer: Water-penny / mayfly nymph scraping algae & excess phosphorus from rock -->
+  <rect width="160" height="120" rx="6" fill="#EBF4F5"/>
+  <!-- Dorsal shield plates of grazing nymph -->
+  <ellipse cx="80" cy="62" rx="28" ry="20" fill="#7C4D25" stroke="#1B221B" stroke-width="2.2"/>
+  <path d="M56 62H104M80 42V82" stroke="#D6C7A9" stroke-width="1.8"/>
+  <!-- Six clinging legs -->
+  <path d="M64 46L48 34M80 42L80 26M96 46L112 34" stroke="#1B221B" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M64 78L48 90M80 82L80 98M96 78L112 90" stroke="#1B221B" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Three tail cerci -->
+  <path d="M52 62L26 50M52 62L24 62M52 62L26 74" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Cleared algae & P particle -->
+  <circle cx="122" cy="62" r="8" fill="#52944E" stroke="#1B221B" stroke-width="1.8"/>
+  <polygon points="136,46 144,60 128,60" fill="#C6690A" stroke="#1B221B" stroke-width="1.5"/>
+</svg>

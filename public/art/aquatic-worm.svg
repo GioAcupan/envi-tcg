@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Aquatic Worm: Benthic oligochaete burrowing through river sediment -->
+  <rect width="160" height="120" rx="6" fill="#F3EDE0"/>
+  <!-- Sediment cross-section -->
+  <path d="M0 72C40 68 120 76 160 70V120H0V72Z" fill="#C6BCA6" stroke="#1B221B" stroke-width="2"/>
+  <!-- Burrowing segmented worm -->
+  <path d="M26 94C46 94 48 44 74 44C100 44 98 88 128 84" stroke="#1B221B" stroke-width="13" stroke-linecap="round"/>
+  <path d="M26 94C46 94 48 44 74 44C100 44 98 88 128 84" stroke="#C85A17" stroke-width="9" stroke-linecap="round"/>
+  <!-- Clitellum saddle band -->
+  <path d="M66 44H82" stroke="#FDE68A" stroke-width="9" stroke-linecap="round"/>
+  <!-- Segment rings -->
+  <path d="M44 70L50 74M54 52L60 56M90 54L84 58M104 74L98 78" stroke="#5C3A21" stroke-width="1.6"/>
+</svg>

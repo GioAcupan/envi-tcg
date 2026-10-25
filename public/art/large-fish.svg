@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Large Fish: Predatory river bass / trout (TL4 Tertiary Consumer) -->
+  <rect width="160" height="120" rx="6" fill="#E3F0F4"/>
+  <!-- Spiny dorsal & pelvic fins -->
+  <path d="M52 38L64 22L76 30L88 22L102 38Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M62 82L78 98L92 82Z" fill="#C85A17" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Broad caudal tail -->
+  <path d="M34 60L10 34L18 60L10 86L34 60Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Muscular body -->
+  <path d="M30 60C48 30 108 30 142 56L128 62L140 68C108 90 48 90 30 60Z" fill="#52944E" stroke="#1B221B" stroke-width="2.4" stroke-linejoin="round"/>
+  <!-- Pale belly & lateral stripe -->
+  <path d="M40 66C66 78 102 78 128 66" stroke="#FAF6EC" stroke-width="5" stroke-linecap="round"/>
+  <path d="M38 56H116" stroke="#1B221B" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <!-- Gill cover & fierce eye -->
+  <path d="M108 44C102 54 102 66 108 74" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="122" cy="50" r="4" fill="#FDE68A" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="123" cy="50" r="1.8" fill="#1B221B"/>
+</svg>

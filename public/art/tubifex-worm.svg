@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Tubifex Worm: Colony of red sludge/collector worms waving from silt tubes -->
+  <rect width="160" height="120" rx="6" fill="#EFEBE1"/>
+  <!-- Silt mound & vertical mud tubes -->
+  <path d="M16 98C50 86 110 86 144 98H16Z" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
+  <!-- Waving collector worms -->
+  <path d="M58 92C52 72 64 52 50 28" stroke="#B83B2A" stroke-width="5.5" stroke-linecap="round"/>
+  <path d="M80 90C84 66 72 44 82 20" stroke="#9E2A1C" stroke-width="6" stroke-linecap="round"/>
+  <path d="M102 92C108 72 96 54 112 30" stroke="#B83B2A" stroke-width="5.5" stroke-linecap="round"/>
+  <!-- Fine detritus particles being collected -->
+  <circle cx="42" cy="44" r="3" fill="#5C4024"/>
+  <circle cx="96" cy="34" r="3.5" fill="#5C4024"/>
+  <circle cx="68" cy="38" r="2.5" fill="#5C4024"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Chironomid Larva: Bright crimson bloodworm (non-biting midge larva) in C-posture -->
+  <rect width="160" height="120" rx="6" fill="#F4EFE4"/>
+  <!-- Segmented C-curved larva -->
+  <path d="M48 84C32 62 46 32 78 32C108 32 122 56 108 78" stroke="#1B221B" stroke-width="15" stroke-linecap="round"/>
+  <path d="M48 84C32 62 46 32 78 32C108 32 122 56 108 78" stroke="#C83E2B" stroke-width="11" stroke-linecap="round"/>
+  <path d="M48 84C32 62 46 32 78 32C108 32 122 56 108 78" stroke="#F87171" stroke-width="7" stroke-linecap="round" stroke-dasharray="4 8"/>
+  <!-- Dark sclerotized head capsule -->
+  <circle cx="108" cy="80" r="7" fill="#432818" stroke="#1B221B" stroke-width="2"/>
+  <!-- Posterior prolegs & gills -->
+  <path d="M46 86L36 94M48 88L44 98" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

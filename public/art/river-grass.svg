@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- River Grass: Flowing sedge and reed blades rooted in shallow river current -->
+  <rect width="160" height="120" rx="6" fill="#EAF4F4"/>
+  <!-- Water band -->
+  <path d="M0 80C32 76 64 84 96 80C128 76 144 82 160 80V120H0V80Z" fill="#BEE3E8"/>
+  <path d="M12 94C36 90 60 98 84 94C108 90 132 98 148 94" stroke="#0D7A8A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Grass blades -->
+  <path d="M56 106C52 76 42 46 28 22C46 38 58 66 64 106" fill="#3A7537" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M76 108C74 70 78 38 92 14C86 42 84 72 86 108" fill="#52944E" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M96 106C102 74 114 48 134 28C118 52 108 76 104 106" fill="#2E6F40" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 108C64 80 56 58 46 42C60 56 68 78 72 108" fill="#68A864" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Seed plume -->
+  <ellipse cx="90" cy="18" rx="4" ry="9" transform="rotate(18 90 18)" fill="#D9820B" stroke="#1B221B" stroke-width="1.8"/>
+</svg>

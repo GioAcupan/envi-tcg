@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Freshwater Snail: Ramshorn / Physa grazer snail scraping green biofilm off a river pebble -->
+  <rect width="160" height="120" rx="6" fill="#E8F4F2"/>
+  <!-- Algae-coated river cobble -->
+  <path d="M20 98C28 76 132 76 140 98H20Z" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <!-- Planorbid / conical freshwater shell -->
+  <path d="M44 66L92 32C108 42 110 66 92 76L44 66Z" fill="#9E420B" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M62 54L74 72M78 43L90 68" stroke="#FDE68A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Grazer foot & tentacles -->
+  <path d="M54 80H116C122 80 124 72 116 70H60L54 80Z" fill="#5C4024" stroke="#1B221B" stroke-width="2"/>
+  <path d="M118 71L132 60M114 71L126 56" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+</svg>
