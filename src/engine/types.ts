@@ -84,6 +84,7 @@ export interface Modifier {           // queued event effects, e.g. "next Night:
   appliesTo: 'nextDay' | 'nextNight' | 'nextRound' | 'thisRound';
   player?: PlayerId;                  // undefined = both players
   effect: string;                     // handler key, e.g. 'upkeep+1', 'producerO2-1', 'noAquaticPlay', 'noAquaticPhotosynthesis'
+  activeRound?: number;               // exact window; queued during Night means the following Night
 }
 
 export interface PendingChoice {      // engine waits for a 'choose' action (e.g. Flood)
@@ -109,6 +110,9 @@ export interface GameState {
   winner?: PlayerId | 'draw';
   log: LogEntry[];
   lastError?: string;       // set when the last action was illegal; cleared on the next legal action
+  endedTurns?: PlayerId[];  // players who have ended their action turn this round
+  pendingFloodPlayers?: PlayerId[]; // remaining Flood choices, in draw order
+  pendingDraws?: PlayerId[]; // draws/replacements paused while a Flood choice is answered
 }
 
 export type Action =

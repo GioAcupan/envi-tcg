@@ -1,0 +1,133 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-79d663",
+  "kind": "report",
+  "created": "2026-10-25T12:43:07.308Z",
+  "summarized": true,
+  "parent": "h-20261025-ed09ec",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "codex",
+    "model": "gpt-6.1-sol",
+    "session": "01a17309-40bb-7a53-b9c3-459b48821e15"
+  },
+  "to": null,
+  "repo": {
+    "base": "a564acb802117862f4942073cca48ae83e9052af",
+    "head": "148213ec88b0540e6d520367cd68cb6ba61fbe03",
+    "branch": "lane/sim-t2",
+    "worktree": ".worktrees/sim-t2",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-79d663",
+      "commit": "6b9da60b8ecac07b22d4a1cdc9e006a88c84f396"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Implemented T2's pure seeded game engine, action validation, referee operations, environmental phases and card-id ability handlers. All 49 engine tests pass, along with typecheck and build; full-suite failures are limited to the four explicitly excluded T3 ruleset/interpretations tests. Commit 148213ec88b0540e6d520367cd68cb6ba61fbe03 is ready for the coordinator's independent wave review and merge.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Implemented newGame, checkAction and applyAction, including deterministic opening hands, payments, food chain, adaptations, decomposition, automatic rounds, event windows, Flood draw continuations, win checks, purity, logging and referee bookkeeping.",
+      "evidence": [
+        {
+          "commit": "148213ec88b0540e6d520367cd68cb6ba61fbe03"
+        }
+      ]
+    },
+    {
+      "what": "Added card-specific handlers in src/engine/abilities.ts and 25 lane tests; frozen acceptance tests are unchanged.",
+      "evidence": [
+        {
+          "test": "Added card-specific handlers in src/engine/abilities.ts and 25 lane tests; frozen acceptance tests are unchanged.",
+          "result": "npx vitest run tests/acceptance/engine.test.ts tests/engine.lane.test.ts: 2 files passed, 49 tests passed (24 frozen acceptance + 25 lane)."
+        }
+      ]
+    },
+    {
+      "what": "Installed dependencies locally without changing dependency manifests.",
+      "evidence": [
+        {
+          "test": "Installed dependencies locally without changing dependency manifests.",
+          "result": "npm ci: added 49 packages, audited 50 packages, exit 0."
+        }
+      ]
+    },
+    {
+      "what": "Required compilation and production build checks.",
+      "evidence": [
+        {
+          "test": "Required compilation and production build checks.",
+          "result": "npm run typecheck: exit 0; npm run build: exit 0, Vite built 21 modules successfully."
+        }
+      ]
+    },
+    {
+      "what": "Full-suite verification records expected other-lane failures.",
+      "evidence": [
+        {
+          "test": "Full-suite verification records expected other-lane failures.",
+          "result": "npm test: 51 passed, 4 failed, 55 total. Failures: three ruleset sharing tests at untouched src/ruleset/index.ts stubs and the interpretations test against the untouched empty interpretations list; explicitly excluded by the dispatch acceptance."
+        }
+      ]
+    },
+    {
+      "what": "Scope and deterministic Alley review.",
+      "evidence": [
+        {
+          "test": "Scope and deterministic Alley review.",
+          "result": "git diff --check: exit 0; git status --short after commit: only ?? TASK.md. Alley review: no policy changes, no modified pre-existing tests, no pending proposals, no store changes; independent documentation review remains outstanding for the coordinator's wave check."
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "Targeted engine: 49/49 passed (24 frozen acceptance, 25 lane); full suite: 51 passed and 4 expected out-of-scope T3 failures out of 55. npm ci, typecheck, build and git diff --check all exited 0. Independent documentation/wave review is outstanding and coordinator-owned."
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Optional seam additions only: Modifier.activeRound?: number; GameState.endedTurns?: PlayerId[]; GameState.pendingFloodPlayers?: PlayerId[]; GameState.pendingDraws?: PlayerId[]. These record exact event windows, completed turns and suspended event/replacement draws.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "A dying or eaten detritivore releases unfinished processing; the dead card stays available for reassignment. Attached cards leave play with their decomposed host and go to their owners' discard piles; only the host's stored pool is returned.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Playing a microbe or detritivore with a target uses the play AP charge and resolves decomposition or assignment as part of that play; using an already-played card uses its respective action AP cost. A duplicate copy of the same adaptation cannot be attached to the same organism.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "AP and eating limits reset before exposing a round-opening Flood choice so the resumed round is ready to play. Empty Flood fields expose choose(null), granting +1 P, rather than automatically choosing for a player.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Simultaneous nutrient-threshold winners produce a draw; a referee lowering pools below thresholds reopens play. An all-event edited deck deals a shorter opening hand and returns its events to the shuffled deck without looping.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "The requested external JSON is the durable lane report. A .alley/handoffs report record was not written because this dispatch restricts mutations to src/engine/ and tests/engine.lane.test.ts; the coordinator can create the parent h-20261025-ed09ec report record from this JSON.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": []
+}
