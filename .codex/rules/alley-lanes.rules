@@ -1,0 +1,2 @@
+prefix_rule(pattern = ["git", "add"], decision = "allow", justification = "Alley lanes stage their own owned files")
+prefix_rule(pattern = ["git", "commit"], decision = "allow", justification = "Alley lanes commit on their own lane branch")
