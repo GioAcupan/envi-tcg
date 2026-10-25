@@ -1,0 +1,118 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-8e3cb4",
+  "kind": "report",
+  "created": "2026-10-25T13:42:06.222Z",
+  "summarized": true,
+  "parent": "h-20261025-693753",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "antigravity",
+    "model": null,
+    "session": "ad0ec3e0-5bd0-474d-a2d7-d02da88d7ce6"
+  },
+  "to": null,
+  "repo": {
+    "base": "82110f5e95cf0c2e28fea6fb2f111019afb53645",
+    "head": "50c8e186ea6a31e355be5491f5153b86572efea9",
+    "branch": "lane/sim-t8",
+    "worktree": ".worktrees/sim-t8",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-8e3cb4",
+      "commit": "670bb092bcbaa0ed4cdadf0b346324c81b3fea28"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Applied the 'Riparian Field Guide' visual design skin and animations from src/ui/DESIGN.md across src/index.css and src/ui/ without altering any dispatch calls, engine/ruleset imports, hook signatures, or component prop interfaces. Implemented archetype-colored card frames with SVG illustrations from ${import.meta.env.BASE_URL}art/<defId>.svg and vector kind-icon fallbacks, sideways dead/processing/processed card slots with unclipped counter-rotated status stamps and upright stored-biomass pills, stacked attached cards beneath host organisms, Day/Night board themes, and reduced-motion-safe CSS animations. Verified via typecheck, 59 unit/acceptance tests, production build, and Playwright browser screenshots in Day, Night, Ruleset Editor, and Interpretations screens at both 1440px and 1024px viewports.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Commit T8 UI skin and animations on lane/sim-t8",
+      "evidence": [
+        {
+          "test": "Commit T8 UI skin and animations on lane/sim-t8",
+          "result": "Commit 50c8e186ea6a31e355be5491f5153b86572efea9 (50c8e18) touching only src/index.css and src/ui/ (8 files changed)"
+        }
+      ]
+    },
+    {
+      "what": "Design tokens, Night cycle overrides, and motion keyframes in src/index.css",
+      "evidence": [
+        {
+          "test": "Design tokens, Night cycle overrides, and motion keyframes in src/index.css",
+          "result": "Defined all DESIGN.md §2 & §3 CSS custom properties on :root, Night overrides on [data-cycle=\"night\"] and .game-shell--night, and @keyframes card-play, card-death-turn, nutrient-tick, cycle-emblem-in, event-reveal with @media (prefers-reduced-motion: reduce) fallback in src/index.css"
+        }
+      ]
+    },
+    {
+      "what": "Archetype card frames, SVG art loading with kind-icon fallback, sideways dead/processed states, and stacked attachments in Card.tsx & game.css",
+      "evidence": [
+        {
+          "test": "Archetype card frames, SVG art loading with kind-icon fallback, sideways dead/processed states, and stacked attachments in Card.tsx & game.css",
+          "result": "Implemented in src/ui/common/Card.tsx and src/ui/game/game.css using ${import.meta.env.BASE_URL}art/<defId>.svg with vector SVG kind-icon fallback and zero emojis"
+        }
+      ]
+    },
+    {
+      "what": "Day and Night board screenshots with alive, dead-sideways, processing, processed, and attached adaptation/prey cards",
+      "evidence": [
+        {
+          "test": "Day and Night board screenshots with alive, dead-sideways, processing, processed, and attached adaptation/prey cards",
+          "result": "Day screenshot: C:/Users/gbacu/AppData/Local/Temp/claude/C--Users-gbacu-Documents-Gio-Files-PROGRAMMING-PROJECTS-envi-tcg/3d15743f-7919-4b25-9160-d90b39663cc4/scratchpad/t8/day-board.png; Night screenshot: C:/Users/gbacu/AppData/Local/Temp/claude/C--Users-gbacu-Documents-Gio-Files-PROGRAMMING-PROJECTS-envi-tcg/3d15743f-7919-4b25-9160-d90b39663cc4/scratchpad/t8/night-board.png"
+        }
+      ]
+    },
+    {
+      "what": "Ruleset Editor and Interpretations screen styling & 1024px zero-overflow verification",
+      "evidence": [
+        {
+          "test": "Ruleset Editor and Interpretations screen styling & 1024px zero-overflow verification",
+          "result": "Editor screenshot: C:/Users/gbacu/AppData/Local/Temp/claude/C--Users-gbacu-Documents-Gio-Files-PROGRAMMING-PROJECTS-envi-tcg/3d15743f-7919-4b25-9160-d90b39663cc4/scratchpad/t8/editor.png; Interpretations screenshot: C:/Users/gbacu/AppData/Local/Temp/claude/C--Users-gbacu-Documents-Gio-Files-PROGRAMMING-PROJECTS-envi-tcg/3d15743f-7919-4b25-9160-d90b39663cc4/scratchpad/t8/interpretations.png; verified scrollWidth === clientWidth (1024px) on both Game and Editor screens"
+        }
+      ]
+    },
+    {
+      "what": "All automated checks green",
+      "evidence": [
+        {
+          "test": "All automated checks green",
+          "result": "npm run typecheck, npm test (59/59 passed), and npm run build all exited 0"
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "59 passed (5 test files)"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Replaced all emoji glyphs with crisp inline SVG icons and public/art/ SVG assets across the UI per operator instruction.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Positioned sideways status stamps (.card__status-banner) relative to the outer .card frame rather than the clipped .card__art-frame and anchored upright stored-biomass pills (.card__sideways-hud) to the unrotated .field-slot--sideways container so sideways labels never clip.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": []
+}
