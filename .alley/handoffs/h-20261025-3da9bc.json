@@ -1,0 +1,183 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-3da9bc",
+  "kind": "report",
+  "created": "2026-10-25T12:51:45.600Z",
+  "summarized": true,
+  "parent": "h-20261025-8cae91",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "unknown",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": null,
+  "repo": {
+    "base": "28e20f2d9f49599a5c2c04614bd1f32d5af3c01f",
+    "head": "9c32c92201a3e6c18ac170b09ccd9e8d5153368b",
+    "branch": "lane/sim-t6",
+    "worktree": ".worktrees/sim-t6",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-3da9bc",
+      "commit": "069c918535a32173aee07acabdf123351171510a"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "T6 built: EditorScreen (ruleset name, params form, card table, Export/Import/Reset, deck total, storage warning) and InterpretationsScreen (major questions first, then other inferences). Committed as 9c32c92 on lane/sim-t6 with only the owned files under src/ui/editor and src/ui/interpretations. Typecheck, tests and build pass; the dev server serves the new modules.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "EditorScreen: ruleset name input, params form covering every Params field, cards table with all specified columns, immutable per-field onChange updates",
+      "evidence": [
+        {
+          "test": "EditorScreen: ruleset name input, params form covering every Params field, cards table with all specified columns, immutable per-field onChange updates",
+          "result": "commit 9c32c92; npm run typecheck exit 0"
+        }
+      ]
+    },
+    {
+      "what": "Empty number input removes optional fields and sets required ones to 0; comma lists use a draft so typing commas is not swallowed",
+      "evidence": [
+        {
+          "test": "Empty number input removes optional fields and sets required ones to 0; comma lists use a draft so typing commas is not swallowed",
+          "result": "commit 9c32c92 (NumberInput, ListInput in src/ui/editor/EditorScreen.tsx)"
+        }
+      ]
+    },
+    {
+      "what": "Deck total (sum of copies) with hint when not 40; banner 'Changes apply when you start a new game.'",
+      "evidence": [
+        {
+          "test": "Deck total (sum of copies) with hint when not 40; banner 'Changes apply when you start a new game.'",
+          "result": "commit 9c32c92"
+        }
+      ]
+    },
+    {
+      "what": "Export via Blob and temporary a[download] as <name>.envi-tcg.json; Import via hidden file input calling importRuleset, error shown in role=alert and no onChange on failure; Reset with window.confirm then defaultRuleset()",
+      "evidence": [
+        {
+          "test": "Export via Blob and temporary a[download] as <name>.envi-tcg.json; Import via hidden file input calling importRuleset, error shown in role=alert and no onChange on failure; Reset with window.confirm then defaultRuleset()",
+          "result": "commit 9c32c92"
+        }
+      ]
+    },
+    {
+      "what": "localStorage probe in try/catch shows 'Changes won't be saved in this browser — export to keep them.'",
+      "evidence": [
+        {
+          "test": "localStorage probe in try/catch shows 'Changes won't be saved in this browser — export to keep them.'",
+          "result": "commit 9c32c92"
+        }
+      ]
+    },
+    {
+      "what": "InterpretationsScreen: heading 'How the app reads the rules', 'Questions for the rule authors' (major first), 'Other inferences'",
+      "evidence": [
+        {
+          "test": "InterpretationsScreen: heading 'How the app reads the rules', 'Questions for the rule authors' (major first), 'Other inferences'",
+          "result": "commit 9c32c92; typecheck exit 0"
+        }
+      ]
+    },
+    {
+      "what": "Plain CSS in src/ui/editor/editor.css and src/ui/interpretations/interpretations.css, table in overflow-x container",
+      "evidence": [
+        {
+          "test": "Plain CSS in src/ui/editor/editor.css and src/ui/interpretations/interpretations.css, table in overflow-x container",
+          "result": "commit 9c32c92"
+        }
+      ]
+    },
+    {
+      "what": "Props kept as placeholders: EditorScreen({ ruleset, onChange }), InterpretationsScreen()",
+      "evidence": [
+        {
+          "test": "Props kept as placeholders: EditorScreen({ ruleset, onChange }), InterpretationsScreen()",
+          "result": "commit 9c32c92; App.tsx untouched"
+        }
+      ]
+    },
+    {
+      "what": "npm ci, npm run typecheck, npm test, npm run build",
+      "evidence": [
+        {
+          "test": "npm ci, npm run typecheck, npm test, npm run build",
+          "result": "npm ci exit 0 (found 0 vulnerabilities); typecheck exit 0; npm test 5 files / 59 tests passed; build exit 0 (vite build 24 modules)"
+        }
+      ]
+    },
+    {
+      "what": "Dev server smoke: npx vite --port 5176 --strictPort serves / and the two new modules with HTTP 200, then stopped via TaskStop",
+      "evidence": [
+        {
+          "test": "Dev server smoke: npx vite --port 5176 --strictPort serves / and the two new modules with HTTP 200, then stopped via TaskStop",
+          "result": "fetch http://localhost:5176/ -> 200 html; EditorScreen.tsx -> 200; InterpretationsScreen.tsx -> 200"
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "npm test: 5 test files, 59 tests passed (no tests added or changed by this lane). Typecheck and build pass."
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Empty required number inputs (params, cost C/N, copies, pool and threshold values) store 0 rather than leaving the field undefined.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Empty optional numeric fields (trophicLevel, o2Produced, o2PerRound, lifespan) and empty subtype and canEat remove the key from the card instead of storing undefined or an empty string.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Comma-list inputs keep local draft text and commit parsed lists on each change, re-syncing only when the stored list changes from outside, so typing a comma is not swallowed.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Export file name replaces characters invalid in file names with '-' and falls back to 'ruleset'.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Storage availability is probed once on mount with a test write and remove in try/catch.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Interpretations screen adds a one-line intro paragraph above the sections.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "No component-level behavioral tests were added: the repo has no jsdom or Testing Library setup, and the frozen-test list for this lane is empty. Acceptance behaviors (number edit changes only one field, export-then-import round trip, bad import keeps ruleset) are verified by code reading and the orchestrator smoke run, not by an automated test.",
+    "No browser interaction run was done (no clicks on Export/Import/Reset); only HTTP serving of the dev server was checked.",
+    "Card id is not shown or editable in the table (not in the spec column list); renaming ids is therefore not possible from the editor.",
+    "Alley graph impact was run for both owned files before editing; context preview printed no lessons."
+  ],
+  "questions": [
+    {
+      "text": "Should the card id be shown read-only in the editor table? It is not in the spec column list, so it was left out; renaming ids would drop abilities.",
+      "blocks": [],
+      "attemptsLeft": null,
+      "deadline": null,
+      "options": []
+    }
+  ]
+}
