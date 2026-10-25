@@ -1,0 +1,67 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-3a9d0f",
+  "kind": "brief",
+  "created": "2026-10-25T12:41:42.577Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T7"
+  },
+  "repo": {
+    "base": null,
+    "head": "a564acb802117862f4942073cca48ae83e9052af",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl",
+      "plans/2026-10-25-envi-tcg-sim.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-3a9d0f",
+      "commit": "d9a299e8975f16a9599f7927f1bd6ed58e9e355c"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-3ac7",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 2,
+    "task": "T7"
+  },
+  "contract": {
+    "label": "pinned",
+    "owns": [
+      ".github/workflows/pages.yml",
+      "README.md"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "15m"
+  },
+  "lessons": [],
+  "summary": "Add the pinned GitHub Pages deploy workflow and a short README so every push to main publishes the app at https://gioacupan.github.io/envi-tcg/.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T7 — GitHub Pages deploy workflow and README (plans/2026-10-25-envi-tcg-sim.md#t7).",
+    "acceptance": [
+      ".github/workflows/pages.yml matches the YAML pinned in the T7 section exactly",
+      "README.md has: one paragraph on what the app is, the play link https://gioacupan.github.io/envi-tcg/, how to run locally (npm install, npm run dev), how to share a tuned ruleset (Export/Import), and that rules come from docs/TCG_DRAFT.pdf"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}

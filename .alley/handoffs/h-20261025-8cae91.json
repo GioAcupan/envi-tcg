@@ -1,0 +1,69 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-8cae91",
+  "kind": "brief",
+  "created": "2026-10-25T12:45:49.194Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T6"
+  },
+  "repo": {
+    "base": null,
+    "head": "28e20f2d9f49599a5c2c04614bd1f32d5af3c01f",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-8cae91",
+      "commit": "3cc05af777681493f8d2d238b9f92d668f934d22"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-934b",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 2,
+    "task": "T6"
+  },
+  "contract": {
+    "label": "shaped",
+    "owns": [
+      "src/ui/editor/",
+      "src/ui/interpretations/"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "45m"
+  },
+  "lessons": [],
+  "summary": "Build the ruleset editor (card table, params form, Export/Import/Reset, deck total) and the Interpretations screen listing major questions for the rule authors first.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T6 — Ruleset editor and Interpretations screen (plans/2026-10-25-envi-tcg-sim.md#t6). Read the T6 section and spec §3.3, §3.4, §4, §5.",
+    "acceptance": [
+      "Editing a number calls onChange with a ruleset differing only in that field",
+      "Export then Import of the same file yields an equal ruleset",
+      "Importing a bad file shows the error and keeps the current ruleset",
+      "Interpretations lists major items first under 'Questions for the rule authors', then the rest",
+      "npm run typecheck, npm test, npm run build pass"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
