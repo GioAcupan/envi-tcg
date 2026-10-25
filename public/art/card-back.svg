@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" fill="none">
+  <!-- Field Guide Card Back -->
+  <rect x="4" y="4" width="192" height="272" rx="12" fill="#233127" stroke="#1B221B" stroke-width="4"/>
+  <rect x="14" y="14" width="172" height="252" rx="8" fill="#2D3F33" stroke="#D6C7A9" stroke-width="2"/>
+  <rect x="22" y="22" width="156" height="236" rx="4" fill="none" stroke="#8FA893" stroke-width="1" stroke-dasharray="4 4"/>
+  <!-- Corner botanical flourishes -->
+  <circle cx="32" cy="32" r="5" fill="#C85A17" stroke="#D6C7A9" stroke-width="1.5"/>
+  <circle cx="168" cy="32" r="5" fill="#1E5AA8" stroke="#D6C7A9" stroke-width="1.5"/>
+  <circle cx="32" cy="248" r="5" fill="#C6690A" stroke="#D6C7A9" stroke-width="1.5"/>
+  <circle cx="168" cy="248" r="5" fill="#0D7A8A" stroke="#D6C7A9" stroke-width="1.5"/>
+  <!-- Central Medallion: Riparian Leaf & Cycle Ring -->
+  <circle cx="100" cy="140" r="54" fill="#F5EFE2" stroke="#D6C7A9" stroke-width="3"/>
+  <circle cx="100" cy="140" r="46" fill="none" stroke="#233127" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <!-- Water Waves at bottom of medallion -->
+  <path d="M62 158C72 152 82 164 92 158C102 152 112 164 122 158C130 153 135 156 138 158" stroke="#0D7A8A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M68 168C78 162 88 174 98 168C108 162 118 174 128 168" stroke="#1E5AA8" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Riparian Sprout -->
+  <path d="M100 162V104" stroke="#233127" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M100 138C100 120 122 112 128 124C132 134 114 144 100 138Z" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <path d="M100 144C100 126 78 118 72 130C68 140 86 150 100 144Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="100" cy="100" r="6" fill="#D9820B" stroke="#1B221B" stroke-width="2"/>
+</svg>

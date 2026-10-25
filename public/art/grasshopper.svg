@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Grasshopper: Meadow grasshopper with powerful jumping hind legs -->
+  <rect width="160" height="120" rx="6" fill="#F7F2E4"/>
+  <path d="M16 98L144 86" stroke="#68A864" stroke-width="3" stroke-linecap="round"/>
+  <!-- Hind jumping leg -->
+  <path d="M62 72L42 36L28 92" stroke="#3A7537" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M62 72L42 36L28 92" stroke="#1B221B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Abdomen, forewing & thorax -->
+  <ellipse cx="64" cy="70" rx="32" ry="11" transform="rotate(-10 64 70)" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <path d="M84 56H104V76H84V56Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <!-- Head & antennae -->
+  <ellipse cx="112" cy="66" rx="10" ry="13" fill="#68A864" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="115" cy="62" r="3" fill="#1B221B"/>
+  <path d="M118 55L138 38M114 54L128 34" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Front legs -->
+  <path d="M92 76L86 92M106 76L114 90" stroke="#1B221B" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

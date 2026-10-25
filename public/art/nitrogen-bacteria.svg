@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Nitrogen Bacteria: Rod-shaped nitrifying bacilli with blue Nitrogen (N) diamonds -->
+  <rect width="160" height="120" rx="6" fill="#FCF0F5"/>
+  <circle cx="80" cy="60" r="46" fill="#F5DCE8" stroke="#A83868" stroke-width="2" stroke-dasharray="5 3"/>
+  <!-- Rod-shaped bacilli -->
+  <rect x="40" y="38" width="38" height="16" rx="8" transform="rotate(-18 40 38)" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <rect x="76" y="64" width="40" height="16" rx="8" transform="rotate(14 76 64)" fill="#C25283" stroke="#1B221B" stroke-width="2"/>
+  <rect x="46" y="72" width="32" height="14" rx="7" transform="rotate(-8 46 72)" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <!-- Nitrogen diamond emblem -->
+  <polygon points="104,22 120,38 104,54 88,38" fill="#1E5AA8" stroke="#1B221B" stroke-width="2"/>
+  <path d="M100 43V33L108 43V33" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

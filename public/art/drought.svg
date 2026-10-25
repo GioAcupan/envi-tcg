@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Drought: Blazing sun over cracked dry riverbed mud -->
+  <rect width="160" height="120" rx="6" fill="#FDF3E7"/>
+  <!-- Blazing sun -->
+  <circle cx="80" cy="36" r="18" fill="#D97706" stroke="#1B221B" stroke-width="2.2"/>
+  <path d="M80 10V14M80 58V62M54 36H58M102 36H106M62 18L65 21M95 51L98 54M98 18L95 21M65 51L62 54" stroke="#B45309" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Parched cracked riverbed -->
+  <path d="M0 72H160V120H0V72Z" fill="#D6C7A9" stroke="#1B221B" stroke-width="2"/>
+  <path d="M32 72L48 92L36 120M48 92L78 96L92 120M78 96L96 72M124 72L112 96L132 120M112 96L92 102" stroke="#5C4024" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

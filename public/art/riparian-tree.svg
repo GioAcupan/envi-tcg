@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Riparian Tree: Sturdy riverbank willow/alder with deep roots anchoring the bank -->
+  <rect width="160" height="120" rx="6" fill="#F5EFE2"/>
+  <!-- Riverbank and water edge -->
+  <path d="M90 96H160V120H90V96Z" fill="#B5DEE6"/>
+  <path d="M0 90C45 88 78 92 106 120H0V90Z" fill="#8C6239" stroke="#1B221B" stroke-width="2"/>
+  <!-- Trunk and roots -->
+  <path d="M56 94C56 76 58 58 58 44H72C72 58 76 76 84 96" fill="#6E4726" stroke="#1B221B" stroke-width="2.2"/>
+  <path d="M56 92L38 106M66 94L62 110M78 94L98 108" stroke="#5C3A21" stroke-width="3" stroke-linecap="round"/>
+  <!-- Broad leafy canopy -->
+  <circle cx="44" cy="44" r="22" fill="#3A7537" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="86" cy="42" r="24" fill="#2E6F40" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="64" cy="28" r="22" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <!-- Canopy leaf texture lines -->
+  <path d="M54 24C60 20 68 20 74 24M34 44C40 40 48 40 52 44M80 42C86 38 94 38 98 42" stroke="#1B221B" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

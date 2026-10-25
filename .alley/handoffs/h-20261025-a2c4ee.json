@@ -1,0 +1,100 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-a2c4ee",
+  "kind": "report",
+  "created": "2026-10-25T12:29:53.762Z",
+  "summarized": true,
+  "parent": "h-20261025-a7de94",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "antigravity",
+    "model": null,
+    "session": "7199cffb-2157-46c0-ae27-37e4b0a4ad39"
+  },
+  "to": null,
+  "repo": {
+    "base": "e52e83cdc7122fa878244b53eeb4700998a9e5f7",
+    "head": "2707daa591cef989591c87bf39bf45f2fd79a542",
+    "branch": "lane/sim-t4",
+    "worktree": ".worktrees/sim-t4",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-a2c4ee",
+      "commit": "c6e6ab699fff87f8a2ca4a3bdba4cb0b4dd52dcc"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Created the 'Riparian Field Guide' visual design specification in src/ui/DESIGN.md and 45 hand-crafted flat botanical SVG assets in public/art/ covering all 38 Appendix B card IDs plus c, n, p, o2, day, night, and card-back.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "src/ui/DESIGN.md with status 'iterating' and all T4 design sections",
+      "evidence": [
+        {
+          "test": "src/ui/DESIGN.md with status 'iterating' and all T4 design sections",
+          "result": "src/ui/DESIGN.md defines projector-safe CSS custom properties, tabular type scale for ~160px cards, archetype frames matching PDF p.1 colors (organisms orange, microbe pink, wild event green, adaptation teal, token kraft), alive/dead(sideways)/processed/attached stack visuals per PDF p.3, board layout per spec §5, Day/Night treatment, and 5 CSS animations with durations, easing curves, and prefers-reduced-motion support."
+        }
+      ]
+    },
+    {
+      "what": "38 card illustration SVGs in public/art/<card-id>.svg for every Appendix B card",
+      "evidence": [
+        {
+          "test": "38 card illustration SVGs in public/art/<card-id>.svg for every Appendix B card",
+          "result": "Verified all 38 Appendix B card IDs exist in public/art/ (8 producers, 10 consumers, 6 detritivores, 4 microbes, 5 adaptations, 4 events, 1 fallen-leaf token), each viewBox-scaled (0 0 160 120) and < 1.5 KB."
+        }
+      ]
+    },
+    {
+      "what": "7 UI and nutrient icon SVGs (day.svg, night.svg, card-back.svg, c.svg, n.svg, p.svg, o2.svg)",
+      "evidence": [
+        {
+          "test": "7 UI and nutrient icon SVGs (day.svg, night.svg, card-back.svg, c.svg, n.svg, p.svg, o2.svg)",
+          "result": "Verified all 7 icon/cycle SVGs exist in public/art/ with distinct geometric silhouettes for colorblind and projector legibility (C hexagon, N diamond, P triangle, O2 paired bubbles)."
+        }
+      ]
+    },
+    {
+      "what": "Committed owned files on branch lane/sim-t4 leaving TASK.md untracked",
+      "evidence": [
+        {
+          "test": "Committed owned files on branch lane/sim-t4 leaving TASK.md untracked",
+          "result": "Commit 2707daa on lane/sim-t4 adds src/ui/DESIGN.md and 45 files under public/art/; git status shows only ?? TASK.md."
+        }
+      ]
+    },
+    {
+      "what": "Test counts",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "N/A (design-only lane branched from main prior to T1 scaffold; verified 45/45 SVG files < 6 KB and DESIGN.md sections)"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Used a 160x120 (4:3) viewBox for card illustration SVGs, 64x64 for nutrient/cycle icons, and 200x280 (5:7) for card-back.svg so all assets scale cleanly inside ~160x224px cards.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Designed Night cycle surface tokens as a cool moonlight slate wash (#DCE3EC / #CFD8E4) with a deep indigo header (#162032) rather than pitch black so dark ink text and sideways dead cards remain high-contrast on a classroom projector.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": []
+}

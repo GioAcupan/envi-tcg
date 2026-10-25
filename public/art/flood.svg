@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Flood: Surging river crest sweeping organic matter downstream -->
+  <rect width="160" height="120" rx="6" fill="#E6F2F5"/>
+  <!-- Crested flood waves -->
+  <path d="M0 56C24 30 56 26 78 44C62 44 54 56 64 66C92 42 124 38 160 58V120H0V56Z" fill="#0D7A8A" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M0 82C32 66 64 92 96 76C124 62 144 78 160 74V120H0V82Z" fill="#1E5AA8" stroke="#1B221B" stroke-width="2"/>
+  <!-- Whitewater foam & swept leaf -->
+  <path d="M44 38C56 32 70 36 78 44M104 46C116 42 130 46 138 52" stroke="#FAF6EC" stroke-width="3" stroke-linecap="round"/>
+  <path d="M92 64C102 56 114 60 110 70C102 74 90 70 92 64Z" fill="#52944E" stroke="#1B221B" stroke-width="1.8"/>
+</svg>

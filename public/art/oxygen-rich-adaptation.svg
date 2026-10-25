@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Oxygen-Rich Adaptation: Photosynthetic leaf releasing abundant O2 bubbles in sunlight -->
+  <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
+  <circle cx="80" cy="60" r="44" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2"/>
+  <!-- Aquatic leaf -->
+  <path d="M42 86C44 54 70 34 102 36C100 68 74 88 42 86Z" fill="#2E6F40" stroke="#1B221B" stroke-width="2.2"/>
+  <!-- Rising O2 bubbles -->
+  <circle cx="96" cy="72" r="12" fill="#0D7A8A" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="114" cy="52" r="10" fill="#1294A6" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="88" cy="36" r="8" fill="#0D7A8A" stroke="#1B221B" stroke-width="2"/>
+  <!-- Special Gold Star -->
+  <polygon points="52,18 56,28 66,28 58,34 61,44 52,38 43,44 46,34 38,28 48,28" fill="#EAB308" stroke="#1B221B" stroke-width="1.8" stroke-linejoin="round"/>
+</svg>

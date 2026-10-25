@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Phosphorus-Accumulator Adaptation: Root & leaf system storing mineral Phosphorus (P) prisms -->
+  <rect width="160" height="120" rx="6" fill="#EDF7F8"/>
+  <circle cx="80" cy="60" r="44" fill="#D5ECEE" stroke="#1F6E7A" stroke-width="2"/>
+  <!-- Root & shoot -->
+  <path d="M80 24V92M80 62L56 84M80 68L104 88" stroke="#2E6F40" stroke-width="4" stroke-linecap="round"/>
+  <path d="M80 42C62 38 56 24 68 20C76 18 80 28 80 42Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <path d="M80 42C98 38 104 24 92 20C84 18 80 28 80 42Z" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <!-- Stored P mineral triangles -->
+  <polygon points="56,64 68,86 44,86" fill="#C6690A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="104,64 116,86 92,86" fill="#C6690A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="80,74 92,96 68,96" fill="#EAB308" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+</svg>

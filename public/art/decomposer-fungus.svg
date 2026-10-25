@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Decomposer Fungus: Saprophytic mushrooms & branching white mycelium on decaying wood -->
+  <rect width="160" height="120" rx="6" fill="#FCF0F5"/>
+  <!-- Decaying log & mycelial hyphae -->
+  <rect x="16" y="88" width="128" height="22" rx="6" fill="#7A5835" stroke="#1B221B" stroke-width="2"/>
+  <path d="M56 90L40 104M72 90L76 106M98 90L116 104" stroke="#FAF6EC" stroke-width="2" stroke-linecap="round"/>
+  <!-- Fungal stalks -->
+  <path d="M60 88V52H72V88M98 88V62H108V88" fill="#FAF6EC" stroke="#1B221B" stroke-width="2"/>
+  <!-- Mushroom caps -->
+  <path d="M36 54C38 28 94 28 96 54H36Z" fill="#A83868" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M82 64C84 44 122 44 124 64H82Z" fill="#C25283" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Spore dots -->
+  <circle cx="58" cy="40" r="3" fill="#FAF6EC"/>
+  <circle cx="74" cy="44" r="2.5" fill="#FAF6EC"/>
+  <circle cx="104" cy="54" r="2.5" fill="#FAF6EC"/>
+</svg>
