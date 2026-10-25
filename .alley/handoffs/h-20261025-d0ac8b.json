@@ -1,0 +1,90 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-d0ac8b",
+  "kind": "brief",
+  "created": "2026-10-25T12:11:08.316Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T1"
+  },
+  "repo": {
+    "base": null,
+    "head": "e52e83cdc7122fa878244b53eeb4700998a9e5f7",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-d0ac8b",
+      "commit": "bc028f8b8e3e8d73f41539f778a18b0af8030b21"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-5624",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 0,
+    "task": "T1"
+  },
+  "contract": {
+    "label": "open",
+    "owns": [
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "vite.config.ts",
+      "index.html",
+      ".gitignore",
+      "src/main.tsx",
+      "src/index.css",
+      "src/App.tsx",
+      "src/engine/types.ts",
+      "src/engine/index.ts",
+      "src/ruleset/index.ts",
+      "src/data/cards.ts",
+      "src/data/params.ts",
+      "src/data/interpretations.ts",
+      "src/ui/game/GameScreen.tsx",
+      "src/ui/editor/EditorScreen.tsx",
+      "src/ui/interpretations/InterpretationsScreen.tsx",
+      "tests/acceptance/engine.test.ts",
+      "tests/acceptance/ruleset.test.ts",
+      "tests/acceptance/interpretations.test.ts",
+      "tests/acceptance/helpers.ts"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "60m"
+  },
+  "lessons": [],
+  "summary": "Wave 0 scaffold for the envi-tcg playtest simulator: a Vite + React 18 + TypeScript + Vitest project at the repo root, the seam types from spec §3 verbatim, stubbed engine and ruleset functions, the default card data from spec Appendix B, placeholder screens wired into App.tsx, and the frozen acceptance tests from spec §7. Typecheck and build must pass; the acceptance tests must run and fail with 'not implemented' rather than crash.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T1 — Scaffold, seam types and stubs, default card data, frozen acceptance tests (plans/2026-10-25-envi-tcg-sim.md#t1). Read the T1 section and spec architecture/envi-tcg-sim-spec.md §3, §7, Appendix A and Appendix B.",
+    "acceptance": [
+      "npm run typecheck passes",
+      "npm test runs and the acceptance tests fail with 'not implemented' (not crash on import)",
+      "npm run build passes",
+      "src/engine/types.ts contains spec §3.1 and §3.2 types verbatim",
+      "src/data/cards.ts holds every Appendix B row with its exact numbers, tags, canEat and copies (Σ copies = 40)",
+      "Frozen tests tests/acceptance/engine.test.ts, ruleset.test.ts, interpretations.test.ts cover one describe per spec §7 row as listed in the T1 section, arranging scenarios only through newGame + referee ops + actions"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
