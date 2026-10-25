@@ -1,0 +1,73 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-6af433",
+  "kind": "brief",
+  "created": "2026-10-25T12:28:44.791Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T3"
+  },
+  "repo": {
+    "base": null,
+    "head": "a564acb802117862f4942073cca48ae83e9052af",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-6af433",
+      "commit": "21609ddf39a53cbe0cb3ca4b0df597d837fa0a91"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-76b5",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 1,
+    "task": "T3"
+  },
+  "contract": {
+    "label": "shaped",
+    "owns": [
+      "src/ruleset/",
+      "src/data/interpretations.ts",
+      "tests/ruleset.lane.test.ts"
+    ],
+    "frozen": [
+      "tests/acceptance/ruleset.test.ts",
+      "tests/acceptance/interpretations.test.ts"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "30m"
+  },
+  "lessons": [],
+  "summary": "Implement ruleset persistence and sharing (spec §3.3) in src/ruleset/index.ts and fill src/data/interpretations.ts with one plain-English entry per Appendix A [R*]/[I*] tag.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T3 — Ruleset storage and the Interpretations list (plans/2026-10-25-envi-tcg-sim.md#t3). Read the T3 section, spec §3.3, §3.4, §4 and Appendix A.",
+    "acceptance": [
+      "Frozen tests/acceptance/ruleset.test.ts and tests/acceptance/interpretations.test.ts pass unchanged (the ruleset test's newGame case depends on the T2 engine lane and may stay red in this lane alone; say so in the report)",
+      "Own cases in tests/ruleset.lane.test.ts: loadRuleset with corrupt JSON in storage returns defaults; with no localStorage global returns defaults and saveRuleset doesn't throw; import with version 2 returns ok:false",
+      "localStorage key envi-tcg.ruleset.v1; importRuleset deep-fills missing params and missing optional card fields from defaults and keeps unknown fields",
+      "interpretations has ids R1-R5 (major: true) and I1-I17 (major: false), each text a sentence a student can check against the PDF",
+      "npm run typecheck and npm run build pass"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}

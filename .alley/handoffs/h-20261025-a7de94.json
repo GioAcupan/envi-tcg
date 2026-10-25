@@ -1,0 +1,68 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-a7de94",
+  "kind": "brief",
+  "created": "2026-10-25T12:12:29.850Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T4"
+  },
+  "repo": {
+    "base": null,
+    "head": "e52e83cdc7122fa878244b53eeb4700998a9e5f7",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-a7de94",
+      "commit": "d737eb342a906da9af0c3b7f7bcb8c5e5a19cc7b"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-96be",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 1,
+    "task": "T4"
+  },
+  "contract": {
+    "label": "open",
+    "owns": [
+      "src/ui/DESIGN.md",
+      "public/art/"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "45m"
+  },
+  "lessons": [],
+  "summary": "Design lane for the envi-tcg playtest simulator: write src/ui/DESIGN.md (tokens, card frames per kind, alive/dead/processed/attached states, board layout, day/night treatment, 3-5 animations) and draw the SVG art set in public/art/ so the wave 3 skin can apply it. No code outside those paths.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T4 — Visual design and art (plans/2026-10-25-envi-tcg-sim.md#t4). Read the T4 section, spec §5 (what the UI must expose) and Appendix B (card ids).",
+    "acceptance": [
+      "src/ui/DESIGN.md exists with status line '**Status:** iterating'",
+      "DESIGN.md covers: palette as CSS custom properties (projector-friendly), type scale, card frame per kind matching the PDF archetype colors (organisms orange, microbe pink, wild event green, evolution teal), alive vs dead (sideways) vs processed and attached stacks, board layout per spec §5, Day/Night treatment, and 3-5 animations (card play, death flip, nutrient gain tick, day/night transition, event reveal) with durations and easing",
+      "public/art/<card-id>.svg exists for every Appendix B id, in one consistent flat style",
+      "public/art/ also has day.svg, night.svg, card-back.svg, c.svg, n.svg, p.svg, o2.svg"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}

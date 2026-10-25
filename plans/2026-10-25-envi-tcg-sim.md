@@ -16,13 +16,14 @@ tasks:
   - { id: T6, wave: 2, label: shaped, budget: 45m, owns: [src/ui/editor/, src/ui/interpretations/], after: [T3] }
   - { id: T7, wave: 2, label: pinned, budget: 15m, owns: [.github/workflows/pages.yml, README.md] }
   - { id: T8, wave: 3, label: open, budget: 60m, owns: [src/ui/, src/index.css], after: [T4, T5, T6] }
+  - { id: T9, wave: 3, label: open, budget: 60m, owns: [public/art/], after: [T4] }
 ---
 
 # envi-tcg playtest simulator
 
 **Spec:** [architecture/envi-tcg-sim-spec.md](../architecture/envi-tcg-sim-spec.md). Rules contract: spec Appendix A; default cards: Appendix B; seams: §3; acceptance trace: §7.
 
-**Agent routing (spec D11):** GPT 6.1 Sol via Orca `codex` at medium effort for T1, T2, T5; Haiku subagents for T3, T6, T7; Gemini via Orca `antigravity` for T4, T8 (fallback per spec §6 S1). No Sonnet.
+**Agent routing (spec D11):** GPT 6.1 Sol via Orca `codex` at medium effort for T1, T2, T5; Haiku subagents for T3, T6, T7; Gemini 4 Argon via Orca `antigravity` for T4, T8, T9 at **high** effort minimum (operator, 2026-10-25; T4 ran on medium before this rule). No Sonnet.
 
 ## Wave 0
 
@@ -152,3 +153,12 @@ jobs:
 - Applies DESIGN.md tokens in `src/index.css` (T1 creates it as a minimal reset and imports it from `src/main.tsx`), card frames per kind using `public/art/<id>.svg` (fall back to a kind icon when missing), and the listed animations with CSS transitions/keyframes; respects `prefers-reduced-motion`.
 - Must not change any `dispatch` call, engine import, or component prop interface; class names may be added.
 - Acceptance: `checks` stay green; orchestrator screenshots the board in Day and Night with alive, dead and attached cards and compares against DESIGN.md; a full match still plays.
+
+### T9 — SVG art revision round (Gemini 4 Argon, high)
+
+**Design line:** find the card and UI SVGs from T4 that read as wonky or off-style and redraw them so the whole set is recognizable and consistent.
+
+- Added 2026-10-25 at the operator's request ("some of them look... wonky"). Owns only `public/art/`; files keep their names (`<card-id>.svg`), so no code changes.
+- Audit every SVG in `public/art/` by rendering it (e.g. a scratch contact sheet outside the repo) against DESIGN.md's style section: subject recognizable at card-art size, consistent stroke weight and palette, balanced composition inside the viewBox, no clipped or stray shapes, no broken paths.
+- Redraw each failing file; keep < 6 KB, flat, viewBox-scaled, no raster or external refs.
+- Acceptance: the lane report lists every file audited with a pass/redraw verdict and a one-line reason for each redraw; a before/after contact sheet path outside the worktree is given; orchestrator reviews the after sheet.

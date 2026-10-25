@@ -1,0 +1,72 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261025-ed09ec",
+  "kind": "brief",
+  "created": "2026-10-25T12:28:43.742Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": {
+    "lane": "T2"
+  },
+  "repo": {
+    "base": null,
+    "head": "a564acb802117862f4942073cca48ae83e9052af",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".seeds/issues.jsonl"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261025-ed09ec",
+      "commit": "f63212cc9a64dd25824874114fe50bfe3bddb7ea"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-75d3",
+    "spec": "architecture/envi-tcg-sim-spec.md",
+    "plan": "plans/2026-10-25-envi-tcg-sim.md",
+    "phase": null,
+    "wave": 1,
+    "task": "T2"
+  },
+  "contract": {
+    "label": "shaped",
+    "owns": [
+      "src/engine/",
+      "tests/engine.lane.test.ts"
+    ],
+    "frozen": [
+      "tests/acceptance/engine.test.ts",
+      "tests/acceptance/helpers.ts"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "90m"
+  },
+  "lessons": [],
+  "summary": "Implement the rules engine (src/engine/) so newGame, checkAction and applyAction play the game in spec Appendix A through the spec §3.2 seam, with ability handlers keyed by card id in src/engine/abilities.ts and a readable log line for every action and automatic effect.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "T2 — Rules engine (plans/2026-10-25-envi-tcg-sim.md#t2). Read the T2 section, spec §3.1-§3.2, §4 and Appendices A and B.",
+    "acceptance": [
+      "Frozen tests/acceptance/engine.test.ts passes unchanged",
+      "Own cases in tests/engine.lane.test.ts for Drought, Heat Wave death, Flood choice with no organism (+1 P), Algal Bloom and Freshwater Snail prevention, Aquatic Worm processing in 1 round, bacterial bonus once per card per game, Consumer Specialization after 2 marks, Protected adaptation, empty-deck draw is a no-op",
+      "An illegal action returns state with only lastError changed; actions by the non-active player are illegal except choose for a pending choice addressed to them and referee; any action while phase === 'gameOver' except referee is illegal",
+      "Referee moveCard keeps PlayerState.deck/hand/discard and GameState.center consistent with CardInstance.zone; endRound runs the Environmental Phase immediately",
+      "npm run typecheck, npm test (engine files), npm run build pass"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
