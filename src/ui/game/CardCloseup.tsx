@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Action, GameState, PlayerId } from '../../engine';
 import { ActionButton } from '../common/ActionButton';
-import { art, attachmentsOf, CardFace, defOf, kindLabel, nutrientText, PoolChips, StarIcon, workersOf } from '../common/Card';
+import { art, attachmentsOf, CardFace, defOf, isInactiveOrganism, isOrganism, kindLabel, nutrientText, PoolChips, StarIcon, workersOf } from '../common/Card';
 import { Sheet } from '../common/Sheet';
 import { cardActions, noTargetReason, TARGET_VERB, validTargets, type TargetKind } from './actions';
 
@@ -15,6 +15,7 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
 }) {
   const card = state.cards[uid];
   const def = defOf(state, card);
+  const inactive = isInactiveOrganism(card, def);
   const params = state.ruleset.params;
   const attachments = [...workersOf(state, uid), ...attachmentsOf(state, uid)];
   const workingOn = card.working ? state.cards[card.working] : undefined;
@@ -48,13 +49,17 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
 
         <dl className="closeup__facts">
           {fact('Cost', <>{def.cost.C} C · {def.cost.N} N{def.cost.O2 ? ` · ${def.cost.O2} O₂` : ''} · {apCost} AP</>)}
-          {def.growth && fact('Growth / round', nutrientText(def.growth))}
-          {def.yield && fact('Yield / round', nutrientText({ ...def.yield, O2: o2Prod }))}
-          {def.release && fact('Release / round', nutrientText(def.release))}
-          {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each round</>)}
-          {def.o2PerRound !== undefined && fact('O₂ upkeep', <>−{def.o2PerRound} each round</>)}
-          {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact('Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
-          {card.zone !== 'hand' && fact(card.status === 'dead' ? 'Remaining biomass' : 'Biomass', <PoolChips pool={card.stored} all />)}
+          {inactive && fact('Activity', `${card.zone === 'attached' ? 'Eaten' : 'Dead'} — no production, upkeep or aging`)}
+          {!inactive && <>
+            {def.growth && fact('Growth / round', nutrientText(def.growth))}
+            {def.yield && fact('Yield / round', nutrientText({ ...def.yield, O2: o2Prod }))}
+            {def.release && fact('Release / round', nutrientText(def.release))}
+            {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each round</>)}
+            {def.o2PerRound !== undefined && fact('O₂ upkeep', <>−{def.o2PerRound} each round</>)}
+            {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact('Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
+          </>}
+          {isOrganism(def) && card.zone !== 'hand' && fact(inactive ? 'Remaining biomass' : 'Biomass', <PoolChips pool={card.stored} all />)}
+          {def.kind === 'microbe' && card.zone === 'attached' && fact('Role', 'Assisting')}
           {workingOn && fact('Working on', <>{name(workingOn.uid)}</>)}
           {!!card.marks && fact('Marks', <>{card.marks}/2{card.specialized ? ' · specialized' : ''}</>)}
           {!card.marks && card.specialized && fact('Marks', 'Specialized')}
@@ -68,7 +73,8 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
             <button type="button" className="attached-row" onClick={() => onOpen(a.uid)}>
               <img src={art(defOf(state, a).art ?? a.defId)} alt="" />
               <span>{defOf(state, a).kind === 'adaptation' ? '⭐ ' : ''}{defOf(state, a).name}{a.working === uid ? ' · working' : ''}</span>
-              <PoolChips pool={a.stored} />
+              {isOrganism(defOf(state, a)) && <PoolChips pool={a.stored} />}
+              {defOf(state, a).kind === 'microbe' && <span>Assisting</span>}
             </button>
           </li>)}</ul>
         </section>}

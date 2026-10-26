@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import type { CardInstance, GameState } from '../../engine';
-import { attachmentsOf, CardFace, defOf, isSideways, nutrientText, statusLabel, workersOf } from '../common/Card';
+import { attachmentsOf, CardFace, defOf, isInactiveOrganism, isOrganism, isSideways, nutrientText, statusLabel, workersOf } from '../common/Card';
 
 export type Mark = 'source' | 'target' | 'dim' | undefined;
 
@@ -64,8 +64,11 @@ function CardButton({ card, state, mark, compact, onTap, onInspect }: {
   >
     {compact ? <span className={`stack-card stack-card--${def.kind}`}>
       <strong>{def.name} <small>P{card.owner + 1}</small></strong>
-      <span>Biomass {nutrientText(card.stored)}</span>
-      <span>{def.release ? `Release ${nutrientText(def.release)}` : def.kind === 'microbe' ? 'Assisting' : 'Underneath'}{def.o2PerRound !== undefined ? ` · Upkeep ${def.o2PerRound} O₂` : ''}</span>
+      {isOrganism(def) && <span>Biomass {nutrientText(card.stored)}</span>}
+      {def.kind === 'microbe' && <span>Assisting</span>}
+      {isOrganism(def) && <span>{isInactiveOrganism(card, def)
+        ? `${card.zone === 'attached' ? 'Eaten' : 'Dead'} — no production`
+        : [def.release ? `Release ${nutrientText(def.release)}` : '', def.o2PerRound !== undefined ? `Upkeep ${def.o2PerRound} O₂` : ''].filter(Boolean).join(' · ')}</span>}
     </span> : <CardFace card={card} state={state} />}
     {!compact && adaptations > 0 && <span className="slot__badge" aria-hidden="true">
       {adaptations > 0 && <span>⭐{adaptations}</span>}
