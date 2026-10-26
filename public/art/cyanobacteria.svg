@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Cyanobacteria: Blue-green Anabaena filament chains with thick-walled nitrogen-fixing heterocysts -->
+  <rect width="160" height="120" rx="6" fill="#E6F4F1"/>
+  <!-- Microscope droplet medallion -->
+  <circle cx="80" cy="60" r="48" fill="#C7ECE4" stroke="#0D7A8A" stroke-width="2"/>
+  <circle cx="80" cy="60" r="43" stroke="#0D7A8A" stroke-width="1" stroke-dasharray="5 3"/>
+  <!-- Secondary background filament chain -->
+  <g fill="#1F6E7A" stroke="#1B221B" stroke-width="1.7">
+    <circle cx="48" cy="38" r="5"/>
+    <circle cx="58" cy="36" r="5"/>
+    <circle cx="68" cy="39" r="5"/>
+    <circle cx="90" cy="48" r="5"/>
+    <circle cx="100" cy="52" r="5"/>
+    <circle cx="110" cy="54" r="5"/>
+  </g>
+  <!-- Enlarged thick-walled heterocyst on upper chain -->
+  <circle cx="79" cy="43" r="7.5" fill="#FDE68A" stroke="#1B221B" stroke-width="2.4"/>
+  <circle cx="79" cy="43" r="4.5" fill="#EAB308" stroke="#0D7A8A" stroke-width="1.4"/>
+  <!-- Primary blue-green beaded trichome filament chain -->
+  <g fill="#0D7A8A" stroke="#1B221B" stroke-width="1.9">
+    <circle cx="40" cy="78" r="6"/>
+    <circle cx="51" cy="72" r="6"/>
+    <circle cx="63" cy="68" r="6"/>
+    <circle cx="92" cy="72" r="6"/>
+    <circle cx="104" cy="76" r="6"/>
+    <circle cx="116" cy="74" r="6"/>
+  </g>
+  <!-- Primary thick-walled heterocyst with polar cyanophycin nodules -->
+  <circle cx="77" cy="70" r="9" fill="#FDE68A" stroke="#1B221B" stroke-width="2.6"/>
+  <circle cx="77" cy="70" r="6" fill="#52944E" stroke="#0D7A8A" stroke-width="1.5"/>
+  <circle cx="70" cy="69" r="1.6" fill="#1B221B"/>
+  <circle cx="84" cy="71" r="1.6" fill="#1B221B"/>
+  <!-- Photosynthetic O2 micro-bubbles -->
+  <circle cx="108" cy="34" r="4" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.6"/>
+  <circle cx="58" cy="90" r="3.5" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.5"/>
+</svg>

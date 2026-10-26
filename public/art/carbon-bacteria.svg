@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Carbon Bacteria: Rod-shaped decomposer bacilli arranged around a Carbon (C) hexagon motif -->
+  <rect width="160" height="120" rx="6" fill="#FCF0F5"/>
+  <circle cx="80" cy="60" r="46" fill="#F5DCE8" stroke="#A83868" stroke-width="2" stroke-dasharray="5 3"/>
+  <!-- Rod-shaped decomposer bacteria around the motif -->
+  <rect x="38" y="34" width="36" height="15" rx="7.5" transform="rotate(-20 38 34)" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <rect x="42" y="70" width="38" height="15" rx="7.5" transform="rotate(12 42 70)" fill="#C25283" stroke="#1B221B" stroke-width="2"/>
+  <rect x="76" y="74" width="36" height="15" rx="7.5" transform="rotate(-14 76 74)" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <!-- Carbon hexagon emblem -->
+  <polygon points="104,22 120,31 120,49 104,58 88,49 88,31" fill="#2E3D30" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="104,26 116,33 116,47 104,54 92,47 92,33" fill="none" stroke="#8FA893" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <path d="M108 35C106.5 33.5 104 33 102 34C99.5 35 98 37.5 98 40C98 42.5 99.5 45 102 46C104 47 106.5 46.5 108 45" stroke="#FAF6EC" stroke-width="2.4" stroke-linecap="round"/>
+</svg>
