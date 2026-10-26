@@ -1,0 +1,79 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-5fe1cd",
+  "kind": "brief",
+  "created": "2026-10-26T14:22:01.785Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "698deac6-7dfe-467d-a0b2-bf7019c6db43"
+  },
+  "to": {
+    "lane": "T2"
+  },
+  "repo": {
+    "base": "578fa80a88a83dff79255bc7ddf3e68b58d5d14f",
+    "head": "99bc1cd34c34a9bcb8777ab44718ef0841b0ddb4",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".claude/skills/gitnexus-cli/SKILL.md",
+      ".claude/skills/gitnexus-debugging/SKILL.md",
+      ".claude/skills/gitnexus-exploring/SKILL.md",
+      ".claude/skills/gitnexus-guide/SKILL.md",
+      ".claude/skills/gitnexus-impact-analysis/SKILL.md",
+      ".claude/skills/gitnexus-refactoring/SKILL.md",
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-5fe1cd",
+      "commit": "7e037f840d1bcf564d37b2593b60b6934285cc96"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-c9ef",
+    "spec": "architecture/update-1-spec.md",
+    "plan": "plans/2026-10-26-update-1.md",
+    "phase": null,
+    "wave": 1,
+    "task": "T2"
+  },
+  "contract": {
+    "label": "shaped",
+    "owns": [
+      "src/ui/game/",
+      "src/ui/common/",
+      "src/ui/useGame.ts",
+      "src/App.tsx",
+      "tests/ui.lane.test.ts"
+    ],
+    "frozen": [
+      "tests/acceptance/engine.test.ts"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "90m"
+  },
+  "lessons": [],
+  "summary": "Update the tablet game screen to show and play UPDATE-1's state (biomass, producer growth/yield, detritivore and microbe stacks over the worked card, consumers eating detritivores) with Day/Night, the shared center and the Flood choice gone, and add a game-menu switch for params.evolutionEnabled plus an 'Evolution off' chip, keeping DESIGN.md's look and the no-scroll rule.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "upd1 T2 — Game screen for UPDATE-1 and the evolution switch (plans/2026-10-26-update-1.md#t2)",
+    "acceptance": [
+      "given a new game at 1024×768 and 768×1024, when two players play a producer, a detritivore assigned to a dead card, a microbe on it, a consumer eating, and end turns, then each step is reachable by tapping, the page never scrolls, and there are no console errors (Playwright smoke; screenshots for the operator, hitl).",
+      "Toggling evolution off then New game yields hands with no adaptation cards and the chip shows.",
+      "Own test file tests/ui.lane.test.ts for any pure helpers (e.g. src/ui/game/actions.ts targeting)."
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}

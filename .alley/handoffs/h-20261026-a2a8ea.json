@@ -1,0 +1,78 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-a2a8ea",
+  "kind": "brief",
+  "created": "2026-10-26T14:22:02.748Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "698deac6-7dfe-467d-a0b2-bf7019c6db43"
+  },
+  "to": {
+    "lane": "T3"
+  },
+  "repo": {
+    "base": "578fa80a88a83dff79255bc7ddf3e68b58d5d14f",
+    "head": "99bc1cd34c34a9bcb8777ab44718ef0841b0ddb4",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      ".claude/skills/gitnexus-cli/SKILL.md",
+      ".claude/skills/gitnexus-debugging/SKILL.md",
+      ".claude/skills/gitnexus-exploring/SKILL.md",
+      ".claude/skills/gitnexus-guide/SKILL.md",
+      ".claude/skills/gitnexus-impact-analysis/SKILL.md",
+      ".claude/skills/gitnexus-refactoring/SKILL.md",
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-a2a8ea",
+      "commit": "70fe09c85501d0e213d36a5e0017d5febe605f8c"
+    }
+  },
+  "work": {
+    "seeds": "envi-tcg-a718",
+    "spec": "architecture/update-1-spec.md",
+    "plan": "plans/2026-10-26-update-1.md",
+    "phase": null,
+    "wave": 1,
+    "task": "T3"
+  },
+  "contract": {
+    "label": "shaped",
+    "owns": [
+      "src/ui/editor/",
+      "src/ui/interpretations/"
+    ],
+    "frozen": [
+      "tests/acceptance/ruleset.test.ts",
+      "tests/acceptance/interpretations.test.ts"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "45m"
+  },
+  "lessons": [],
+  "summary": "Update the ruleset editor for UPDATE-1's card fields and params (cost C/N/O2, biomass, growth, yield, upkeep, release, eatsAlive; decimals allowed), add the 'Evolution / adaptation mechanics' checkbox and the 36/26 deck-size hint, and keep the Interpretations screen listing the new entries with major ones first.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "upd1 T3 — Editor and Interpretations screens for UPDATE-1 (plans/2026-10-26-update-1.md#t3)",
+    "acceptance": [
+      "editing a decimal cost to 0.5 calls onChange with exactly that change",
+      "unchecking evolution sets params.evolutionEnabled false",
+      "Export then Import yields an equal ruleset",
+      "importing a version 1 file shows §4's error and keeps the current ruleset (orchestrator smoke)"
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
