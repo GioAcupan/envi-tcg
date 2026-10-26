@@ -4,7 +4,7 @@
   height: 100vh;
   height: 100dvh;
   display: grid;
-  grid-template-rows: auto minmax(0, 0.9fr) minmax(0, 0.58fr) minmax(0, 1.12fr) auto minmax(0, 1.05fr);
+  grid-template-rows: auto minmax(0, 1fr) 54px minmax(0, 1.18fr) auto minmax(0, 1.05fr);
   gap: 4px;
   padding: max(4px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
   overflow: hidden;
@@ -157,7 +157,6 @@
 }
 .zone--opponent { background: var(--bg-zone-opponent); --ch-max: 190px; }
 .zone--mine { background: var(--bg-zone-player); --ch-max: 230px; }
-.zone--center { background: var(--bg-zone-center); --ch-max: 150px; --pad: 6px; }
 .zone--hand { border: 0; background: transparent; --ch-max: 250px; --pad: 10px; --ch-min: min(clamp(110px, 18vw, 150px), 100cqh - 2 * var(--pad)); }
 
 .zone__row {
@@ -186,6 +185,9 @@
   --ch: min(100cqh - 2 * var(--pad), max(var(--ch-min), var(--fit)), var(--ch-max));
   --cw: calc(var(--ch) * 0.714);
   position: relative;
+  isolation: isolate; /* Hover transforms must not change the order of overlapping hand cards. */
+  display: flex;
+  flex-direction: column;
   flex: none;
   width: var(--cw);
   height: var(--ch);
@@ -204,14 +206,13 @@
 }
 .slot:first-child { margin-left: 0; }
 .slot--side { width: var(--ch); height: var(--cw); }
-.slot:active > .cf { transform: scale(0.97); }
+.card-tap:active > .cf { transform: scale(0.97); }
 .zone--field .slot { animation: card-play 260ms cubic-bezier(0.22, 1, 0.36, 1); }
-.slot--side > .cf { animation: side-in 380ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.slot--side > .card-tap > .cf { animation: side-in 380ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 @media (hover: hover) {
   .zone--hand .slot:hover { transform: translateY(-6px); }
-  .zone--field .slot:hover > .cf,
-  .zone--center .slot:hover > .cf { box-shadow: var(--shadow-card-hover); }
+  .zone--field .slot:hover > .card-tap > .cf { box-shadow: var(--shadow-card-hover); }
 }
 .zone--hand .slot:focus-visible { transform: translateY(-6px); }
 
@@ -219,18 +220,7 @@
 .is-target > .cf { outline: 3px solid var(--status-ok); outline-offset: 2px; animation: target-pulse 1.1s ease-in-out infinite; }
 .is-dim { opacity: 0.42; filter: saturate(0.4); }
 
-/* Attached cards: slivers peeking out behind the host's top-right corner, plus a count badge. */
-.slot__peek {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--card-radius);
-  border: 2px solid var(--border-ink);
-  background: var(--arch-organism-header);
-  transform: translate(calc(var(--i) * 4px), calc(var(--i) * -4px));
-}
-.slot__peek--adaptation { background: var(--arch-adaptation-header); }
-.slot__peek--microbe { background: var(--arch-microbe-header); }
-.slot__peek--token { background: var(--arch-token-header); }
+/* Adaptation count on the host; all attached cards remain exposed underneath. */
 .slot__badge {
   position: absolute;
   z-index: 2;
@@ -419,7 +409,7 @@
 /* --- Center strip: turn indicator / prompt · shared zone · log ticker --- */
 .center {
   display: grid;
-  grid-template-columns: minmax(130px, 21%) minmax(0, 1fr) minmax(90px, 19%);
+  grid-template-columns: minmax(180px, 35%) minmax(0, 1fr);
   gap: 4px;
   min-height: 0;
 }
@@ -436,7 +426,6 @@
   align-items: center;
 }
 .turn { display: flex; align-items: center; gap: 8px; }
-.turn__emblem { width: clamp(28px, 6cqh, 44px); height: auto; animation: cycle-emblem-in 360ms cubic-bezier(0.22, 1, 0.36, 1); }
 .turn p { display: flex; flex-direction: column; font-size: var(--text-sm); line-height: 1.2; }
 .turn b { font-family: var(--font-display); font-size: var(--text-base); }
 .prompt {
@@ -455,7 +444,6 @@
 .prompt p { flex: 1 1 auto; min-width: 0; }
 .prompt b { margin-right: 4px; }
 .prompt .btn { flex: none; }
-.prompt--choice { border-color: var(--status-ok); background: #E6F4E4; }
 .center__log {
   flex-direction: column;
   align-items: flex-start;
@@ -675,7 +663,7 @@
   .pool img { width: 15px; height: 15px; }
   .pool b { font-size: 0.9rem; }
   .pool small { display: none; }
-  .center { grid-template-columns: minmax(84px, 24%) minmax(0, 1fr) 46px; }
+  .center { grid-template-columns: minmax(0, 1fr) 46px; }
   .center__status { padding: 4px 6px; }
   .turn p { font-size: var(--text-xs); }
   .turn b { font-size: var(--text-sm); }
@@ -684,18 +672,16 @@
   .center__log::after { content: "📜"; font-size: 1.2rem; }
   .center__mods { font-size: 10px; padding: 0 4px; }
   .act--end .btn { padding: 0 12px; font-size: 0.95rem; }
-  .turn__emblem { display: none; }
 }
 
 @media (max-height: 560px) {
-  .game { gap: 3px; --gap: 5px; grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.7fr) minmax(0, 1.1fr) auto minmax(0, 1.1fr); }
+  .game { gap: 3px; --gap: 5px; grid-template-rows: auto minmax(0, 1fr) 44px minmax(0, 1.1fr) auto minmax(0, 1.1fr); }
   .zone { --pad: 4px; --ch-min: 48px; }
   .hud { min-height: 40px; padding: 2px 10px; }
   .pool img { width: 15px; height: 15px; }
   .pool b { font-size: 0.9rem; }
   .act--end .btn { min-height: 40px; }
   .center__status, .center__log { padding: 3px 8px; }
-  .turn__emblem { display: none; }
 }
 
 /* --- Motion (reduced-motion fallback lives in src/index.css) --- */
@@ -709,3 +695,29 @@
 }
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes slide-in { from { transform: translateX(40px); opacity: 0; } }
+
+/* UPDATE-1: a slim round strip leaves the space to the two fields. */
+.center__status { gap: 12px; }
+.evolution-chip { padding: 4px 8px; border: 1.5px solid var(--border-ink); border-radius: 99px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.evolution-switch { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 700; }
+.evolution-switch input { width: 24px; height: 24px; accent-color: var(--arch-adaptation-header); }
+.card-tap { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: var(--card-radius); background: none; color: inherit; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-touch-callout: none; }
+.slot > .card-tap { flex: 1 1 auto; min-height: 0; }
+.slot--worked { height: var(--ch); }
+.slot__workers { order: -1; display: flex; flex-direction: column; flex: 0 0 auto; max-height: 48%; overflow: auto; padding: 0 8px 0 0; margin: 0 0 -5px 8px; z-index: 2; }
+.slot__under { display: flex; flex-direction: column; flex: 0 0 auto; max-height: 40%; overflow: auto; padding-left: 8px; margin-top: -5px; }
+.card-tap--compact { flex: none; height: auto; min-height: 44px; text-align: left; }
+.stack-card { display: flex; flex-direction: column; gap: 2px; padding: 4px 7px; border: 2px solid var(--arch-organism-border); border-radius: 6px; background: var(--arch-organism-bg); box-shadow: var(--shadow-card); font-size: 10px; line-height: 1.15; }
+.stack-card strong { font-family: var(--font-display); font-size: 12px; }
+.stack-card--microbe { border-color: var(--arch-microbe-border); background: var(--arch-microbe-bg); }
+.stack-card--adaptation { border-color: var(--arch-adaptation-border); background: var(--arch-adaptation-bg); }
+.card-tap.is-source { outline: 3px solid var(--arch-special-star); outline-offset: 1px; }
+.card-tap.is-target { outline: 3px solid var(--status-ok); outline-offset: 1px; }
+.cf__biomass { display: block; width: 100%; font-weight: 800; font-size: max(10px, 7.8cqi); }
+.cf__rates { flex: none; display: flex; flex-direction: column; gap: 2px; padding: 0 3cqi 3cqi; font-size: max(9px, 7cqi); font-weight: 700; }
+.cf--side .cf__biomass { font-size: max(10px, 6cqi); }
+.cf--full .cf__rates { font-size: 15px; }
+@media (max-width: 640px) {
+  .center__status { gap: 8px; }
+  .evolution-chip { font-size: 10px; padding: 3px 6px; }
+}

@@ -1,15 +1,31 @@
 import { useRef } from 'react';
 import type { CardInstance, GameState } from '../../engine';
-import { attachmentsOf, CardFace, defOf, isSideways, statusLabel } from '../common/Card';
+import { attachmentsOf, CardFace, defOf, isInactiveOrganism, isOrganism, isSideways, nutrientText, statusLabel, workersOf } from '../common/Card';
 
 export type Mark = 'source' | 'target' | 'dim' | undefined;
 
 const LONG_PRESS_MS = 450;
 
-/** One tappable card slot on the board or in the hand. Tap calls onTap; long-press (touch), right-click
- *  and the context-menu key call onInspect. Attached cards peek out behind the slot's top-right edge. */
-export function BoardCard({ card, state, mark, onTap, onInspect }: {
-  card: CardInstance; state: GameState; mark?: Mark; onTap: () => void; onInspect: () => void;
+/** A worked card remains underneath its workers; eaten prey remains underneath its consumer.
+ * Each exposed card is independently tappable and inspectable, including during targeting. */
+export function BoardCard({ card, state, markOf, onTap, onInspect }: {
+  card: CardInstance; state: GameState; markOf: (c: CardInstance) => Mark;
+  onTap: (c: CardInstance) => void; onInspect: (c: CardInstance) => void;
+}) {
+  const over = [...workersOf(state, card.uid), ...attachmentsOf(state, card.uid).filter(c => defOf(state, c).kind === 'microbe')];
+  const under = attachmentsOf(state, card.uid).filter(c => defOf(state, c).kind !== 'microbe');
+  return <div className={`slot${isSideways(card) ? ' slot--side' : ''}${over.length ? ' slot--worked' : ''}${under.length ? ' slot--prey' : ''}`}>
+    <CardButton card={card} state={state} mark={markOf(card)} onTap={() => onTap(card)} onInspect={() => onInspect(card)} />
+    {over.length > 0 && <div className="slot__workers" aria-label="Working cards">{over.map(c =>
+      <CardButton key={c.uid} card={c} state={state} compact mark={markOf(c)} onTap={() => onTap(c)} onInspect={() => onInspect(c)} />)}</div>}
+    {under.length > 0 && <div className="slot__under" aria-label="Cards underneath">{under.map(c =>
+      <CardButton key={c.uid} card={c} state={state} compact mark={markOf(c)} onTap={() => onTap(c)} onInspect={() => onInspect(c)} />)}</div>}
+  </div>;
+}
+
+/** Shared tap/long-press controls for a full card or an exposed card in a stack. */
+function CardButton({ card, state, mark, compact, onTap, onInspect }: {
+  card: CardInstance; state: GameState; mark?: Mark; compact?: boolean; onTap: () => void; onInspect: () => void;
 }) {
   const timer = useRef<number>();
   const pressed = useRef(false); // a long-press already handled this touch
@@ -23,7 +39,7 @@ export function BoardCard({ card, state, mark, onTap, onInspect }: {
 
   return <button
     type="button"
-    className={`slot${isSideways(card) ? ' slot--side' : ''}${mark ? ` is-${mark}` : ''}`}
+    className={`card-tap${compact ? ' card-tap--compact' : ''}${mark ? ` is-${mark}` : ''}`}
     data-uid={card.uid}
     aria-label={`${def.name}${status ? `, ${status.toLowerCase()}` : ''}${attachments.length ? `, ${attachments.length} attached` : ''}`}
     onPointerDown={e => {
@@ -46,12 +62,16 @@ export function BoardCard({ card, state, mark, onTap, onInspect }: {
     }}
     onClick={() => { if (pressed.current) { pressed.current = false; return; } onTap(); }}
   >
-    {attachments.slice(0, 3).map((a, i) =>
-      <span key={a.uid} className={`slot__peek slot__peek--${defOf(state, a).kind}`} style={{ '--i': attachments.slice(0, 3).length - i } as React.CSSProperties} aria-hidden="true" />)}
-    <CardFace card={card} state={state} />
-    {attachments.length > 0 && <span className="slot__badge" aria-hidden="true">
+    {compact ? <span className={`stack-card stack-card--${def.kind}`}>
+      <strong>{def.name} <small>P{card.owner + 1}</small></strong>
+      {isOrganism(def) && <span>Biomass {nutrientText(card.stored)}</span>}
+      {def.kind === 'microbe' && <span>Assisting</span>}
+      {isOrganism(def) && <span>{isInactiveOrganism(card, def)
+        ? `${card.zone === 'attached' ? 'Eaten' : 'Dead'} — no production`
+        : [def.release ? `Release ${nutrientText(def.release)}` : '', def.o2PerRound !== undefined ? `Upkeep ${def.o2PerRound} O₂` : ''].filter(Boolean).join(' · ')}</span>}
+    </span> : <CardFace card={card} state={state} />}
+    {!compact && adaptations > 0 && <span className="slot__badge" aria-hidden="true">
       {adaptations > 0 && <span>⭐{adaptations}</span>}
-      {attachments.length - adaptations > 0 && <span>+{attachments.length - adaptations}</span>}
     </span>}
   </button>;
 }

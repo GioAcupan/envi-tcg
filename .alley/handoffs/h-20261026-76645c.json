@@ -1,0 +1,110 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-76645c",
+  "kind": "report",
+  "created": "2026-10-26T14:50:05.871Z",
+  "summarized": true,
+  "parent": "h-20261026-5fe1cd",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "698deac6-7dfe-467d-a0b2-bf7019c6db43"
+  },
+  "to": null,
+  "repo": {
+    "base": "a8653ed3222d68e2cc854957573cd03173672d3b",
+    "head": "324cd6e9b7dfa458cad756acd3e9f89a73ee92f3",
+    "branch": "lane/upd1-t2",
+    "worktree": ".worktrees/upd1-t2",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-76645c",
+      "commit": "a712135693357dac8ad468deb9a3ae6ed264ac90"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Fixed both T2 wave-check correctness findings and committed as 324cd6e. Dead field organisms and eaten prey hide live production, release, upkeep and lifespan facts while retaining prominent remaining biomass; microbes show Assisting and adaptations show no biomass. Required checks and both tablet browser scenarios pass; coordinator owns independent review and the Alley report wrapper.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Inactive organism display fixed in Card.tsx, CardCloseup.tsx and BoardCard.tsx; hand cards retain printed rates.",
+      "evidence": [
+        {
+          "test": "Regression reproduction before implementation",
+          "result": "Both added rendering tests failed on the prior code."
+        },
+        {
+          "test": "npm test",
+          "result": "82 tests passed across 6 files, including both added rendering regressions; prior tests unchanged."
+        },
+        {
+          "test": "git commit",
+          "result": "324cd6e: Fix inactive organism facts and attachment biomass labels"
+        }
+      ]
+    },
+    {
+      "what": "Biomass restricted to producer, consumer and detritivore faces, stacks, closeups and attached lists; microbes labeled Assisting.",
+      "evidence": [
+        {
+          "test": "Rendering regression",
+          "result": "Microbe and adaptation standalone closeups and stack/list renderings show no biomass chips."
+        },
+        {
+          "test": "Playwright at 1024x768 and 768x1024",
+          "result": "Both passed: dead facts have no live rates/lifespan, microbe stack/list has no biomass, eaten prey has no release/upkeep/lifespan."
+        }
+      ]
+    },
+    {
+      "what": "Checks and browser artifacts refreshed outside the worktree.",
+      "evidence": [
+        {
+          "test": "npm run typecheck",
+          "result": "Passed."
+        },
+        {
+          "test": "npm run build",
+          "result": "Passed."
+        },
+        {
+          "test": "Playwright full lane scenario",
+          "result": "Both tablet sizes passed producer play, worker/microbe targeting, consumer eating, round resolution and evolution toggle/new-game checks with no horizontal or vertical page scroll and no console errors. Results: t2-browser-fix1-results.json; script: t2-browser-fix1.cjs."
+        },
+        {
+          "test": "Screenshot review",
+          "result": "Overwrote t2-shots/1024x768-worked-stack.png and t2-shots/768x1024-closeup.png, visually inspected both, removed stale *-failure.png files."
+        },
+        {
+          "test": "Alley review and git diff --check",
+          "result": "No policy changes, pending proposals or uncommitted store changes; test diff only adds regression coverage; whitespace check passed. Independent documentation review remains with coordinator."
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Suppress inactive live stats instead of adding another printed-stat group; retain printed rules text on the card face and make inactivity explicit in closeup Activity facts.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Treat attached organisms as eaten prey even if an inspected/referee fixture retains alive status; only field-dead or attached organisms are inactive so hand printed stats remain available.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [],
+  "questions": []
+}

@@ -2,10 +2,18 @@ import { useEffect, useState, type ReactNode } from 'react';
 import type { CardDef, CardInstance, GameState, Pool } from '../../engine';
 
 /** URL of an SVG in public/art/. The app is served under a subpath, so never use a leading slash. */
-export const art = (name: string) => `${import.meta.env.BASE_URL}art/${name}.svg`;
+export const art = (name: string) => `${import.meta.env.BASE_URL}${name.startsWith('art/') ? name : `art/${name}.svg`}`;
 
 export const defOf = (state: GameState, card: CardInstance): CardDef =>
   state.ruleset.cards.find(d => d.id === card.defId)!;
+
+/** Only organisms carry biomass; microbes and adaptations have roles instead. */
+export const isOrganism = (def: CardDef) =>
+  def.kind === 'producer' || def.kind === 'consumer' || def.kind === 'detritivore';
+
+/** Dead organisms and eaten prey retain biomass but no longer produce, pay upkeep or age. */
+export const isInactiveOrganism = (card: CardInstance, def: CardDef) =>
+  isOrganism(def) && ((card.zone === 'field' && card.status === 'dead') || card.zone === 'attached');
 
 /** Rule C.2: dead cards on the board are turned sideways. */
 export const isSideways = (card: CardInstance) =>
@@ -13,6 +21,14 @@ export const isSideways = (card: CardInstance) =>
 
 export const attachmentsOf = (state: GameState, uid: string) =>
   Object.values(state.cards).filter(c => c.zone === 'attached' && c.attachedTo === uid);
+
+/** Field detritivores stacked over the card they currently work, including another player's workers. */
+export const workersOf = (state: GameState, uid: string) =>
+  Object.values(state.cards).filter(c => c.zone === 'field' && c.working === uid);
+
+/** Compact printed nutrient amounts; partial growth/yield/release pools omit zero amounts. */
+export const nutrientText = (pool: Partial<Pool>) =>
+  (['C', 'N', 'P', 'O2'] as const).filter(n => pool[n]).map(n => `${pool[n]} ${n === 'O2' ? 'O₂' : n}`).join(' · ') || '0 C';
 
 function KindIcon({ kind }: { kind: CardDef['kind'] }): ReactNode {
   const paths: Record<CardDef['kind'], ReactNode> = {
@@ -73,7 +89,7 @@ function Art({ card, def }: { card: CardInstance; def: CardDef }) {
   return <span className="cf__art">
     {failed
       ? <span className="cf__fallback"><KindIcon kind={def.kind} /></span>
-      : <img src={art(card.defId)} alt="" draggable={false} onError={() => setFailed(true)} />}
+      : <img src={art(def.art ?? card.defId)} alt="" draggable={false} onError={() => setFailed(true)} />}
   </span>;
 }
 
@@ -82,6 +98,7 @@ function Art({ card, def }: { card: CardInstance; def: CardDef }) {
  *  Dead board cards get a landscape (sideways) face whose text stays upright. */
 export function CardFace({ card, state, full }: { card: CardInstance; state: GameState; full?: boolean }) {
   const def = defOf(state, card);
+  const inactive = isInactiveOrganism(card, def);
   const upgraded = card.adaptations.length > 0 || !!card.specialized;
   const status = statusLabel(card);
   const classes = `cf cf--${def.kind} cf--${card.status ?? 'none'}${upgraded ? ' cf--upgraded' : ''}${full ? ' cf--full' : ''}`;
@@ -96,7 +113,7 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       <span className="cf__side-info">
         <span className="cf__name">{def.name}</span>
         <span className={`cf__stamp cf__stamp--${card.status}`} title={status}>{status}</span>
-        <PoolChips pool={card.stored} />
+        <span className="cf__biomass">Biomass {nutrientText(card.stored)}</span>
       </span>
     </span>;
   }
@@ -106,7 +123,8 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       <span className="cf__cost">
         {def.cost.C > 0 && <span className="cf__cost-chip"><img src={art('c')} alt="C" />{def.cost.C}</span>}
         {def.cost.N > 0 && <span className="cf__cost-chip"><img src={art('n')} alt="N" />{def.cost.N}</span>}
-        {!def.cost.C && !def.cost.N && <span className="cf__cost-chip">{def.kind === 'event' ? '0 AP' : `${state.ruleset.params.playApCost} AP`}</span>}
+        {!!def.cost.O2 && <span className="cf__cost-chip"><img src={art('o2')} alt="O₂" />{def.cost.O2}</span>}
+        {!def.cost.C && !def.cost.N && !def.cost.O2 && <span className="cf__cost-chip">{def.kind === 'event' ? '0 AP' : `${state.ruleset.params.playApCost} AP`}</span>}
       </span>
       <span className="cf__kind">{full ? kindLabel(def) : shortKind(def)}</span>
     </span>
@@ -114,11 +132,18 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
     <Art card={card} def={def} />
     {status && <span className={`cf__stamp cf__stamp--${card.status}`}>{status}</span>}
     <span className="cf__stats">
-      {o2Prod !== undefined && <span className={`pill pill--o2`} title={`Produces ${o2Prod} O₂ each round`}><img src={art('o2')} alt="O?" />+{o2Prod}</span>}
-      {def.o2PerRound !== undefined && <span className={`pill pill--upkeep`} title={`Uses ${def.o2PerRound} O₂ each round`}><img src={art('o2')} alt="O₂" />−{def.o2PerRound}</span>}
-      {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title="Lifespan left">⏳{card.lifespanLeft ?? def.lifespan}</span>}
-      {card.zone !== 'hand' && card.zone !== 'deck' && <span className="pill pill--stored" title="Stored nutrients"><PoolChips pool={card.stored} /></span>}
+      {!inactive && <>
+        {o2Prod !== undefined && <span className={`pill pill--o2`} title={`Produces ${o2Prod} O₂ each round`}><img src={art('o2')} alt="O₂" />+{o2Prod}</span>}
+        {def.o2PerRound !== undefined && <span className={`pill pill--upkeep`} title={`Uses ${def.o2PerRound} O₂ each round`}><img src={art('o2')} alt="O₂" />−{def.o2PerRound}</span>}
+        {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title="Lifespan left">⏳{card.lifespanLeft ?? def.lifespan}</span>}
+      </>}
+      {isOrganism(def) && card.zone !== 'hand' && card.zone !== 'deck' && <span className="cf__biomass">{inactive ? 'Remaining biomass' : 'Biomass'} {nutrientText(card.stored)}</span>}
     </span>
+    {!inactive && (def.growth || def.yield || def.release) && <span className="cf__rates">
+      {def.growth && <span>Growth {nutrientText(def.growth)}</span>}
+      {def.yield && <span>Yield {nutrientText({ ...def.yield, O2: o2Prod })}</span>}
+      {def.release && <span>Release {nutrientText(def.release)}</span>}
+    </span>}
     {full && <>
       {(def.tags.length > 0 || eats.length > 0) && <span className="cf__meta">
         {def.tags.filter(t => t && t !== '–').join(' • ')}
