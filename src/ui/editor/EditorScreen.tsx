@@ -3,8 +3,9 @@ import type { CardDef, Nutrient, Params, Ruleset } from '../../engine';
 import { defaultRuleset, exportRuleset, importRuleset } from '../../ruleset';
 import './editor.css';
 
-const DECK_SIZE = 40;
 const NUTRIENTS: Nutrient[] = ['C', 'N', 'P', 'O2'];
+const ORGANISM_NUTRIENTS: Nutrient[] = ['C', 'N', 'P'];
+type NestedPool = Partial<Record<Nutrient, number>>;
 
 /** Copy of `obj` with `key` set, or without `key` when value is undefined. Never mutates `obj`. */
 function withField<T extends object>(obj: T, key: string, value: unknown): T {
@@ -12,6 +13,14 @@ function withField<T extends object>(obj: T, key: string, value: unknown): T {
   if (value === undefined) delete copy[key];
   else copy[key] = value;
   return copy as T;
+}
+
+/** One nutrient of an optional nested pool. An empty value removes it; the whole pool goes when none is left. */
+function withPoolNutrient(pool: NestedPool | undefined, nutrient: Nutrient, value: number | undefined): NestedPool | undefined {
+  const next: NestedPool = { ...pool };
+  if (value === undefined) delete next[nutrient];
+  else next[nutrient] = value;
+  return Object.keys(next).length > 0 ? next : undefined;
 }
 
 function parseList(text: string): string[] {
@@ -32,14 +41,28 @@ function fileBaseName(name: string): string {
   return name.trim().replace(/[\\/:*?"<>|]+/g, '-') || 'ruleset';
 }
 
-/** Number input: empty means undefined (optional field) or 0 (required field). */
+/** Number input (decimals allowed). Empty means undefined for an optional field, or 0 for a required one. */
 function NumberInput({ label, value, required, onChange }: {
   label: string; value: number | undefined; required?: boolean; onChange: (value: number | undefined) => void;
 }) {
-  return <input aria-label={label} type="number" value={value ?? ''} onChange={event => {
-    const next = event.target.value === '' ? undefined : Number(event.target.value);
+  // Keeps the raw text while focused, so a half-typed decimal such as "0." is not overwritten by the parsed value.
+  const [draft, setDraft] = useState<string>();
+  return <input aria-label={label} type="number" step="any" value={draft ?? value ?? ''} onChange={event => {
+    const text = event.target.value;
+    setDraft(text);
+    const next = text === '' ? undefined : Number(text);
     onChange(required ? next ?? 0 : next);
-  }} />;
+  }} onBlur={() => setDraft(undefined)} />;
+}
+
+/** One number cell per nutrient of an optional nested pool (biomass, growth, yield, release). */
+function PoolCells({ label, row, pool, nutrients, onChange }: {
+  label: string; row: string; pool: NestedPool | undefined; nutrients: Nutrient[]; onChange: (pool: NestedPool | undefined) => void;
+}) {
+  return <>{nutrients.map(nutrient => <td key={nutrient}>
+    <NumberInput label={`${label} ${nutrient} ${row}`} value={pool?.[nutrient]}
+      onChange={value => onChange(withPoolNutrient(pool, nutrient, value))} />
+  </td>)}</>;
 }
 
 /** Comma-separated list. Keeps its own draft text so typing a comma is not swallowed; re-syncs when the list changes from outside. */
@@ -61,7 +84,11 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const { params } = ruleset;
-  const deckTotal = ruleset.cards.reduce((sum, card) => sum + card.copies, 0);
+  // Adaptation cards are not part of the deck when evolution is off (the baseline).
+  const deckSize = params.evolutionEnabled ? 36 : 26;
+  const deckTotal = ruleset.cards
+    .filter(card => params.evolutionEnabled || card.kind !== 'adaptation')
+    .reduce((sum, card) => sum + card.copies, 0);
 
   const setCard = (index: number, next: CardDef) =>
     onChange({ ...ruleset, cards: ruleset.cards.map((card, i) => (i === index ? next : card)) });
@@ -97,7 +124,8 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
       onChange(result.ruleset);
       setMessage({ kind: 'ok', text: `Imported "${result.ruleset.name}".` });
     } else {
-      setMessage({ kind: 'error', text: `Import failed: ${result.error}. The current ruleset is unchanged.` });
+      // importRuleset's version message already ends in a period; keep exactly one before the sentence below.
+      setMessage({ kind: 'error', text: `Import failed: ${result.error.replace(/\.$/, '')}. The current ruleset is unchanged.` });
     }
   }
 
@@ -127,7 +155,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
       </div>
       <p className="editor-deck" aria-live="polite">
         Deck total: <strong>{deckTotal}</strong> cards
-        {deckTotal !== DECK_SIZE && <span className="editor-hint"> (decks are usually {DECK_SIZE} cards)</span>}
+        {deckTotal !== deckSize && <span className="editor-hint"> (decks are usually {deckSize} cards)</span>}
       </p>
     </div>
     {message && <p role={message.kind === 'error' ? 'alert' : 'status'} className={`editor-message editor-message-${message.kind}`}>{message.text}</p>}
@@ -169,7 +197,6 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
         ))}
       </fieldset>
 
-
       <label className="editor-check">
         <input type="checkbox" checked={params.firstPlayerAlternates}
           onChange={event => setParams({ firstPlayerAlternates: event.target.checked })} />
@@ -180,6 +207,14 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
           onChange={event => setParams({ undoEnabled: event.target.checked })} />
         Undo enabled
       </label>
+      <div className="editor-check-group">
+        <label className="editor-check">
+          <input type="checkbox" checked={params.evolutionEnabled} aria-describedby="evolution-help"
+            onChange={event => setParams({ evolutionEnabled: event.target.checked })} />
+          Evolution / adaptation mechanics
+        </label>
+        <p id="evolution-help" className="editor-help">Off = baseline: no Evolution cards in either deck, no specialization.</p>
+      </div>
     </div>
 
     <h3>Cards ({ruleset.cards.length} archetypes)</h3>
@@ -187,8 +222,14 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
       <table className="editor-table">
         <thead>
           <tr>
-            <th>Name</th><th>Kind</th><th>Subtype</th><th>Cost C</th><th>Cost N</th>
-            <th>O₂ produced</th><th>O₂ per round</th><th>Lifespan</th><th>Tags</th><th>Can eat</th><th>Copies</th><th>Text</th>
+            <th>Name</th><th>Kind</th><th>Subtype</th>
+            <th>Cost C</th><th>Cost N</th><th>Cost O₂</th>
+            <th>Biomass C</th><th>Biomass N</th><th>Biomass P</th>
+            <th>Growth C</th><th>Growth N</th><th>Growth P</th><th>Growth O₂</th>
+            <th>Yield C</th><th>Yield N</th><th>Yield P</th><th>Yield O₂</th>
+            <th>Upkeep O₂</th>
+            <th>Release C</th><th>Release N</th><th>Release P</th>
+            <th>Lifespan</th><th>Tags</th><th>Can eat</th><th>Eats alive</th><th>Copies</th><th>Text</th>
           </tr>
         </thead>
         <tbody>
@@ -196,22 +237,34 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
             const row = `(card ${index + 1})`;
             const set = (next: CardDef) => setCard(index, next);
             return <tr key={index} className={`editor-row editor-row--${card.kind}`}>
-              <td><input aria-label={`Name ${row}`} value={card.name} onChange={event => set({ ...card, name: event.target.value })} /></td>
+              <td className="editor-col-name"><input aria-label={`Name ${row}`} value={card.name} onChange={event => set({ ...card, name: event.target.value })} /></td>
               <td className="editor-kind"><span className={`editor-kind-pill editor-kind-pill--${card.kind}`}>{card.kind}</span></td>
-              <td><input aria-label={`Subtype ${row}`} value={card.subtype ?? ''}
+              <td className="editor-col-subtype"><input aria-label={`Subtype ${row}`} value={card.subtype ?? ''}
                 onChange={event => set(withField(card, 'subtype', event.target.value || undefined))} /></td>
               <td><NumberInput label={`Cost C ${row}`} required value={card.cost.C}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'C', value) })} /></td>
               <td><NumberInput label={`Cost N ${row}`} required value={card.cost.N}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'N', value) })} /></td>
-              <td><NumberInput label={`O2 per round ${row}`} value={card.o2PerRound}
+              <td><NumberInput label={`Cost O2 ${row}`} value={card.cost.O2}
+                onChange={value => set({ ...card, cost: withField(card.cost, 'O2', value) })} /></td>
+              <PoolCells label="Biomass" row={row} pool={card.biomass} nutrients={ORGANISM_NUTRIENTS}
+                onChange={pool => set(withField(card, 'biomass', pool))} />
+              <PoolCells label="Growth" row={row} pool={card.growth} nutrients={NUTRIENTS}
+                onChange={pool => set(withField(card, 'growth', pool))} />
+              <PoolCells label="Yield" row={row} pool={card.yield} nutrients={NUTRIENTS}
+                onChange={pool => set(withField(card, 'yield', pool))} />
+              <td><NumberInput label={`Upkeep O2 ${row}`} value={card.o2PerRound}
                 onChange={value => set(withField(card, 'o2PerRound', value))} /></td>
+              <PoolCells label="Release" row={row} pool={card.release} nutrients={ORGANISM_NUTRIENTS}
+                onChange={pool => set(withField(card, 'release', pool))} />
               <td><NumberInput label={`Lifespan ${row}`} value={card.lifespan}
                 onChange={value => set(withField(card, 'lifespan', value))} /></td>
-              <td><ListInput label={`Tags ${row}`} value={card.tags}
+              <td className="editor-col-list"><ListInput label={`Tags ${row}`} value={card.tags}
                 onChange={list => set({ ...card, tags: list })} /></td>
-              <td><ListInput label={`Can eat ${row}`} value={card.canEat}
+              <td className="editor-col-list"><ListInput label={`Can eat ${row}`} value={card.canEat}
                 onChange={list => set(withField(card, 'canEat', list.length ? list : undefined))} /></td>
+              <td><input type="checkbox" aria-label={`Eats alive ${row}`} checked={card.eatsAlive ?? false}
+                onChange={event => set({ ...card, eatsAlive: event.target.checked })} /></td>
               <td><NumberInput label={`Copies ${row}`} required value={card.copies}
                 onChange={value => set({ ...card, copies: value ?? 0 })} /></td>
               <td><textarea aria-label={`Text ${row}`} rows={2} value={card.text}

@@ -191,6 +191,19 @@
   width: 11.5rem;
 }
 
+.editor-check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.editor-help {
+  margin: 0;
+  padding-left: 1.4rem;
+  font-size: var(--text-xs);
+  color: var(--ink-secondary);
+}
+
 .editor-group {
   display: flex;
   flex-wrap: wrap;
@@ -268,17 +281,20 @@
   width: 3.3rem;
 }
 
-.editor-table td:nth-child(1) input {
+.editor-table input[type="checkbox"] {
+  width: auto;
+}
+
+.editor-col-name input {
   width: 9.5rem;
   font-weight: 700;
 }
 
-.editor-table td:nth-child(3) input {
+.editor-col-subtype input {
   width: 5.5rem;
 }
 
-.editor-table td:nth-child(10) input,
-.editor-table td:nth-child(11) input {
+.editor-col-list input {
   width: 7.5rem;
 }
 
