@@ -1,0 +1,7 @@
+{
+  "id": "h-20261026-b52f11",
+  "state": "closed",
+  "at": "2026-10-26T13:55:32.313Z",
+  "by": "raphaelgioacupanz@gmail.com",
+  "reason": "superseded: plan T1 owns gained src/ui/ and src/App.tsx (compile-only)"
+}

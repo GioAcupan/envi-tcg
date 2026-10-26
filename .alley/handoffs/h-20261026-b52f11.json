@@ -1,0 +1,76 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-b52f11",
+  "kind": "brief",
+  "created": "2026-10-26T13:54:52.186Z",
+  "summarized": true,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "698deac6-7dfe-467d-a0b2-bf7019c6db43"
+  },
+  "to": {
+    "lane": "T1"
+  },
+  "repo": {
+    "base": "578fa80a88a83dff79255bc7ddf3e68b58d5d14f",
+    "head": "9c599c27040a860feb70d5c9212a98c5032c02ad",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [],
+    "salvage": null
+  },
+  "work": {
+    "seeds": "envi-tcg-e143",
+    "spec": "architecture/update-1-spec.md",
+    "plan": "plans/2026-10-26-update-1.md",
+    "phase": null,
+    "wave": 0,
+    "task": "T1"
+  },
+  "contract": {
+    "label": "open",
+    "owns": [
+      "src/engine/",
+      "src/data/",
+      "src/ruleset/",
+      "tests/acceptance/engine.test.ts",
+      "tests/acceptance/helpers.ts",
+      "tests/acceptance/ruleset.test.ts",
+      "tests/acceptance/interpretations.test.ts",
+      "tests/engine.lane.test.ts",
+      "tests/ruleset.lane.test.ts"
+    ],
+    "frozen": [],
+    "checks": [
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "budget": "120m"
+  },
+  "lessons": [],
+  "summary": "Rewrite the engine, default card data, params, Interpretations and ruleset storage so the app plays the revised rules in docs/UPDATE-1.pdf as pinned by architecture/update-1-spec.md (types §3 verbatim, round flow Appendix A, cards Appendix B, inferences §9), including the params.evolutionEnabled toggle. Rewrite the engine/ruleset/interpretations tests for the new rules.",
+  "outcome": null,
+  "done": [],
+  "next": {
+    "step": "upd1 T1 — Engine, default data and ruleset for UPDATE-1 (plans/2026-10-26-update-1.md#t1)",
+    "acceptance": [
+      "given defaults, when newGame, then each player has 36 cards across deck+hand and 5 in hand; with evolutionEnabled: false, 26 and no adaptation card anywhere, and playing an adaptation obtained by referee is illegal (\"Evolution is off\").",
+      "given Emergent Plant in hand, when played, then pool −2 C −0.5 N, AP −1, stored = 6/1/0/0; after both players end turn, stored C = 7 and pool +2 O2 +1 C; with Drought this round an Aquatic Plant produces nothing and other producers yield 1 O2.",
+      "given a dead plant worked by Freshwater Shrimp, when a round ends, then the shrimp's owner gains 3 C from the plant's stored C and the shrimp's lifespan does not drop; with Tubifex Worm also on it the Tubifex releases 1 C + 1 extra C + 1 N; when the plant's C reaches 0 it goes to its owner's discard with nothing left on the field, and its workers are free to assign again.",
+      "given a Shrimp working a dead plant and a Carbon Bacteria played on it, when a round ends, then 6 C reach the owner while the plant loses only 3 C, and the bacteria is back in its owner's hand; Nitrifying moves all the card's N; Phosphorus gives +1 P; a microbe on a card with no worker stays put.",
+      "given a Small Fish and an opponent's living detritivore, when eat, then the prey's stored adds to the fish, the prey sits under it, AP −1; a second eat that round is illegal; Protected prey is illegal.",
+      "Strong Rainfall: each player +1 P; a player at 3 P with living algae has each algae's stored doubled unless they have a living Freshwater Snail. Heat Wave: an organism whose owner can't pay upkeep+1 dies (producers included). Flood: each player loses one random living organism and gains 1 C, or gains 1 P with none.",
+      "given pool 50/15/1 via referee, then that player wins.",
+      "an empty deck draws from the reshuffled discard pile.",
+      "importRuleset of a version 1 file → ok: false with §4's message; loadRuleset with a stored version 1 returns defaults.",
+      "Edge cases: an illegal action changes only lastError; fractional pools display and compare correctly (no rounding in the engine)."
+    ]
+  },
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
