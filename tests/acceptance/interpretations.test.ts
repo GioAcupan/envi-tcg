@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { interpretations } from '../../src/data/interpretations';
 
-describe('D7 — interpretations', () => {
-  it('lists every major and minor inference from Appendix A', () => {
-    const required = [
-      ...Array.from({ length: 5 }, (_, index) => `R${index + 1}`),
-      ...Array.from({ length: 17 }, (_, index) => `I${index + 1}`),
-    ];
-    expect(interpretations.map(item => item.id)).toEqual(expect.arrayContaining(required));
+describe('U13 in-app Interpretations', () => {
+  it('lists exactly R1-R5 and I1-I14 with nonempty text and major flags', () => {
+    const ids = [...Array.from({ length: 5 }, (_, i) => `R${i + 1}`), ...Array.from({ length: 14 }, (_, i) => `I${i + 1}`)];
+    expect(interpretations.map(i => i.id)).toEqual(ids); expect(new Set(interpretations.map(i => i.id)).size).toBe(19);
+    for (const item of interpretations) { expect(item.topic.trim().length).toBeGreaterThan(0); expect(item.text.trim().length).toBeGreaterThan(10); expect(item.major).toBe(item.id.startsWith('R')); }
   });
 });

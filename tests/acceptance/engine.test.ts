@@ -1,238 +1,150 @@
 import { describe, expect, it } from 'vitest';
-import { applyAction, checkAction, newGame, type Action, type GameState } from '../../src/engine';
-import { give, play, testRuleset, uidOf } from './helpers';
+import { applyAction, checkAction, newGame } from '../../src/engine';
+import { defaultRuleset } from '../../src/ruleset';
+import { give, play, testRuleset, round, ref } from './helpers';
 
-describe('D1 — action validation, payments and referee', () => {
-  it.each(['AP', 'nutrients'])('rejects a play without enough %s and changes only lastError', shortage => {
-    let state = give(newGame(testRuleset(), 1), 0, 'river-grass');
-    state = applyAction(state, { type: 'referee', op: shortage === 'AP'
-      ? { kind: 'setAp', player: 0, ap: 0 }
-      : { kind: 'setPool', player: 0, pool: { C: 0, N: 0 } } });
-    const uid = state.players[0].hand.find(uid => state.cards[uid].defId === 'river-grass')!;
-    const action: Action = { type: 'play', player: 0, uid };
-    expect(checkAction(state, action)).toEqual(expect.any(String));
-    const next = applyAction(state, action);
-    expect(next.lastError).toEqual(expect.any(String));
-    expect({ ...next, lastError: undefined }).toEqual({ ...state, lastError: undefined });
-  });
-
-  it('pays AP and C/N on a legal play and stores the cost', () => {
-    const state = give(newGame(testRuleset(), 2), 0, 'river-grass');
-    const uid = state.players[0].hand.find(uid => state.cards[uid].defId === 'river-grass')!;
-    const action: Action = { type: 'play', player: 0, uid };
-    expect(checkAction(state, action)).toBeNull();
-    const next = applyAction(state, action);
-    expect(next.lastError).toBeUndefined();
-    expect(next.players[0].ap).toBe(state.players[0].ap - 1);
-    expect(next.players[0].pool).toEqual({ ...state.players[0].pool, C: state.players[0].pool.C - 2, N: state.players[0].pool.N - 1 });
-    expect(next.cards[uid]).toMatchObject({ zone: 'field', status: 'alive', stored: { C: 2, N: 1, P: 0, O2: 0 } });
-  });
-
-  it('allows and logs referee setPool even without AP', () => {
-    let state = newGame(testRuleset(), 3);
-    state = applyAction(state, { type: 'referee', op: { kind: 'setAp', player: 0, ap: 0 } });
-    const action: Action = { type: 'referee', op: { kind: 'setPool', player: 0, pool: { C: 12, N: 4 } } };
-    expect(checkAction(state, action)).toBeNull();
-    state = applyAction(state, action);
-    expect(state.players[0].pool).toMatchObject({ C: 12, N: 4 });
-    expect(state.log.at(-1)?.text).toContain('Referee:');
+describe('U1 decks and evolution baseline', () => {
+  it.each([true, false])('deals five of %s evolution deck', evolutionEnabled => {
+    const rules = defaultRuleset(); rules.params.evolutionEnabled = evolutionEnabled;
+    const state = newGame(rules, 12);
+    for (const p of state.players) { expect(p.hand).toHaveLength(5); expect(p.deck.length + p.hand.length).toBe(evolutionEnabled ? 36 : 26); }
+    if (!evolutionEnabled) expect(Object.values(state.cards).some(c => rules.cards.find(d => d.id === c.defId)!.kind === 'adaptation')).toBe(false);
   });
 });
 
-describe('D1 round flow', () => {
-  it('settles Day production, upkeep and aging, then opens Night for player 1', () => {
-    let { state, uid: producer } = play(newGame(testRuleset(), 4), 0, 'river-grass');
-    const consumer = play(state, 0, 'caterpillar');
-    state = consumer.state;
-    const before = structuredClone(state);
-    state = applyAction(state, { type: 'endTurn', player: 0 });
+describe('U2 play costs and initial biomass', () => {
+  it('pays fractional N and AP and stores printed biomass', () => {
+    let state = give(newGame(testRuleset(), 1), 0, 'emergent-plant');
+    const uid = state.players[0].hand.find(u => state.cards[u].defId === 'emergent-plant')!;
+    state = applyAction(state, { type: 'play', player: 0, uid });
+    expect(state.lastError).toBeUndefined(); expect(state.players[0].pool).toEqual({ C: 8, N: 2.5, P: 0, O2: 7 });
+    expect(state.players[0].ap).toBe(2); expect(state.cards[uid].stored).toEqual({ C: 6, N: 1, P: 0, O2: 0 });
+  });
+  it('pays microbe O2 and requires a dead target', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'river-grass');
+    let state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
+    state = give(state, 0, 'carbon-bacteria'); const uid = state.players[0].hand.find(u => state.cards[u].defId === 'carbon-bacteria')!;
+    const before = state.players[0].pool.O2;
+    expect(checkAction(state, { type: 'play', player: 0, uid })).toBeTruthy();
+    state = applyAction(state, { type: 'play', player: 0, uid, targetUid: plant.uid });
+    expect(state.players[0].pool.O2).toBe(before - 1); expect(state.cards[uid].attachedTo).toBe(plant.uid);
+  });
+});
+
+describe('U3 round production', () => {
+  it('grows and yields every round after both turns', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'emergent-plant');
+    let state = plant.state; const before = state.players[0].pool;
+    state = applyAction(state, { type: 'endTurn', player: 0 }); expect(state.round).toBe(1);
     state = applyAction(state, { type: 'endTurn', player: 1 });
-    expect(state).toMatchObject({ round: 2, isDay: false, firstPlayer: 1, activePlayer: 1 });
-    expect(state.players[0].pool.O2).toBe(before.players[0].pool.O2 + 2 - 1);
-    expect(state.cards[producer].lifespanLeft).toBe(3);
-    expect(state.cards[consumer.uid].lifespanLeft).toBe(2);
-    for (const player of [0, 1] as const) {
-      expect(state.players[player].hand).toHaveLength(before.players[player].hand.length + 1);
-      expect(state.players[player].deck).toHaveLength(before.players[player].deck.length - 1);
-      expect(state.players[player].ap).toBe(3);
-    }
+    expect(state.cards[plant.uid].stored.C).toBe(7); expect(state.players[0].pool.C).toBe(before.C + 1); expect(state.players[0].pool.O2).toBe(before.O2 + 2);
+    state = round(state); expect(state.cards[plant.uid].stored.C).toBe(8);
+  });
+  it('Oxygen-Rich adds two O2 and P-Accumulator adds biomass P', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'river-grass');
+    let state = play(plant.state, 0, 'oxygen-rich-adaptation', plant.uid).state;
+    state = play(state, 0, 'p-accumulator-adaptation', plant.uid).state;
+    const before = state.players[0].pool.O2; state = round(state);
+    expect(state.players[0].pool.O2).toBe(before + 4); expect(state.cards[plant.uid].stored.P).toBe(1);
   });
 });
 
-describe('D1 food chain', () => {
-  it('moves eaten prey under its eater and transfers its stored nutrients', () => {
-    const prey = play(newGame(testRuleset(), 5), 1, 'leaf-litter-plant');
-    let { state, uid: eater } = play(prey.state, 0, 'caterpillar');
-    const before = structuredClone(state);
-    const action: Action = { type: 'eat', player: 0, eaterUid: eater, preyUid: prey.uid };
-    expect(checkAction(state, action)).toBeNull();
-    state = applyAction(state, action);
-    expect(state.cards[prey.uid]).toMatchObject({ zone: 'attached', attachedTo: eater });
-    expect(state.cards[eater].stored.C).toBe(before.cards[eater].stored.C + before.cards[prey.uid].stored.C);
-    expect(state.cards[eater].stored.N).toBe(before.cards[eater].stored.N + before.cards[prey.uid].stored.N);
-    expect(state.players[0].ap).toBe(before.players[0].ap - 1);
-    expect(checkAction(state, action)).toEqual(expect.any(String));
+describe('U4 detritivore release and completion', () => {
+  it('releases three C, pauses lifespan, completes and frees workers', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'emergent-plant');
+    let state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
+    const shrimp = play(state, 0, 'freshwater-shrimp', plant.uid); state = shrimp.state;
+    const before = state.players[0].pool.C; state = round(state);
+    expect(state.players[0].pool.C).toBe(before + 3); expect(state.cards[plant.uid].stored.C).toBe(3); expect(state.cards[shrimp.uid].lifespanLeft).toBe(4);
+    state = round(state); expect(state.cards[plant.uid].zone).toBe('discard'); expect(state.cards[shrimp.uid].working).toBeUndefined();
+    expect(Object.values(state.cards).some(c => c.zone === 'field' && c.uid === plant.uid)).toBe(false);
   });
-
-  it.each(['riparian-tree', 'green-algae'])('Caterpillar cannot eat %s', defId => {
-    const prey = play(newGame(testRuleset(), 6), 1, defId);
-    const eater = play(prey.state, 0, 'caterpillar');
-    expect(checkAction(eater.state, { type: 'eat', player: 0, eaterUid: eater.uid, preyUid: prey.uid })).toEqual(expect.any(String));
-  });
-
-  it('does not allow eating a Protected organism', () => {
-    const prey = play(newGame(testRuleset(), 7), 1, 'leaf-litter-plant');
-    const protectedPrey = play(prey.state, 1, 'protected-adaptation', prey.uid);
-    const eater = play(protectedPrey.state, 0, 'caterpillar');
-    expect(checkAction(eater.state, { type: 'eat', player: 0, eaterUid: eater.uid, preyUid: prey.uid })).toEqual(expect.any(String));
+  it('allows multiple workers and collector + shredder bonus from biomass', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'river-grass');
+    let state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
+    state = play(state, 0, 'freshwater-shrimp', plant.uid).state;
+    const worm = play(state, 1, 'tubifex-worm', plant.uid); state = worm.state;
+    const before = state.players[1].pool; state = round(state);
+    expect(state.players[1].pool.C).toBe(before.C + 2); expect(state.players[1].pool.N).toBe(before.N + 1); expect(state.cards[plant.uid].stored.C).toBe(1); expect(state.cards[worm.uid].lifespanLeft).toBe(3);
   });
 });
 
-describe('D1 decomposition', () => {
-  it('processes a dead card over processRounds and returns stored nutrients to the microbe owner', () => {
-    const dead = play(newGame(testRuleset(), 8), 1, 'river-grass');
-    let state = applyAction(dead.state, { type: 'referee', op: { kind: 'setStatus', uid: dead.uid, status: 'dead' } });
-    const detritivore = play(state, 0, 'freshwater-shrimp');
-    state = applyAction(detritivore.state, { type: 'assign', player: 0, detritivoreUid: detritivore.uid, deadUid: dead.uid });
-    expect(state.lastError).toBeUndefined();
-    for (let round = 0; round < state.ruleset.params.processRounds; round++) {
-      state = applyAction(state, { type: 'referee', op: { kind: 'endRound' } });
-      expect(state.cards[dead.uid].status).toBe(round + 1 < state.ruleset.params.processRounds ? 'dead' : 'processed');
-    }
-    const stored = state.cards[dead.uid].stored;
-    state = give(state, 0, 'decomposer-fungus');
-    state = applyAction(state, { type: 'referee', op: { kind: 'setActivePlayer', player: 0 } });
-    state = applyAction(state, { type: 'referee', op: { kind: 'setAp', player: 0, ap: 3 } });
-    const before = state.players[0].pool;
-    const microbe = state.players[0].hand.find(uid => state.cards[uid].defId === 'decomposer-fungus')!;
-    state = applyAction(state, { type: 'play', player: 0, uid: microbe, targetUid: dead.uid });
-    expect(state.lastError).toBeUndefined();
-    expect(state.players[0].pool.C).toBe(before.C + stored.C + 1); // Shrimp's Shred bonus
-    expect(state.players[0].pool.N).toBe(before.N + stored.N + 1);
-    expect(state.cards[dead.uid].zone).toBe('discard');
-    expect(state.players[1].discard).toContain(dead.uid);
-    expect(state.cards[microbe].zone).toBe('field');
+describe('U5 one-use microbe assistance', () => {
+  it.each(['carbon-bacteria', 'nitrifying-bacteria', 'phosphorus-bacteria'])('%s assists and returns to hand', id => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'river-grass');
+    let state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
+    state = play(state, 0, 'freshwater-shrimp', plant.uid).state;
+    const microbe = play(state, 0, id, plant.uid); state = microbe.state;
+    const before = state.players[0].pool; state = round(state);
+    expect(state.cards[microbe.uid].zone).toBe('hand'); expect(state.cards[plant.uid].stored.C).toBe(3);
+    if (id === 'carbon-bacteria') expect(state.players[0].pool.C).toBe(before.C + 6);
+    if (id === 'nitrifying-bacteria') { expect(state.players[0].pool.N).toBe(before.N + 1); expect(state.cards[plant.uid].stored.N).toBe(0); }
+    if (id === 'phosphorus-bacteria') expect(state.players[0].pool.P).toBe(before.P + 1);
   });
-
-  it('allows Super Decomposer on unprocessed dead matter', () => {
-    let state = newGame(testRuleset(), 9);
-    const dead = uidOf(state, 'fallen-leaf', 'center');
-    const result = play(state, 0, 'super-decomposer', dead);
-    state = result.state;
-    expect(state.cards[dead]?.zone ?? 'removed').toBe('removed');
-    expect(state.players[0].pool.C).toBe(31);
+  it('waits attached when no worker acts', () => {
+    const plant = play(newGame(testRuleset(), 1), 0, 'river-grass');
+    const state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
+    const microbe = play(state, 0, 'carbon-bacteria', plant.uid);
+    expect(round(microbe.state).cards[microbe.uid]).toMatchObject({ zone: 'attached', attachedTo: plant.uid });
   });
 });
 
-describe('D1 events', () => {
-  it('resolves drawn Strong Rainfall immediately and queues next Night upkeep', () => {
-    const ruleset = testRuleset();
-    ruleset.cards = ruleset.cards.map(card => ({ ...card, copies: card.id === 'strong-rainfall' ? 1 : card.copies }));
-    let state = newGame(ruleset, 10);
-    const event = Object.values(state.cards).find(card => card.defId === 'strong-rainfall' && card.owner === 0 && card.zone === 'deck')!;
-    // Moving every other deck card to hand leaves the event as the only drawable card.
-    for (const uid of [...state.players[0].deck]) {
-      if (uid !== event.uid) state = applyAction(state, { type: 'referee', op: { kind: 'moveCard', uid, zone: 'hand', owner: 0 } });
-    }
-    const before = structuredClone(state);
-    state = applyAction(state, { type: 'referee', op: { kind: 'draw', player: 0 } });
-    expect(state.players[0].pool.P).toBe(before.players[0].pool.P + 2);
-    expect(state.players[1].pool.P).toBe(before.players[1].pool.P + 2);
-    expect(state.modifiers).toEqual(expect.arrayContaining([expect.objectContaining({ source: 'strong-rainfall', appliesTo: 'nextNight', effect: 'upkeep+1' })]));
-    expect(state.players[0].hand).not.toContain(event.uid);
-    expect(state.players[0].ap).toBe(before.players[0].ap);
+describe('U6 consumer eating', () => {
+  it('transfers prey biomass, attaches prey, charges AP and limits eating', () => {
+    const fish = play(newGame(testRuleset(), 1), 0, 'small-fish');
+    const shrimp = play(fish.state, 1, 'freshwater-shrimp');
+    const worm = play(shrimp.state, 1, 'aquatic-worm');
+    let state = ref(worm.state, { kind: 'setActivePlayer', player: 0 }); const before = state.players[0].ap;
+    state = applyAction(state, { type: 'eat', player: 0, eaterUid: fish.uid, preyUid: shrimp.uid });
+    expect(state.lastError).toBeUndefined(); expect(state.cards[fish.uid].stored).toEqual({ C: 6, N: 2, P: 0, O2: 0 }); expect(state.cards[shrimp.uid]).toMatchObject({ zone: 'attached', attachedTo: fish.uid }); expect(state.players[0].ap).toBe(before - 1);
+    expect(checkAction(state, { type: 'eat', player: 0, eaterUid: fish.uid, preyUid: worm.uid })).toMatch(/limit/);
   });
-
-  it('Flood asks the drawer, then the other player, to choose an organism', () => {
-    const ruleset = testRuleset();
-    ruleset.cards = ruleset.cards.map(card => ({ ...card, copies: card.id === 'flood' ? 1 : card.copies }));
-    const p0 = play(newGame(ruleset, 11), 0, 'river-grass');
-    let { state, uid: p1 } = play(p0.state, 1, 'river-grass');
-    const event = Object.values(state.cards).find(card => card.defId === 'flood' && card.owner === 0 && card.zone === 'deck')!;
-    for (const uid of [...state.players[0].deck]) {
-      if (uid !== event.uid) state = applyAction(state, { type: 'referee', op: { kind: 'moveCard', uid, zone: 'hand', owner: 0 } });
-    }
-    state = applyAction(state, { type: 'referee', op: { kind: 'draw', player: 0 } });
-    expect(state.phase).toBe('choice');
-    expect(state.pendingChoice).toMatchObject({ player: 0, options: expect.arrayContaining([p0.uid]) });
-    const before = structuredClone(state);
-    state = applyAction(state, { type: 'choose', player: 0, uid: p0.uid });
-    expect(state.cards[p0.uid].status).toBe('processed');
-    expect(state.players[0].pool.C).toBe(before.players[0].pool.C + 1);
-    expect(state.pendingChoice).toMatchObject({ player: 1, options: expect.arrayContaining([p1]) });
-    state = applyAction(state, { type: 'choose', player: 1, uid: p1 });
-    expect(state.cards[p1].status).toBe('processed');
-    expect(state.players[1].pool.C).toBe(before.players[1].pool.C + 1);
-    expect(state.pendingChoice).toBeUndefined();
+  it('blocks Protected prey', () => {
+    const fish = play(newGame(testRuleset(), 1), 0, 'small-fish'); const prey = play(fish.state, 1, 'freshwater-shrimp');
+    let state = play(prey.state, 1, 'protected-adaptation', prey.uid).state; state = ref(state, { kind: 'setActivePlayer', player: 0 });
+    expect(checkAction(state, { type: 'eat', player: 0, eaterUid: fish.uid, preyUid: prey.uid })).toMatch(/Protected/);
   });
 });
 
-describe('D1 win', () => {
-  it('ends the game when an action reaches every nutrient threshold', () => {
-    const state = applyAction(newGame(testRuleset(), 12), { type: 'referee', op: { kind: 'setPool', player: 0, pool: { C: 50, N: 15, P: 2 } } });
-    expect(state.winner).toBe(0);
-    expect(state.phase).toBe('gameOver');
+describe('U7 wild events', () => {
+  it('Drought affects this round and aquatic plants produce nothing', () => {
+    const rules = testRuleset(); rules.cards.find(c => c.id === 'drought')!.copies = 1;
+    const a = play(newGame(rules, 1), 0, 'aquatic-plant'); const b = play(a.state, 0, 'river-grass');
+    let state = play(b.state, 0, 'drought').state; const before = state.players[0].pool;
+    state = round(state); expect(state.cards[a.uid].stored.C).toBe(6); expect(state.cards[b.uid].stored.C).toBe(7); expect(state.players[0].pool.O2).toBe(before.O2 + 1); expect(state.modifiers).toHaveLength(0);
+  });
+  it('Heat Wave can kill producers and charges upkeep in play order', () => {
+    const rules = testRuleset(); rules.cards.find(c => c.id === 'heat-wave')!.copies = 1;
+    // Remove production using a zero-yield edited producer so the producer cannot pay even one O2.
+    const edited = testRuleset({ cards: rules.cards.map(c => c.kind === 'producer' ? { ...c, yield: {} } : c) });
+    const p = play(newGame(edited, 1), 0, 'river-grass'); let state = play(p.state, 0, 'heat-wave').state; state = ref(state, { kind: 'setPool', player: 0, pool: { O2: 0 } });
+    state = round(state); expect(state.cards[p.uid].status).toBe('dead');
+  });
+  it('Flood randomly kills one living organism per player, or gives P without one', () => {
+    const rules = testRuleset(); rules.cards.find(c => c.id === 'flood')!.copies = 1;
+    const plant = play(newGame(rules, 5), 0, 'river-grass'); const fish = play(plant.state, 0, 'small-fish');
+    const state = play(fish.state, 0, 'flood').state;
+    expect([plant.uid, fish.uid].filter(uid => state.cards[uid].status === 'dead')).toHaveLength(1); expect(state.players[0].pool.C).toBe(31); expect(state.players[1].pool.P).toBe(1);
+    expect(play(fish.state, 0, 'flood').state).toEqual(state);
   });
 });
 
-describe('D3 — applyAction purity', () => {
-  it.each(['legal', 'illegal', 'referee', 'endTurn'] as const)('never mutates input for %s actions', kind => {
-    let state = give(newGame(testRuleset(), 13), 0, 'river-grass');
-    if (kind === 'illegal') state = applyAction(state, { type: 'referee', op: { kind: 'setAp', player: 0, ap: 0 } });
-    const uid = state.players[0].hand.find(uid => state.cards[uid].defId === 'river-grass')!;
-    const action: Action = kind === 'referee' ? { type: 'referee', op: { kind: 'setPool', player: 0, pool: { C: 12 } } }
-      : kind === 'endTurn' ? { type: 'endTurn', player: 0 } : { type: 'play', player: 0, uid };
-    const before = structuredClone(state);
-    applyAction(state, action);
-    expect(state).toEqual(before);
+describe('U8 Algal Bloom', () => {
+  it.each([false, true])('Rainfall gives each player P and bloom respects snail=%s', snail => {
+    const rules = testRuleset(); rules.cards.find(c => c.id === 'strong-rainfall')!.copies = 1;
+    const algae = play(newGame(rules, 1), 0, 'green-algae'); let state = algae.state;
+    if (snail) state = play(state, 0, 'freshwater-snail').state;
+    state = give(state, 0, 'strong-rainfall'); const uid = state.players[0].hand.find(u => state.cards[u].defId === 'strong-rainfall')!;
+    state = ref(state, { kind: 'setPool', player: 0, pool: { P: 2 } });
+    state = applyAction(state, { type: 'play', player: 0, uid });
+    expect(state.players[0].pool.P).toBe(3); expect(state.players[1].pool.P).toBe(1); expect(state.cards[algae.uid].stored.C).toBe(snail ? 2 : 4);
+    state = round(state); expect(state.cards[algae.uid].stored.C).toBe(snail ? 3 : 10); expect(state.cards[algae.uid].stored.N).toBe(snail ? 1 : 2);
   });
 });
 
-describe('D6 — card ability handlers', () => {
-  it('River Grass gains +1 C when photosynthesizing', () => {
-    const played = play(newGame(testRuleset(), 14), 0, 'river-grass');
-    const before = played.state.players[0].pool.C;
-    const state = applyAction(played.state, { type: 'referee', op: { kind: 'endRound' } });
-    expect(state.players[0].pool.C).toBe(before + 1);
-  });
-
-  it('Fast-Growing Plant gains +1 C on play', () => {
-    const state = give(newGame(testRuleset(), 15), 0, 'fast-growing-plant');
-    const uid = state.players[0].hand.find(uid => state.cards[uid].defId === 'fast-growing-plant')!;
-    const next = applyAction(state, { type: 'play', player: 0, uid });
-    expect(next.players[0].pool.C).toBe(state.players[0].pool.C - 1 + 1);
-  });
-
-  it('Riparian Tree is uneatable by primaries', () => {
-    const prey = play(newGame(testRuleset(), 16), 1, 'riparian-tree');
-    const eater = play(prey.state, 0, 'grasshopper');
-    expect(checkAction(eater.state, { type: 'eat', player: 0, eaterUid: eater.uid, preyUid: prey.uid })).toEqual(expect.any(String));
-  });
-
-  it('Leaf Litter Plant creates a Fallen Leaf on death', () => {
-    const played = play(newGame(testRuleset(), 17), 0, 'leaf-litter-plant');
-    const state = applyAction(played.state, { type: 'referee', op: { kind: 'setCardField', uid: played.uid, field: 'lifespanLeft', value: 1 } });
-    const next = applyAction(state, { type: 'referee', op: { kind: 'endRound' } });
-    expect(next.cards[played.uid].status).toBe('dead');
-    const leaves = Object.values(next.cards).filter(card => card.defId === 'fallen-leaf' && card.owner === 0 && card.zone === 'field');
-    expect(leaves).toHaveLength(1);
-    expect(leaves[0]).toMatchObject({ status: 'dead', stored: { C: 1, N: 0, P: 0, O2: 0 } });
-  });
-
-  it('Nutrient-Rich prey gives the eater owner +1 C and +1 N', () => {
-    const prey = play(newGame(testRuleset(), 18), 1, 'river-grass');
-    const adapted = play(prey.state, 1, 'nutrient-rich-adaptation', prey.uid);
-    const eater = play(adapted.state, 0, 'caterpillar');
-    const before = eater.state.players[0].pool;
-    const state = applyAction(eater.state, { type: 'eat', player: 0, eaterUid: eater.uid, preyUid: prey.uid });
-    expect(state.players[0].pool).toEqual({ ...before, C: before.C + 1, N: before.N + 1 });
-  });
-
-  it('Super Decomposer can decompose unprocessed dead matter from the field', () => {
-    const dead = play(newGame(testRuleset(), 19), 1, 'river-grass');
-    const state = applyAction(dead.state, { type: 'referee', op: { kind: 'setStatus', uid: dead.uid, status: 'dead' } });
-    const next = play(state, 0, 'super-decomposer', dead.uid).state;
-    expect(next.players[0].pool).toMatchObject({ C: 32, N: 21 });
-    expect(next.players[1].discard).toContain(dead.uid);
+describe('U9 victory', () => {
+  it('wins at 50 C / 15 N / 1 P but not a fractional amount short', () => {
+    let state = ref(newGame(testRuleset(), 1), { kind: 'setPool', player: 0, pool: { C: 49.5, N: 15, P: 1 } }); expect(state.phase).toBe('action');
+    state = ref(state, { kind: 'setPool', player: 0, pool: { C: 50 } }); expect(state.winner).toBe(0); expect(state.phase).toBe('gameOver');
   });
 });
