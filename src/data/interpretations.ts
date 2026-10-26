@@ -1,50 +1,119 @@
-// src/data/interpretations.ts
-export interface Interpretation { id: string; topic: string; text: string; major: boolean }  // major = relayed to authors (R1–R5)
+// Assumptions from architecture/update-1-spec.md section 9, shown in-app for the rule authors to check.
+export interface Interpretation { id: string; topic: string; text: string; major: boolean }
 
-// One entry per [R*]/[I*] tag in docs/spec Appendix A. Text is what the app does, checkable against the PDF.
 export const interpretations: Interpretation[] = [
-  { id: 'R1', topic: 'Round structure', major: true,
-    text: 'Each round is an Environmental Phase, then the first player\'s turn of 3 AP, then the other player\'s turn of 3 AP. Rounds alternate Day and Night, and round 1 is Day.' },
-  { id: 'R2', topic: 'Costs and decomposition returns', major: true,
-    text: 'Playing an organism pays its C and N cost from the player\'s pool and that amount stays on the card. When a microbe decomposes a card, the card\'s stored nutrients go to the microbe\'s owner and the card goes to its owner\'s discard pile.' },
-  { id: 'R3', topic: 'Algal Bloom', major: true,
-    text: 'Algal Bloom makes all of one player\'s organisms pay 1 more O₂ upkeep in the next round, and any they cannot pay for die. Bloom Algae starts it for its owner during photosynthesis when that owner has at least 3 P.' },
-  { id: 'R4', topic: 'Eating', major: true,
-    text: 'Eating costs 1 AP and each eater can eat at most once per round. The prey can belong to either player, its stored nutrients move to the eater, and the prey is placed under the eater.' },
-  { id: 'R5', topic: 'Processing and microbes', major: true,
-    text: 'A dead card must wait 2 rounds under a detritivore before a microbe can decompose it. Microbes stay in play after decomposing and can decompose again in later turns, at most once per round each.' },
-  { id: 'I1', topic: 'Wild event in opening hand', major: false,
-    text: 'If a wild event is dealt into an opening hand, it is shuffled back into the deck and replaced with another card.' },
-  { id: 'I2', topic: 'Starting Fallen Leaves', major: false,
-    text: 'Three Fallen Leaf tokens start in the shared center, each storing 1 C, and either player can use them.' },
-  { id: 'I3', topic: 'First player', major: false,
-    text: 'Player 1 takes the first turn in round 1, and the first player switches every round.' },
-  { id: 'I4', topic: 'Upkeep order', major: false,
-    text: 'Upkeep is paid in the order the organisms were played, and an organism its owner cannot pay for dies.' },
-  { id: 'I5', topic: 'Round draw', major: false,
-    text: 'The PDF does not state a draw step, so each player draws 1 card per round in the Environmental Phase.' },
-  { id: 'I6', topic: 'Wild event drawn', major: false,
-    text: 'A wild event that is drawn resolves at once for no AP, and the player then draws a replacement card.' },
-  { id: 'I7', topic: 'Eaten organisms', major: false,
-    text: 'An eaten organism is placed under its eater and is not treated as dead matter, so its nutrients only leave through that eater.' },
-  { id: 'I8', topic: 'Hand limit and unspent AP', major: false,
-    text: 'There is no hand size limit, and unspent AP is lost at the end of each turn.' },
-  { id: 'I9', topic: 'Specialization marks', major: false,
-    text: 'A consumer gains one specialization mark each time it eats a producer that has any special (⭐) adaptation, and the PDF\'s "opponent\'s" wording is ignored.' },
-  { id: 'I10', topic: 'Detritivore release', major: false,
-    text: 'When a detritivore finishes processing a dead card, its owner gains 1 C.' },
-  { id: 'I11', topic: 'Adaptation targets', major: false,
-    text: 'Producer adaptations and Protected can only target an alive organism of the right kind that the same player owns.' },
-  { id: 'I12', topic: 'Consumer Specialization cost', major: false,
-    text: 'Consumer Specialization costs 1 AP plus 2 C and 1 N, because the PDF does not state its nutrient cost.' },
-  { id: 'I13', topic: 'Specialized consumers', major: false,
-    text: 'A specialized consumer gets +2 lifespan, may eat twice per round, and each of its eats also gives its owner 1 C.' },
-  { id: 'I14', topic: 'Freshwater Snail and Algal Bloom', major: false,
-    text: 'A player with an alive Freshwater Snail ignores Algal Bloom.' },
-  { id: 'I15', topic: 'Algae token', major: false,
-    text: 'The PDF\'s "Algae/Biofilm token" is treated as an alive algae card that a snail or grazer can eat.' },
-  { id: 'I16', topic: 'Deck copy counts', major: false,
-    text: 'Copy counts were chosen to total 40 cards per deck, using the PDF\'s microbe counts and 4 wild events. The Editor can change them.' },
-  { id: 'I17', topic: 'Aquatic and prey tags', major: false,
-    text: 'The aquatic tag and the prey tags were inferred from biology, because the PDF is silent on them.' },
+  {
+    "id": "R1",
+    "topic": "Day/Night is gone",
+    "text": "UPDATE-1 deletes the Day/Night section; every round's Environmental Phase runs production. (\"Per day round\" in the producer section is read as \"per round\".)",
+    "major": true
+  },
+  {
+    "id": "R2",
+    "topic": "Consumers and Evolution keep first-draft stats",
+    "text": "UPDATE-1 lists 3 secondary consumers and 10 evolution cards but no tables. Used: Small Fish, Frog, Predatory Insect at draft costs/upkeep/lifespan, biomass = cost, all eat any living detritivore; the five draft adaptations × 2 copies. Consumer Specialization marks come from any eat (not from special producers, which consumers no longer eat).",
+    "major": true
+  },
+  {
+    "id": "R3",
+    "topic": "Microbe lifecycle",
+    "text": "Played on a dead card (1 AP + 1 O2), it cannot be moved or taken back; at the next Environmental Phase in which a detritivore works that card it applies its ability once, then returns to its owner's hand.",
+    "major": true
+  },
+  {
+    "id": "R4",
+    "topic": "Decomposition end and dead animals",
+    "text": "A worked card is fully decomposed when its stored C reaches 0; leftover N/P is lost with it and it goes to its owner's discard with everything under it. Collectors may also work dead animals (detritivores, consumers), otherwise nothing could recycle them.",
+    "major": true
+  },
+  {
+    "id": "R5",
+    "topic": "Algal Bloom effect",
+    "text": "At each Environmental Phase (and immediately on Strong Rainfall), a player with P > 2 and at least one living algae has each living algae's biomass doubled (C, N, P); a living Freshwater Snail prevents it. No other bloom penalty.",
+    "major": true
+  },
+  {
+    "id": "I1",
+    "topic": "Wild event deck copies",
+    "text": "Each deck holds one of each of the 4 wild events (\"split to 2 decks\" read as one set per player's deck; 36 total confirms 4 per deck).",
+    "major": false
+  },
+  {
+    "id": "I2",
+    "topic": "Opening and drawn events",
+    "text": "Opening-hand wild events are shuffled back and replaced; a drawn event resolves for no AP and a replacement is drawn.",
+    "major": false
+  },
+  {
+    "id": "I3",
+    "topic": "Event timing",
+    "text": "Wild events affect the round in which they are drawn; round-start draws happen after the round number advances.",
+    "major": false
+  },
+  {
+    "id": "I4",
+    "topic": "Flood outcomes",
+    "text": "Flood: for each player, a random living organism of theirs dies and they gain +1 C; with none, +1 P.",
+    "major": false
+  },
+  {
+    "id": "I5",
+    "topic": "Heat Wave upkeep",
+    "text": "Heat Wave's +1 O2 applies to producers too (\"all organisms\").",
+    "major": false
+  },
+  {
+    "id": "I6",
+    "topic": "Assigning on play",
+    "text": "Playing a detritivore with a target costs play AP + assign AP (the PDF's \"separately cost another action point\"); later rounds of work are free.",
+    "major": false
+  },
+  {
+    "id": "I7",
+    "topic": "Multiple workers",
+    "text": "Multiple detritivores may work one card; a detritivore works one card at a time; reassigning costs AP again.",
+    "major": false
+  },
+  {
+    "id": "I8",
+    "topic": "Collectors paired with shredders",
+    "text": "Collector + Shredder pairing: a collector on a card a shredder also works releases an extra 1 C and 1 N.",
+    "major": false
+  },
+  {
+    "id": "I9",
+    "topic": "Carbon Bacteria bonus",
+    "text": "Carbon Bacteria doubles C released that phase; the extra does not come from the card's biomass.",
+    "major": false
+  },
+  {
+    "id": "I10",
+    "topic": "Aquatic Grazer release",
+    "text": "Aquatic Grazer releases 1 C (unstated) and removes 1 P from its owner's pool when it works algae.",
+    "major": false
+  },
+  {
+    "id": "I11",
+    "topic": "Detritivore lifespan",
+    "text": "Detritivore lifespan does not count down in a round it released nutrients.",
+    "major": false
+  },
+  {
+    "id": "I12",
+    "topic": "Producer adaptations",
+    "text": "Nutrient-Rich adds +1 C +1 N to the producer's biomass when attached; Oxygen-Rich +2 O2 yield; P-Accumulator +1 P growth.",
+    "major": false
+  },
+  {
+    "id": "I13",
+    "topic": "Aquatic tags and Drought",
+    "text": "Aquatic tags per Appendix B; Drought blocks playing aquatic cards and stops aquatic plants (not algae) photosynthesizing.",
+    "major": false
+  },
+  {
+    "id": "I14",
+    "topic": "Deck recycling and turn defaults",
+    "text": "Empty deck: reshuffle the discard pile (PDF A); no hand limit; unspent AP is lost; first player alternates; 1 draw per round.",
+    "major": false
+  }
 ];

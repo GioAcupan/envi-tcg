@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Free-Floating Plant: Surface water-lettuce and duckweed rosettes with unanchored dangling roots -->
+  <rect width="160" height="120" rx="6" fill="#E6F3F5"/>
+  <!-- Open water column below surface -->
+  <rect x="0" y="48" width="160" height="72" rx="4" fill="#B5DEE6"/>
+  <path d="M0 98C40 92 120 104 160 96V120H0V98Z" fill="#98CED9"/>
+  <path d="M6 48H154" stroke="#0D7A8A" stroke-width="2" stroke-dasharray="6 4"/>
+  <!-- Suspended feathery roots dangling freely in mid-water -->
+  <g stroke="#1B221B" stroke-width="1.8" stroke-linecap="round">
+    <path d="M62 52C58 68 54 82 50 96"/>
+    <path d="M68 54C67 72 66 88 64 104"/>
+    <path d="M74 54C76 70 79 84 82 98"/>
+    <path d="M56 68L48 73M54 80L46 85M67 74L60 80M66 86L73 92M77 72L85 77"/>
+    <path d="M122 50C120 62 122 74 119 84M128 50C130 60 129 70 132 78"/>
+  </g>
+  <!-- Main floating rosette (ribbed water-lettuce leaves on water surface) -->
+  <path d="M68 48C50 48 32 42 30 32C32 22 52 24 68 42Z" fill="#3A7537" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 48C86 48 104 42 106 32C104 22 84 24 68 42Z" fill="#4E8C4A" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 46C54 34 52 18 68 16C84 18 82 34 68 46Z" fill="#68A864" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 52C48 58 36 54 38 44C46 40 58 44 68 52Z" fill="#52944E" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M68 52C88 58 100 54 98 44C90 40 78 44 68 52Z" fill="#68A864" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="68" cy="44" r="7" fill="#84CC16" stroke="#1B221B" stroke-width="1.8"/>
+  <path d="M68 37V24M61 42L44 33M75 42L92 33" stroke="#2E6F40" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Companion duckweed frond cluster on surface -->
+  <ellipse cx="120" cy="46" rx="9" ry="5" transform="rotate(-12 120 46)" fill="#68A864" stroke="#1B221B" stroke-width="1.8"/>
+  <ellipse cx="131" cy="48" rx="8" ry="4.5" transform="rotate(15 131 48)" fill="#84CC16" stroke="#1B221B" stroke-width="1.8"/>
+  <ellipse cx="125" cy="41" rx="7" ry="4" fill="#52944E" stroke="#1B221B" stroke-width="1.8"/>
+  <!-- Rising O2 bubbles -->
+  <circle cx="32" cy="76" r="4" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.6"/>
+  <circle cx="102" cy="84" r="3.5" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.5"/>
+</svg>

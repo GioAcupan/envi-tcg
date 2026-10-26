@@ -138,7 +138,6 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
         ['startingHand', 'Starting hand'], ['apPerTurn', 'AP per turn'], ['drawPerRound', 'Draw per round'],
         ['playApCost', 'Play AP cost'], ['discardDrawApCost', 'Discard and draw AP cost'], ['eatApCost', 'Eat AP cost'],
         ['maxEatsPerRound', 'Max eats per round'], ['detritivoreAssignApCost', 'Detritivore assign AP cost'],
-        ['processRounds', 'Process rounds'], ['decomposeApCost', 'Decompose AP cost'],
         ['algalBloomPThreshold', 'Algal Bloom P threshold'],
       ] as [keyof Params, string][]).map(([key, label]) => (
         <label key={key} className="editor-field">
@@ -170,23 +169,6 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
         ))}
       </fieldset>
 
-      <fieldset className="editor-group">
-        <legend>Fallen leaves</legend>
-        <label className="editor-field">
-          <span>Count</span>
-          <NumberInput label="Fallen leaves count" required value={params.fallenLeaves.count}
-            onChange={value => setParams({ fallenLeaves: withField(params.fallenLeaves, 'count', value) })} />
-        </label>
-        {NUTRIENTS.map(nutrient => (
-          <label key={nutrient} className="editor-field">
-            <span>Stored {nutrient}</span>
-            <NumberInput label={`Fallen leaves stored ${nutrient}`} required value={params.fallenLeaves.stored[nutrient]}
-              onChange={value => setParams({
-                fallenLeaves: { ...params.fallenLeaves, stored: withField(params.fallenLeaves.stored, nutrient, value) },
-              })} />
-          </label>
-        ))}
-      </fieldset>
 
       <label className="editor-check">
         <input type="checkbox" checked={params.firstPlayerAlternates}
@@ -205,7 +187,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
       <table className="editor-table">
         <thead>
           <tr>
-            <th>Name</th><th>Kind</th><th>Subtype</th><th>Trophic level</th><th>Cost C</th><th>Cost N</th>
+            <th>Name</th><th>Kind</th><th>Subtype</th><th>Cost C</th><th>Cost N</th>
             <th>O₂ produced</th><th>O₂ per round</th><th>Lifespan</th><th>Tags</th><th>Can eat</th><th>Copies</th><th>Text</th>
           </tr>
         </thead>
@@ -218,14 +200,10 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
               <td className="editor-kind"><span className={`editor-kind-pill editor-kind-pill--${card.kind}`}>{card.kind}</span></td>
               <td><input aria-label={`Subtype ${row}`} value={card.subtype ?? ''}
                 onChange={event => set(withField(card, 'subtype', event.target.value || undefined))} /></td>
-              <td><NumberInput label={`Trophic level ${row}`} value={card.trophicLevel}
-                onChange={value => set(withField(card, 'trophicLevel', value))} /></td>
               <td><NumberInput label={`Cost C ${row}`} required value={card.cost.C}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'C', value) })} /></td>
               <td><NumberInput label={`Cost N ${row}`} required value={card.cost.N}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'N', value) })} /></td>
-              <td><NumberInput label={`O2 produced ${row}`} value={card.o2Produced}
-                onChange={value => set(withField(card, 'o2Produced', value))} /></td>
               <td><NumberInput label={`O2 per round ${row}`} value={card.o2PerRound}
                 onChange={value => set(withField(card, 'o2PerRound', value))} /></td>
               <td><NumberInput label={`Lifespan ${row}`} value={card.lifespan}

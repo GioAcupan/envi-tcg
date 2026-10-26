@@ -85,7 +85,7 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
   const [hint, setHint] = useState<{ text: string; at: number } | null>(null);
   const ticks = usePoolTicks(state.players);
 
-  const player = state.pendingChoice?.player ?? state.activePlayer;
+  const player = state.activePlayer;
   const turn = `${state.round}-${state.activePlayer}-${player}`;
   const over = state.phase === 'gameOver';
   const covered = revealedTurn !== turn && !over;
@@ -93,7 +93,6 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
   const them = state.players[player === 0 ? 1 : 0];
   const aim = !covered && targeting?.turn === turn && state.cards[targeting.source] ? targeting : null;
   const valid = aim ? validTargets(state, aim.kind, player, aim.source) : [];
-  const options = state.pendingChoice?.options ?? [];
   const open = !covered && closeup?.turn === turn && state.cards[closeup.uid] ? closeup.uid : '';
   const name = (uid: string) => defOf(state, state.cards[uid]).name;
   const last = state.log[state.log.length - 1];
@@ -124,12 +123,10 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
       const reason = checkAction(state, action);
       return reason ? setHint({ text: `${name(c.uid)}: ${reason}`, at: Date.now() }) : dispatch(action);
     }
-    // Pending choices (Flood) arrive unasked, so a tap only opens the closeup; its Choose button commits.
     inspect(c);
   };
   const markOf = (c: CardInstance): Mark => {
     if (aim) return c.uid === aim.source ? 'source' : valid.includes(c.uid) ? 'target' : 'dim';
-    if (state.pendingChoice) return options.includes(c.uid) ? 'target' : undefined;
     return open === c.uid ? 'source' : undefined;
   };
   const card = (c: CardInstance) => <BoardCard key={c.uid} card={c} state={state} mark={markOf(c)} onTap={() => tap(c)} onInspect={() => inspect(c)} />;
@@ -146,15 +143,9 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
       <p><b>{TARGET_VERB[aim.kind]} · {name(aim.source)}</b> {targetPrompt(state, aim.kind, aim.source)} ({valid.length} lit)</p>
       <button type="button" className="btn" onClick={() => setTargeting(null)}>Cancel</button>
     </div>;
-  } else if (state.pendingChoice && !covered) {
-    const choice = state.pendingChoice;
-    prompt = <div className="prompt prompt--choice" role="status">
-      <p><b>{state.players[choice.player].name}</b> {choice.prompt}{options.length ? ' Tap a lit card, then Choose.' : ''}</p>
-      {!options.length && <ActionButton state={state} action={{ type: 'choose', player: choice.player, uid: null }} dispatch={dispatch}>Continue</ActionButton>}
-    </div>;
   }
 
-  return <section className="game" data-cycle={state.isDay ? 'day' : 'night'} aria-label="Match">
+  return <section className="game" aria-label="Match">
     <h1 className="sr-only">envi-tcg Playtest Simulator</h1>
     <header className="bar bar--top">
       <button type="button" className="icon-btn" aria-label="Menu" onClick={() => setDrawer('match')}>☰</button>
@@ -166,10 +157,8 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
 
     <div className="center">
       <div className="center__status turn">
-        <img key={String(state.isDay)} className="turn__emblem" src={art(state.isDay ? 'day' : 'night')} alt="" />
-        <p><b>Round {state.round} · {state.isDay ? 'Day' : 'Night'}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
+        <p><b>Round {state.round}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
       </div>
-      <Zone className="zone--center" label="Shared center" cards={state.center.map(uid => state.cards[uid])} render={card} empty="No shared detritus" />
       <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
         {state.modifiers.length > 0 && <span className="center__mods">⚡ {state.modifiers.length} effect{state.modifiers.length === 1 ? '' : 's'}</span>}
         <span className="center__last">{last ? logText(last) : 'Log'}</span>
@@ -216,7 +205,7 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
       </nav>
       {drawer === 'match' && <div className="drawer__body">
         <section>
-          <h3>Round {state.round} · {state.isDay ? 'Day' : 'Night'}</h3>
+          <h3>Round {state.round}</h3>
           <p className="muted">Ruleset “{state.ruleset.name}” · seed {state.seed}</p>
           <div className="row">
             <button type="button" className="btn" disabled={!game.canUndo} title={state.ruleset.params.undoEnabled ? undefined : 'Undo is disabled in this ruleset'} onClick={game.undo}>↶ Undo</button>
@@ -226,7 +215,7 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
         <section>
           <h3>Environmental effects</h3>
           {state.modifiers.length ? <ul className="mods">{state.modifiers.map((m, i) => <li key={`${m.id}-${i}`}>
-            <strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect} · {m.appliesTo}
+            <strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect}
             {m.activeRound !== undefined ? ` (round ${m.activeRound})` : ''}{m.player !== undefined ? ` · ${state.players[m.player].name}` : ' · both players'}
           </li>)}</ul> : <p className="muted">None active or queued.</p>}
         </section>

@@ -1,0 +1,112 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-869546",
+  "kind": "report",
+  "created": "2026-10-26T14:19:26.591Z",
+  "summarized": true,
+  "parent": "h-20261026-618fc1",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "codex",
+    "model": "gpt-6.1-sol",
+    "session": "01a1787f-6c85-7e41-a752-80329b00b175"
+  },
+  "to": null,
+  "repo": {
+    "base": "e125462998e1f49c3d3b2cfbb2def05af17b37c1",
+    "head": "51624faa096c02724640dbea986552adc6328c67",
+    "branch": "lane/upd1-t1",
+    "worktree": ".worktrees/upd1-t1",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-869546",
+      "commit": "0d75142b9427154c5faf081e154515bcb05f8652"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Implemented UPDATE-1 through the existing engine seams, replaced default cards and Interpretations, and migrated ruleset persistence to version 2. Typecheck, all 77 tests across five files, and production build pass on lane/upd1-t1. Compile-only UI changes are ready for the coordinator review and wave 1 UI lanes.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Replaced engine types verbatim from spec section 3 with no optional fields; implemented Appendix A production, bloom, upkeep, worker release, microbes, eating, seeded events, recycling, referee ops, evolution baseline, and fractional values.",
+      "evidence": [
+        {
+          "test": "git commit",
+          "result": "51624faa096c02724640dbea986552adc6328c67"
+        },
+        {
+          "test": "npm test",
+          "result": "Test Files 5 passed (5); Tests 77 passed (77); exit 0"
+        },
+        {
+          "test": "types.ts comparison against spec section 3 code block",
+          "result": "Exact match after line-ending normalization; no optional fields added"
+        }
+      ]
+    },
+    {
+      "what": "Replaced all default cards and params with Appendix B/section 3 values, added R1-R5 major and I1-I14 Interpretations, and migrated storage/import/export to ruleset version 2.",
+      "evidence": [
+        {
+          "test": "git commit",
+          "result": "51624faa096c02724640dbea986552adc6328c67"
+        },
+        {
+          "test": "npm test",
+          "result": "77 tests pass, including exact default data, all inference IDs, version 1 import/load rejection, and fractional version 2 roundtrip"
+        }
+      ]
+    },
+    {
+      "what": "Removed incompatible Day/Night, shared-center, processing and choice/action references from UI with compile-only edits and no CSS or layout additions.",
+      "evidence": [
+        {
+          "test": "git commit",
+          "result": "51624faa096c02724640dbea986552adc6328c67"
+        },
+        {
+          "test": "npm run typecheck",
+          "result": "tsc --noEmit; exit 0"
+        },
+        {
+          "test": "npm run build",
+          "result": "tsc --noEmit and vite build; 36 modules transformed; exit 0"
+        },
+        {
+          "test": "git diff --check",
+          "result": "exit 0"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Coordinator explicitly dropped the unreachable referee-supplied adaptation acceptance sub-case: evolution-off newGame creates no adaptations and the fixed referee seam cannot create cards or edit rules. The Evolution is off guard remains and deck exclusion/no-specialization behavior is tested; no referee op or optional type field was added.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Each Carbon Bacteria adds a bonus equal to the C each worker owner actually released that phase; this bonus does not reduce biomass. Nitrifying and Phosphorus Bacteria award their own owners.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Drawn events are held outside deck/discard until their replacement draw chain ends so edited event-only decks terminate; all events then go to discard and remain available for later reshuffles.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "Independent documentation/code review remains outstanding with the coordinator at the wave gate; Alley deterministic review found no policy changes, proposals or uncommitted store changes."
+  ],
+  "questions": []
+}

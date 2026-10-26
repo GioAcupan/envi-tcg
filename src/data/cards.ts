@@ -2,404 +2,223 @@ import type { CardDef } from '../engine/types';
 
 export const cards: CardDef[] = [
   {
-    "id": "leaf-litter-plant",
-    "name": "Leaf Litter Plant",
+    "id": "emergent-plant",
+    "name": "Emergent Plant",
     "kind": "producer",
     "subtype": "plant",
-    "trophicLevel": 1,
     "cost": {
-      "C": 1,
-      "N": 1
+      "C": 2,
+      "N": 0.5
     },
-    "o2Produced": 2,
     "lifespan": 3,
+    "biomass": {
+      "C": 6,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
+      "C": 1
+    },
+    "yield": {
+      "O2": 2,
+      "C": 1
+    },
     "tags": [
       "plant"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "When it dies, creates 1 Fallen Leaf.",
-    "copies": 1
+    "text": "Grows 1 C biomass and produces 2 O2 and 1 C each round.",
+    "copies": 1,
+    "art": "art/emergent-plant.svg"
   },
   {
     "id": "river-grass",
     "name": "River Grass",
     "kind": "producer",
     "subtype": "plant",
-    "trophicLevel": 1,
     "cost": {
       "C": 2,
-      "N": 1
+      "N": 0.5
     },
-    "o2Produced": 2,
     "lifespan": 4,
+    "biomass": {
+      "C": 6,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
+      "C": 1
+    },
+    "yield": {
+      "O2": 2,
+      "C": 1
+    },
     "tags": [
-      "plant",
-      "aquatic"
+      "plant"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "+1 C when successfully photosynthesizing.",
-    "copies": 1
+    "text": "Grows 1 C biomass and produces 2 O2 and 1 C each round.",
+    "copies": 1,
+    "art": "art/river-grass.svg"
   },
   {
     "id": "aquatic-plant",
     "name": "Aquatic Plant",
     "kind": "producer",
     "subtype": "plant",
-    "trophicLevel": 1,
     "cost": {
       "C": 2,
-      "N": 1
+      "N": 0.5
     },
-    "o2Produced": 3,
     "lifespan": 4,
+    "biomass": {
+      "C": 6,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
+      "C": 1
+    },
+    "yield": {
+      "O2": 2,
+      "C": 1
+    },
     "tags": [
       "plant",
-      "aquatic",
-      "aquatic-plant"
+      "aquatic"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Requires water; unaffected by Drought once.",
-    "copies": 1
+    "text": "Grows 1 C biomass and produces 2 O2 and 1 C each round. Cannot photosynthesize during Drought.",
+    "copies": 1,
+    "art": "art/aquatic-plant.svg"
   },
   {
-    "id": "riparian-tree",
-    "name": "Riparian Tree",
+    "id": "free-floating-plant",
+    "name": "Free-floating Plant",
     "kind": "producer",
     "subtype": "plant",
-    "trophicLevel": 1,
     "cost": {
-      "C": 3,
-      "N": 2
+      "C": 2,
+      "N": 0.5
     },
-    "o2Produced": 3,
-    "lifespan": 5,
+    "lifespan": 3,
+    "biomass": {
+      "C": 6,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
+      "C": 1
+    },
+    "yield": {
+      "O2": 2,
+      "C": 1
+    },
     "tags": [
       "plant",
-      "tree"
+      "aquatic"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Cannot be consumed by Primary Consumers.",
-    "copies": 1
-  },
-  {
-    "id": "fast-growing-plant",
-    "name": "Fast-Growing Plant",
-    "kind": "producer",
-    "subtype": "plant",
-    "trophicLevel": 1,
-    "cost": {
-      "C": 1,
-      "N": 1
-    },
-    "o2Produced": 1,
-    "lifespan": 2,
-    "tags": [
-      "plant"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Gains +1 C when played.",
-    "copies": 1
+    "text": "Grows 1 C biomass and produces 2 O2 and 1 C each round. Cannot photosynthesize during Drought.",
+    "copies": 1,
+    "art": "art/free-floating-plant.svg"
   },
   {
     "id": "green-algae",
     "name": "Green Algae",
     "kind": "producer",
     "subtype": "algae",
-    "trophicLevel": 1,
     "cost": {
+      "C": 1,
+      "N": 0.5
+    },
+    "lifespan": 2,
+    "biomass": {
+      "C": 2,
+      "N": 0,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
       "C": 1,
       "N": 1
     },
-    "o2Produced": 2,
-    "lifespan": 2,
+    "yield": {
+      "O2": 3,
+      "C": 1
+    },
     "tags": [
       "algae",
       "aquatic"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "+1 C when photosynthesizing.",
-    "copies": 1
+    "text": "Grows 1 C and 1 N biomass; produces 3 O2 and 1 C each round.",
+    "copies": 1,
+    "art": "art/green-algae.svg"
   },
   {
-    "id": "diatom",
-    "name": "Diatom",
+    "id": "diatoms",
+    "name": "Diatoms",
     "kind": "producer",
     "subtype": "algae",
-    "trophicLevel": 1,
     "cost": {
+      "C": 2,
+      "N": 0.5
+    },
+    "lifespan": 1,
+    "biomass": {
+      "C": 2,
+      "N": 0,
+      "P": 0,
+      "O2": 0
+    },
+    "growth": {
       "C": 1,
       "N": 1
     },
-    "o2Produced": 2,
-    "lifespan": 3,
+    "yield": {
+      "O2": 4,
+      "C": 1
+    },
     "tags": [
       "algae",
       "aquatic"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "When decomposed, returns +1 P.",
-    "copies": 1
+    "text": "Grows 1 C and 1 N biomass; produces 4 O2 and 1 C each round.",
+    "copies": 1,
+    "art": "art/diatoms.svg"
   },
   {
-    "id": "bloom-algae",
-    "name": "Bloom Algae",
+    "id": "cyanobacteria",
+    "name": "Cyanobacteria",
     "kind": "producer",
     "subtype": "algae",
-    "trophicLevel": 1,
     "cost": {
-      "C": 2,
-      "N": 1
+      "C": 1,
+      "N": 0.5
     },
-    "o2Produced": 3,
     "lifespan": 2,
-    "tags": [
-      "algae",
-      "aquatic"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "If P >= 3, triggers Algal Bloom.",
-    "copies": 1
-  },
-  {
-    "id": "caterpillar",
-    "name": "Caterpillar",
-    "kind": "consumer",
-    "subtype": "primary",
-    "trophicLevel": 2,
-    "cost": {
+    "biomass": {
       "C": 2,
-      "N": 1
+      "N": 0,
+      "P": 0,
+      "O2": 0
     },
-    "o2PerRound": 1,
-    "lifespan": 3,
-    "tags": [
-      "caterpillar",
-      "insect"
-    ],
-    "canEat": [
-      "plant"
-    ],
-    "text": "Can consume plant.",
-    "copies": 1
-  },
-  {
-    "id": "zooplankton",
-    "name": "Zooplankton",
-    "kind": "consumer",
-    "subtype": "primary",
-    "trophicLevel": 2,
-    "cost": {
+    "growth": {
       "C": 1,
       "N": 1
     },
-    "o2PerRound": 1,
-    "lifespan": 3,
-    "tags": [
-      "zooplankton",
-      "aquatic"
-    ],
-    "canEat": [
-      "algae"
-    ],
-    "text": "Can consume algae.",
-    "copies": 1
-  },
-  {
-    "id": "snail",
-    "name": "Snail",
-    "kind": "consumer",
-    "subtype": "primary",
-    "trophicLevel": 2,
-    "cost": {
-      "C": 2,
+    "yield": {
+      "O2": 3,
+      "C": 1,
       "N": 1
     },
-    "o2PerRound": 1,
-    "lifespan": 4,
     "tags": [
-      "snail",
-      "aquatic"
-    ],
-    "canEat": [
       "algae",
-      "aquatic-plant"
-    ],
-    "text": "Can consume algae, aquatic-plant.",
-    "copies": 1
-  },
-  {
-    "id": "grasshopper",
-    "name": "Grasshopper",
-    "kind": "consumer",
-    "subtype": "primary",
-    "trophicLevel": 2,
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "o2PerRound": 1,
-    "lifespan": 3,
-    "tags": [
-      "grasshopper",
-      "insect"
-    ],
-    "canEat": [
-      "plant"
-    ],
-    "text": "Can consume plant.",
-    "copies": 1
-  },
-  {
-    "id": "small-fish",
-    "name": "Small Fish",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "trophicLevel": 3,
-    "cost": {
-      "C": 3,
-      "N": 1
-    },
-    "o2PerRound": 1,
-    "lifespan": 4,
-    "tags": [
-      "fish",
-      "small-fish",
       "aquatic"
     ],
-    "canEat": [
-      "zooplankton",
-      "snail"
-    ],
-    "text": "Can consume zooplankton, snail.",
-    "copies": 1
-  },
-  {
-    "id": "frog",
-    "name": "Frog",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "trophicLevel": 3,
-    "cost": {
-      "C": 3,
-      "N": 2
-    },
-    "o2PerRound": 1,
-    "lifespan": 4,
-    "tags": [
-      "frog"
-    ],
-    "canEat": [
-      "caterpillar",
-      "grasshopper"
-    ],
-    "text": "Can consume caterpillar, grasshopper.",
-    "copies": 1
-  },
-  {
-    "id": "predatory-insect",
-    "name": "Predatory Insect",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "trophicLevel": 3,
-    "cost": {
-      "C": 2,
-      "N": 2
-    },
-    "o2PerRound": 1,
-    "lifespan": 3,
-    "tags": [
-      "insect"
-    ],
-    "canEat": [
-      "caterpillar",
-      "grasshopper"
-    ],
-    "text": "Can consume caterpillar, grasshopper.",
-    "copies": 1
-  },
-  {
-    "id": "large-fish",
-    "name": "Large Fish",
-    "kind": "consumer",
-    "subtype": "tertiary",
-    "trophicLevel": 4,
-    "cost": {
-      "C": 4,
-      "N": 2
-    },
-    "o2PerRound": 2,
-    "lifespan": 5,
-    "tags": [
-      "fish",
-      "aquatic"
-    ],
-    "canEat": [
-      "small-fish",
-      "frog"
-    ],
-    "text": "Can consume small-fish, frog.",
-    "copies": 1
-  },
-  {
-    "id": "water-snake",
-    "name": "Water Snake",
-    "kind": "consumer",
-    "subtype": "tertiary",
-    "trophicLevel": 4,
-    "cost": {
-      "C": 4,
-      "N": 2
-    },
-    "o2PerRound": 2,
-    "lifespan": 5,
-    "tags": [
-      "snake",
-      "aquatic"
-    ],
-    "canEat": [
-      "small-fish",
-      "frog"
-    ],
-    "text": "Can consume small-fish, frog.",
-    "copies": 1
-  },
-  {
-    "id": "heron",
-    "name": "Heron",
-    "kind": "consumer",
-    "subtype": "tertiary",
-    "trophicLevel": 4,
-    "cost": {
-      "C": 5,
-      "N": 3
-    },
-    "o2PerRound": 2,
-    "lifespan": 5,
-    "tags": [
-      "bird"
-    ],
-    "canEat": [
-      "fish",
-      "frog"
-    ],
-    "text": "Can consume fish, frog.",
-    "copies": 1
+    "text": "Grows 1 C and 1 N biomass; produces 3 O2, 1 C and 1 N each round.",
+    "copies": 1,
+    "art": "art/cyanobacteria.svg"
   },
   {
     "id": "freshwater-shrimp",
@@ -407,19 +226,31 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "shredder",
     "cost": {
-      "C": 2,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 4,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 4,
+    "release": {
+      "C": 3
+    },
     "tags": [
+      "detritivore",
+      "animal",
       "aquatic"
     ],
     "canEat": [
-      "–"
+      "plant"
     ],
-    "text": "Shred: consume 1 Dead Plant. The next Microbe decomposing its Shredded Detritus gets +1 C/N returned.",
-    "copies": 1
+    "text": "Releases 3 C from a dead plant each round it works.",
+    "copies": 1,
+    "art": "art/freshwater-shrimp.svg"
   },
   {
     "id": "aquatic-worm",
@@ -427,19 +258,31 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "shredder",
     "cost": {
-      "C": 1,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 3,
+    "release": {
+      "C": 2
+    },
     "tags": [
+      "detritivore",
+      "animal",
       "aquatic"
     ],
     "canEat": [
-      "–"
+      "plant"
     ],
-    "text": "Burrow: reduce processing time for Dead Detritus by 1 round.",
-    "copies": 1
+    "text": "Releases 2 C from a dead plant each round it works.",
+    "copies": 1,
+    "art": "art/aquatic-worm.svg"
   },
   {
     "id": "tubifex-worm",
@@ -447,19 +290,33 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "collector",
     "cost": {
-      "C": 1,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 3,
+    "release": {
+      "C": 1
+    },
     "tags": [
+      "detritivore",
+      "animal",
       "aquatic"
     ],
     "canEat": [
-      "–"
+      "plant",
+      "algae",
+      "animal"
     ],
-    "text": "Filter: gain +1 C when collecting the detritus of a decomposing dead organism.",
-    "copies": 1
+    "text": "Releases 1 C; with a shredder on the same card, releases 1 extra C and 1 N.",
+    "copies": 1,
+    "art": "art/tubifex-worm.svg"
   },
   {
     "id": "chironomid-larva",
@@ -467,20 +324,33 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "collector",
     "cost": {
-      "C": 2,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 3,
+    "release": {
+      "C": 1
+    },
     "tags": [
-      "aquatic",
-      "insect"
+      "detritivore",
+      "animal",
+      "aquatic"
     ],
     "canEat": [
-      "–"
+      "plant",
+      "algae",
+      "animal"
     ],
-    "text": "Fine Detritus: process shredded or partially decomposed detritus; gain +1 N.",
-    "copies": 1
+    "text": "Releases 1 C; with a shredder on the same card, releases 1 extra C and 1 N.",
+    "copies": 1,
+    "art": "art/chironomid-larva.svg"
   },
   {
     "id": "freshwater-snail",
@@ -488,19 +358,32 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "grazer",
     "cost": {
-      "C": 2,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 4,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 4,
+    "release": {
+      "C": 1
+    },
     "tags": [
+      "detritivore",
+      "animal",
       "aquatic"
     ],
     "canEat": [
       "algae"
     ],
-    "text": "Graze: consume 1 Algae/Biofilm token to gain +1 C. Can prevent algal bloom.",
-    "copies": 1
+    "eatsAlive": true,
+    "text": "Releases 1 C from living or dead algae. Prevents Algal Bloom.",
+    "copies": 1,
+    "art": "art/freshwater-snail.svg"
   },
   {
     "id": "aquatic-grazer",
@@ -508,55 +391,151 @@ export const cards: CardDef[] = [
     "kind": "detritivore",
     "subtype": "grazer",
     "cost": {
-      "C": 1,
-      "N": 1
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
     },
     "o2PerRound": 1,
-    "lifespan": 3,
+    "release": {
+      "C": 1
+    },
     "tags": [
+      "detritivore",
+      "animal",
       "aquatic"
     ],
     "canEat": [
       "algae"
     ],
-    "text": "Control Algae: consuming algae removes 1 excess P associated with it.",
-    "copies": 1
+    "eatsAlive": true,
+    "text": "Releases 1 C from living or dead algae and removes 1 P from its owner pool.",
+    "copies": 1,
+    "art": "art/aquatic-grazer.svg"
   },
   {
-    "id": "decomposer-fungus",
-    "name": "Decomposer Fungus",
-    "kind": "microbe",
-    "subtype": "fungus",
+    "id": "small-fish",
+    "name": "Small Fish",
+    "kind": "consumer",
+    "subtype": "secondary",
     "cost": {
-      "C": 0,
-      "N": 0
+      "C": 3,
+      "N": 1
     },
+    "lifespan": 4,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "o2PerRound": 1,
     "tags": [
-      "–"
+      "consumer",
+      "animal",
+      "aquatic"
     ],
     "canEat": [
-      "–"
+      "detritivore"
     ],
-    "text": "Decompose 1 processed dead organism; return stored C/N/P to the nutrient pool.",
-    "copies": 2
+    "text": "Eats a living detritivore and takes its biomass.",
+    "copies": 1,
+    "art": "art/small-fish.svg"
   },
   {
-    "id": "nitrogen-bacteria",
-    "name": "Nitrogen Bacteria",
+    "id": "frog",
+    "name": "Frog",
+    "kind": "consumer",
+    "subtype": "secondary",
+    "cost": {
+      "C": 3,
+      "N": 2
+    },
+    "lifespan": 4,
+    "biomass": {
+      "C": 3,
+      "N": 2,
+      "P": 0,
+      "O2": 0
+    },
+    "o2PerRound": 1,
+    "tags": [
+      "consumer",
+      "animal"
+    ],
+    "canEat": [
+      "detritivore"
+    ],
+    "text": "Eats a living detritivore and takes its biomass.",
+    "copies": 1,
+    "art": "art/frog.svg"
+  },
+  {
+    "id": "predatory-insect",
+    "name": "Predatory Insect",
+    "kind": "consumer",
+    "subtype": "secondary",
+    "cost": {
+      "C": 2,
+      "N": 2
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 2,
+      "N": 2,
+      "P": 0,
+      "O2": 0
+    },
+    "o2PerRound": 1,
+    "tags": [
+      "consumer",
+      "animal"
+    ],
+    "canEat": [
+      "detritivore"
+    ],
+    "text": "Eats a living detritivore and takes its biomass.",
+    "copies": 1,
+    "art": "art/predatory-insect.svg"
+  },
+  {
+    "id": "carbon-bacteria",
+    "name": "Carbon Bacteria",
     "kind": "microbe",
     "subtype": "bacteria",
     "cost": {
       "C": 0,
-      "N": 0
+      "N": 0,
+      "O2": 1
     },
     "tags": [
-      "–"
+      "microbe"
     ],
-    "canEat": [
-      "–"
+    "text": "Doubles C released this phase without taking extra biomass. Returns to hand after assisting a worker.",
+    "copies": 2,
+    "art": "art/carbon-bacteria.svg"
+  },
+  {
+    "id": "nitrifying-bacteria",
+    "name": "Nitrifying Bacteria",
+    "kind": "microbe",
+    "subtype": "bacteria",
+    "cost": {
+      "C": 0,
+      "N": 0,
+      "O2": 1
+    },
+    "tags": [
+      "microbe"
     ],
-    "text": "Decompose Processed Detritus; return its N and gain +1 N. Bonus once per card per game.",
-    "copies": 2
+    "text": "Releases all remaining N from the dead card. Returns to hand after assisting a worker.",
+    "copies": 2,
+    "art": "art/nitrifying-bacteria.svg"
   },
   {
     "id": "phosphorus-bacteria",
@@ -565,34 +544,15 @@ export const cards: CardDef[] = [
     "subtype": "bacteria",
     "cost": {
       "C": 0,
-      "N": 0
+      "N": 0,
+      "O2": 1
     },
     "tags": [
-      "–"
+      "microbe"
     ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Decompose Processed Detritus; return its P and gain +1 P. Bonus once per card per game.",
-    "copies": 2
-  },
-  {
-    "id": "super-decomposer",
-    "name": "Super Decomposer",
-    "kind": "microbe",
-    "subtype": "fungus",
-    "cost": {
-      "C": 0,
-      "N": 0
-    },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Decompose detritus and return C/N/P without a previous detritivore action.",
-    "copies": 1
+    "text": "Gives +1 P. Returns to hand after assisting a worker.",
+    "copies": 2,
+    "art": "art/phosphorus-bacteria.svg"
   },
   {
     "id": "nutrient-rich-adaptation",
@@ -602,14 +562,10 @@ export const cards: CardDef[] = [
       "C": 2,
       "N": 1
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Producer becomes Nutrient-Rich: consumer gains +1 C and +1 N when consuming it.",
-    "copies": 1
+    "tags": [],
+    "text": "Adds 1 C and 1 N to a producer biomass when attached.",
+    "copies": 2,
+    "art": "art/nutrient-rich-adaptation.svg"
   },
   {
     "id": "oxygen-rich-adaptation",
@@ -619,14 +575,10 @@ export const cards: CardDef[] = [
       "C": 2,
       "N": 1
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Producer becomes Oxygen-Rich: produces +2 additional O2 during the Day.",
-    "copies": 1
+    "tags": [],
+    "text": "Producer yields 2 extra O2 each round.",
+    "copies": 2,
+    "art": "art/oxygen-rich-adaptation.svg"
   },
   {
     "id": "p-accumulator-adaptation",
@@ -636,14 +588,10 @@ export const cards: CardDef[] = [
       "C": 2,
       "N": 1
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Producer becomes P-Accumulator: stores +1 P when photosynthesizing, returned on decomposition.",
-    "copies": 1
+    "tags": [],
+    "text": "Producer grows 1 extra P biomass each round.",
+    "copies": 2,
+    "art": "art/p-accumulator-adaptation.svg"
   },
   {
     "id": "consumer-specialization",
@@ -653,14 +601,10 @@ export const cards: CardDef[] = [
       "C": 2,
       "N": 1
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Upgrade a living consumer with 2 specialization marks; pay its C/N requirements and 1 AP.",
-    "copies": 1
+    "tags": [],
+    "text": "Consumer with 2 marks gains 2 lifespan, can eat twice per round and gains 1 C per eat.",
+    "copies": 2,
+    "art": "art/consumer-specialization.svg"
   },
   {
     "id": "protected-adaptation",
@@ -670,14 +614,10 @@ export const cards: CardDef[] = [
       "C": 2,
       "N": 1
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "A living organism cannot be consumed by higher levels. Not immortal.",
-    "copies": 1
+    "tags": [],
+    "text": "An organism cannot be eaten. It still ages and pays upkeep.",
+    "copies": 2,
+    "art": "art/protected-adaptation.svg"
   },
   {
     "id": "strong-rainfall",
@@ -687,14 +627,10 @@ export const cards: CardDef[] = [
       "C": 0,
       "N": 0
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "All players gain +2 P; with P >= 3 and algae, trigger Algal Bloom. Next Night all organisms use +1 O2.",
-    "copies": 1
+    "tags": [],
+    "text": "Each player gains 1 P, then checks for Algal Bloom.",
+    "copies": 1,
+    "art": "art/strong-rainfall.svg"
   },
   {
     "id": "drought",
@@ -704,14 +640,10 @@ export const cards: CardDef[] = [
       "C": 0,
       "N": 0
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Next Day producers produce -1 O2; aquatic organisms cannot be played and aquatic plants cannot photosynthesize.",
-    "copies": 1
+    "tags": [],
+    "text": "This round: producers yield 1 less O2; no aquatic plays; aquatic plants cannot photosynthesize.",
+    "copies": 1,
+    "art": "art/drought.svg"
   },
   {
     "id": "heat-wave",
@@ -721,14 +653,10 @@ export const cards: CardDef[] = [
       "C": 0,
       "N": 0
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Next Night all organisms consume +1 O2; those unable to pay die.",
-    "copies": 1
+    "tags": [],
+    "text": "This round all organisms pay 1 extra O2 upkeep, including producers.",
+    "copies": 1,
+    "art": "art/heat-wave.svg"
   },
   {
     "id": "flood",
@@ -738,30 +666,9 @@ export const cards: CardDef[] = [
       "C": 0,
       "N": 0
     },
-    "tags": [
-      "–"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Each player chooses 1 organism to become Processed Detritus and gains +1 C; with none, gain +1 P.",
-    "copies": 1
-  },
-  {
-    "id": "fallen-leaf",
-    "name": "Fallen Leaf",
-    "kind": "token",
-    "cost": {
-      "C": 0,
-      "N": 0
-    },
-    "tags": [
-      "plant"
-    ],
-    "canEat": [
-      "–"
-    ],
-    "text": "Dead plant matter storing 1 C.",
-    "copies": 0
+    "tags": [],
+    "text": "Each player loses a random living organism and gains 1 C; with none, gains 1 P.",
+    "copies": 1,
+    "art": "art/flood.svg"
   }
 ];

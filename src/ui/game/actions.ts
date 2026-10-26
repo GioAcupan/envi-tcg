@@ -3,13 +3,13 @@ import type { Action, CardInstance, GameState, PlayerId } from '../../engine';
 import { defOf } from '../common/Card';
 
 /** Actions that need a second card chosen on the board. */
-export type TargetKind = 'playOn' | 'eat' | 'assign' | 'decompose';
+export type TargetKind = 'playOn' | 'eat' | 'assign';
 
 export const TARGET_VERB: Record<TargetKind, string> = {
-  playOn: 'Play on a target', eat: 'Eat', assign: 'Assign to dead matter', decompose: 'Decompose',
+  playOn: 'Play on a target', eat: 'Eat', assign: 'Assign to dead matter',
 };
 const PROMPT: Record<TargetKind | 'adaptation' | 'microbe' | 'detritivore', string> = {
-  playOn: 'tap a card to play it on', eat: 'tap its prey', assign: 'tap dead matter to process', decompose: 'tap detritus to decompose',
+  playOn: 'tap a card to play it on', eat: 'tap its prey', assign: 'tap dead matter to process',
   adaptation: 'tap your organism to adapt', microbe: 'tap detritus to decompose', detritivore: 'tap dead matter to process',
 };
 
@@ -22,11 +22,10 @@ export function targetPrompt(state: GameState, kind: TargetKind, source: string)
 export function targetedAction(kind: TargetKind, player: PlayerId, source: string, target: string): Action {
   if (kind === 'playOn') return { type: 'play', player, uid: source, targetUid: target };
   if (kind === 'eat') return { type: 'eat', player, eaterUid: source, preyUid: target };
-  if (kind === 'assign') return { type: 'assign', player, detritivoreUid: source, deadUid: target };
-  return { type: 'decompose', player, microbeUid: source, detritusUid: target };
+  return { type: 'assign', player, detritivoreUid: source, targetUid: target };
 }
 
-const boardCards = (state: GameState) => Object.values(state.cards).filter(c => c.zone === 'field' || c.zone === 'center');
+const boardCards = (state: GameState) => Object.values(state.cards).filter(c => c.zone === 'field');
 
 /** Board cards the engine accepts as the target of this action. */
 export function validTargets(state: GameState, kind: TargetKind, player: PlayerId, source: string): string[] {
@@ -55,8 +54,7 @@ export function cardActions(state: GameState, card: CardInstance, player: Player
   }
   if (card.zone !== 'field' || card.status !== 'alive') return none;
   const targeted: TargetKind[] = [];
-  if (def.kind === 'consumer' || !!def.canEat?.some(t => t && t !== '–')) targeted.push('eat');
+  if (def.kind === 'consumer') targeted.push('eat');
   if (def.kind === 'detritivore') targeted.push('assign');
-  if (def.kind === 'microbe') targeted.push('decompose');
   return { direct: [], targeted, hint: def.kind === 'producer' ? 'Photosynthesis and aging happen automatically between rounds.' : undefined };
 }
