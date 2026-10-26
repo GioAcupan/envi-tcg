@@ -2,12 +2,13 @@
 
 ## Purpose
 
-A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; see [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
+A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; the current revision is [docs/UPDATE-1.pdf](docs/UPDATE-1.pdf), which replaces the first draft [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
 
 ## Local contracts
 
-- The game rules in [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf) are the source of truth for game behavior; the app implements them and never redefines them.
-- The rules are a draft and their numbers change often (costs, lifespans, thresholds); see [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
+- The game rules in the latest revision ([docs/UPDATE-1.pdf](docs/UPDATE-1.pdf)) are the source of truth for game behavior; the app implements them and never redefines them. Where the latest revision is silent (no table for consumers or evolution cards), the first draft's values are carried over and listed as Interpretations.
+- The rules are a draft and their numbers change often (costs, lifespans, thresholds); each new revision arrives as a new `docs/UPDATE-<n>.pdf`.
+- `params.evolutionEnabled` off is the authors' baseline: no Evolution/Adaptation cards in either deck and no specialization marks.
 
 ## Work guidance
 

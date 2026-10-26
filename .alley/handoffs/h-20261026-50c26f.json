@@ -1,0 +1,45 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-50c26f",
+  "kind": "session",
+  "created": "2026-10-26T13:42:42.625Z",
+  "summarized": false,
+  "parent": null,
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "3d15743f-7919-4b25-9160-d90b39663cc4"
+  },
+  "to": null,
+  "repo": {
+    "base": null,
+    "head": "578fa80a88a83dff79255bc7ddf3e68b58d5d14f",
+    "branch": "main",
+    "worktree": "",
+    "dirty": [
+      "docs/UPDATE-1.pdf"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-50c26f",
+      "commit": "c981ea4bdef339a21eaa8a65662c79bc71213898"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Unsummarized: the SessionEnd hook found 1 uncommitted file and commits since the session's base. No agent wrote a judgment for this record.",
+  "outcome": null,
+  "done": [],
+  "next": null,
+  "decisions": [],
+  "gaps": [],
+  "questions": []
+}
