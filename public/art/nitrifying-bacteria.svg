@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Nitrifying Bacteria: Nitrosomonas cocci and Nitrobacter rods clustered around a Nitrogen (N) diamond -->
+  <rect width="160" height="120" rx="6" fill="#FCF0F5"/>
+  <circle cx="80" cy="60" r="46" fill="#F5DCE8" stroke="#A83868" stroke-width="2" stroke-dasharray="5 3"/>
+  <!-- Nitrifying rods (Nitrobacter) & cocci (Nitrosomonas) -->
+  <rect x="40" y="38" width="34" height="15" rx="7.5" transform="rotate(-16 40 38)" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <rect x="74" y="68" width="36" height="15" rx="7.5" transform="rotate(14 74 68)" fill="#C25283" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="52" cy="70" r="10" fill="#C25283" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="68" cy="62" r="9" fill="#A83868" stroke="#1B221B" stroke-width="2"/>
+  <!-- Nitrogen diamond emblem -->
+  <polygon points="104,22 120,38 104,54 88,38" fill="#1E5AA8" stroke="#1B221B" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="104,26 116,38 104,50 92,38" fill="none" stroke="#93C5FD" stroke-width="1.1"/>
+  <path d="M100 43V33L108 43V33" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

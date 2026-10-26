@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Diatoms: Glassy geometric silica frustules (pennate naviculoid and radial centric shapes) -->
+  <rect width="160" height="120" rx="6" fill="#EBF5F5"/>
+  <!-- Microscope field ring -->
+  <circle cx="80" cy="60" r="48" fill="#D5ECEB" stroke="#1F6E7A" stroke-width="2"/>
+  <circle cx="80" cy="60" r="43" stroke="#0D7A8A" stroke-width="1" stroke-dasharray="4 4"/>
+  <!-- Large pennate diatom (diagonal boat-shaped silica frustule with central raphe & striae) -->
+  <g transform="rotate(-24 66 56)">
+    <path d="M22 56C40 36 92 36 110 56C92 76 40 76 22 56Z" fill="#EAB308" stroke="#1B221B" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M30 56C44 42 88 42 102 56C88 70 44 70 30 56Z" fill="#FDE68A" stroke="#78350F" stroke-width="1.4"/>
+    <path d="M32 56H61M71 56H100" stroke="#1B221B" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="66" cy="56" r="3.5" fill="#D97706" stroke="#1B221B" stroke-width="1.5"/>
+    <path d="M44 48V64M54 45V67M78 45V67M88 48V64" stroke="#78350F" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <!-- Radial centric diatom (geometric silica wheel frustule at lower right) -->
+  <circle cx="102" cy="78" r="16" fill="#52944E" stroke="#1B221B" stroke-width="2"/>
+  <circle cx="102" cy="78" r="10.5" fill="#BEF264" stroke="#1B221B" stroke-width="1.5"/>
+  <path d="M102 62V94M86 78H118M91 67L113 89M113 67L91 89" stroke="#1B221B" stroke-width="1.3"/>
+  <circle cx="102" cy="78" r="4" fill="#EAB308" stroke="#1B221B" stroke-width="1.5"/>
+  <!-- Second glassy centric/pennate frustule at upper right & O2 bubble -->
+  <circle cx="104" cy="38" r="9" fill="#99F6E4" stroke="#1B221B" stroke-width="1.8"/>
+  <circle cx="104" cy="38" r="4" fill="#0D7A8A" stroke="#1B221B" stroke-width="1.4"/>
+  <circle cx="54" cy="86" r="4" fill="#FAF6EC" stroke="#0D7A8A" stroke-width="1.6"/>
+</svg>
