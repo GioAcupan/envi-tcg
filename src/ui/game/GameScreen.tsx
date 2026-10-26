@@ -73,7 +73,7 @@ function Zone({ className, label, cards, render, empty }: {
 
 /** Hotseat board. The viewing player's side is at the bottom; their hand mounts only after they accept the device.
  *  Tap a card for its closeup; targeted actions then pick a highlighted card on the board. */
-export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
+export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onRulesetChange: (r: Ruleset) => void }) {
   const game = useGame(ruleset);
   const { state } = game;
   const [revealedTurn, setRevealedTurn] = useState('');
@@ -129,8 +129,8 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
     if (aim) return c.uid === aim.source ? 'source' : valid.includes(c.uid) ? 'target' : 'dim';
     return open === c.uid ? 'source' : undefined;
   };
-  const card = (c: CardInstance) => <BoardCard key={c.uid} card={c} state={state} mark={markOf(c)} onTap={() => tap(c)} onInspect={() => inspect(c)} />;
-  const fieldOf = (p: PlayerState) => Object.values(state.cards).filter(c => c.zone === 'field' && c.owner === p.id);
+  const card = (c: CardInstance) => <BoardCard key={c.uid} card={c} state={state} markOf={markOf} onTap={tap} onInspect={inspect} />;
+  const fieldOf = (p: PlayerState) => Object.values(state.cards).filter(c => c.zone === 'field' && c.owner === p.id && !(c.working && state.cards[c.working]?.zone === 'field'));
   const startNewGame = () => {
     game.newGame(seed === '' ? undefined : Number(seed));
     setRevealedTurn(''); setCloseup(null); setTargeting(null); setDrawer(null);
@@ -158,6 +158,7 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
     <div className="center">
       <div className="center__status turn">
         <p><b>Round {state.round}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
+        {!state.ruleset.params.evolutionEnabled && <span className="evolution-chip">Evolution off</span>}
       </div>
       <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
         {state.modifiers.length > 0 && <span className="center__mods">⚡ {state.modifiers.length} effect{state.modifiers.length === 1 ? '' : 's'}</span>}
@@ -218,6 +219,13 @@ export function GameScreen({ ruleset }: { ruleset: Ruleset }) {
             <strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect}
             {m.activeRound !== undefined ? ` (round ${m.activeRound})` : ''}{m.player !== undefined ? ` · ${state.players[m.player].name}` : ' · both players'}
           </li>)}</ul> : <p className="muted">None active or queued.</p>}
+        </section>
+        <section>
+          <h3>Evolution / adaptation cards</h3>
+          <label className="evolution-switch"><input type="checkbox" role="switch" checked={ruleset.params.evolutionEnabled}
+            onChange={e => onRulesetChange({ ...ruleset, params: { ...ruleset.params, evolutionEnabled: e.target.checked } })} />Evolution / adaptation cards</label>
+          <p className="muted">This change applies to the next new game.</p>
+          <button type="button" className="btn" onClick={startNewGame}>New game now</button>
         </section>
         <section>
           <h3>New game</h3>
