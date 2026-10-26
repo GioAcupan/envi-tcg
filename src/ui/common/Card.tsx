@@ -7,6 +7,14 @@ export const art = (name: string) => `${import.meta.env.BASE_URL}${name.startsWi
 export const defOf = (state: GameState, card: CardInstance): CardDef =>
   state.ruleset.cards.find(d => d.id === card.defId)!;
 
+/** Only organisms carry biomass; microbes and adaptations have roles instead. */
+export const isOrganism = (def: CardDef) =>
+  def.kind === 'producer' || def.kind === 'consumer' || def.kind === 'detritivore';
+
+/** Dead organisms and eaten prey retain biomass but no longer produce, pay upkeep or age. */
+export const isInactiveOrganism = (card: CardInstance, def: CardDef) =>
+  isOrganism(def) && ((card.zone === 'field' && card.status === 'dead') || card.zone === 'attached');
+
 /** Rule C.2: dead cards on the board are turned sideways. */
 export const isSideways = (card: CardInstance) =>
   card.zone === 'field' && card.status === 'dead';
@@ -90,6 +98,7 @@ function Art({ card, def }: { card: CardInstance; def: CardDef }) {
  *  Dead board cards get a landscape (sideways) face whose text stays upright. */
 export function CardFace({ card, state, full }: { card: CardInstance; state: GameState; full?: boolean }) {
   const def = defOf(state, card);
+  const inactive = isInactiveOrganism(card, def);
   const upgraded = card.adaptations.length > 0 || !!card.specialized;
   const status = statusLabel(card);
   const classes = `cf cf--${def.kind} cf--${card.status ?? 'none'}${upgraded ? ' cf--upgraded' : ''}${full ? ' cf--full' : ''}`;
@@ -123,12 +132,14 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
     <Art card={card} def={def} />
     {status && <span className={`cf__stamp cf__stamp--${card.status}`}>{status}</span>}
     <span className="cf__stats">
-      {o2Prod !== undefined && <span className={`pill pill--o2`} title={`Produces ${o2Prod} O₂ each round`}><img src={art('o2')} alt="O₂" />+{o2Prod}</span>}
-      {def.o2PerRound !== undefined && <span className={`pill pill--upkeep`} title={`Uses ${def.o2PerRound} O₂ each round`}><img src={art('o2')} alt="O₂" />−{def.o2PerRound}</span>}
-      {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title="Lifespan left">⏳{card.lifespanLeft ?? def.lifespan}</span>}
-      {card.zone !== 'hand' && card.zone !== 'deck' && <span className="cf__biomass">Biomass {nutrientText(card.stored)}</span>}
+      {!inactive && <>
+        {o2Prod !== undefined && <span className={`pill pill--o2`} title={`Produces ${o2Prod} O₂ each round`}><img src={art('o2')} alt="O₂" />+{o2Prod}</span>}
+        {def.o2PerRound !== undefined && <span className={`pill pill--upkeep`} title={`Uses ${def.o2PerRound} O₂ each round`}><img src={art('o2')} alt="O₂" />−{def.o2PerRound}</span>}
+        {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title="Lifespan left">⏳{card.lifespanLeft ?? def.lifespan}</span>}
+      </>}
+      {isOrganism(def) && card.zone !== 'hand' && card.zone !== 'deck' && <span className="cf__biomass">{inactive ? 'Remaining biomass' : 'Biomass'} {nutrientText(card.stored)}</span>}
     </span>
-    {(def.growth || def.yield || def.release) && <span className="cf__rates">
+    {!inactive && (def.growth || def.yield || def.release) && <span className="cf__rates">
       {def.growth && <span>Growth {nutrientText(def.growth)}</span>}
       {def.yield && <span>Yield {nutrientText({ ...def.yield, O2: o2Prod })}</span>}
       {def.release && <span>Release {nutrientText(def.release)}</span>}

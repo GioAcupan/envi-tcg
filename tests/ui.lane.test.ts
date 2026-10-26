@@ -1,7 +1,54 @@
 import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { applyAction, newGame } from '../src/engine';
 import { defaultRuleset } from '../src/ruleset';
 import { cardActions, noTargetReason, targetedAction, validTargets } from '../src/ui/game/actions';
+import { CardFace } from '../src/ui/common/Card';
+import { CardCloseup } from '../src/ui/game/CardCloseup';
+import { BoardCard } from '../src/ui/game/BoardCard';
+
+describe('card live facts', () => {
+  it('keeps printed hand stats but hides inactive rates for dead cards and eaten prey', () => {
+    const state = newGame(defaultRuleset(), 42);
+    const card = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
+    card.zone = 'hand';
+    const face = () => renderToStaticMarkup(createElement(CardFace, { state, card, full: true }));
+    const closeup = () => renderToStaticMarkup(createElement(CardCloseup, {
+      state, uid: card.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
+    }));
+    expect(face()).toContain('pill--o2');
+    for (const zone of ['field', 'attached'] as const) {
+      card.zone = zone;
+      card.status = zone === 'field' ? 'dead' : 'alive';
+      const html = closeup();
+      expect(html).toContain('Remaining biomass');
+      expect(html).toContain('no production');
+      for (const text of ['pill--o2', 'pill--life', 'Growth / round', 'Yield / round', 'rounds left']) expect(html).not.toContain(text);
+    }
+  });
+  it('shows biomass only for organisms in stacks and closeups', () => {
+    const state = newGame(defaultRuleset(), 42);
+    const host = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
+    host.zone = 'field'; host.status = 'dead';
+    for (const kind of ['microbe', 'adaptation'] as const) {
+      const card = Object.values(state.cards).find(c => state.ruleset.cards.find(d => d.id === c.defId)?.kind === kind)!;
+      card.zone = 'attached'; card.attachedTo = host.uid;
+      const html = renderToStaticMarkup(createElement(CardCloseup, {
+        state, uid: card.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
+      }));
+      expect(html).not.toContain('Biomass');
+    }
+    const board = renderToStaticMarkup(createElement(BoardCard, { state, card: host, markOf: () => undefined, onTap: () => {}, onInspect: () => {} }));
+    const stacks = board.split('stack-card').slice(1).join('stack-card');
+    expect(stacks).toContain('Assisting');
+    expect(stacks).not.toContain('Biomass');
+    const closeup = renderToStaticMarkup(createElement(CardCloseup, {
+      state, uid: host.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
+    }));
+    expect(closeup.split('attached-row').slice(1).join('attached-row')).not.toContain('chip--C');
+  });
+});
 
 describe('UPDATE-1 tap targeting', () => {
   const setup = () => {
