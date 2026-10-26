@@ -2,7 +2,7 @@ import type { CardDef, Ruleset } from '../engine/types';
 import { cards } from '../data/cards';
 import { params } from '../data/params';
 
-const STORAGE_KEY = 'envi-tcg.ruleset.v1';
+const STORAGE_KEY = 'envi-tcg.ruleset.v2';
 
 type Obj = Record<string, unknown>;
 
@@ -69,7 +69,7 @@ export function exportRuleset(r: Ruleset): string {
   return JSON.stringify(r, null, 2);
 }
 
-/** Parse a share file. Fills missing params/card fields from the defaults (so older files keep working);
+/** Parse a share file. Fills missing version 2 params/card fields from the defaults;
  *  returns { ok: false, error } for non-JSON, wrong version, or a card missing id/name/kind. */
 export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { ok: false; error: string } {
   let parsed: unknown;
@@ -79,7 +79,7 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
     return { ok: false, error: 'Not valid JSON' };
   }
   if (!isObject(parsed)) return { ok: false, error: 'Not a ruleset object' };
-  if (parsed.version !== 1) return { ok: false, error: `Unsupported ruleset version ${String(parsed.version)}; expected version 1` };
+  if (parsed.version !== 2) return { ok: false, error: 'This file was made for an earlier rules version; reset to defaults or import a version 2 file.' };
   if (!Array.isArray(parsed.cards)) return { ok: false, error: 'cards must be an array' };
 
   const importedCards: CardDef[] = [];
@@ -87,12 +87,13 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
     if (!isObject(card) || typeof card.id !== 'string' || typeof card.name !== 'string' || typeof card.kind !== 'string') {
       return { ok: false, error: `Card ${index} must have string id, name and kind` };
     }
-    importedCards.push(fillCard(card));
+    const fallback = cards.find(def => def.id === card.id);
+    importedCards.push(fallback ? fillDefaults(card, fallback) : fillCard(card));
   }
 
   const ruleset = {
     ...parsed,
-    version: 1,
+    version: 2,
     name: typeof parsed.name === 'string' ? parsed.name : 'Imported ruleset',
     cards: importedCards,
     params: fillDefaults(parsed.params, params),
@@ -102,6 +103,6 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
 
 /** The built-in default ruleset (from src/data). */
 export function defaultRuleset(): Ruleset {
-  const ruleset: Ruleset = { version: 1, name: 'PDF defaults', cards, params };
+  const ruleset: Ruleset = { version: 2, name: 'PDF defaults', cards, params };
   return structuredClone(ruleset);
 }

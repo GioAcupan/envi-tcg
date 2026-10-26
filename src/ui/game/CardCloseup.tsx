@@ -17,13 +17,12 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
   const def = defOf(state, card);
   const params = state.ruleset.params;
   const attachments = attachmentsOf(state, uid);
-  const workingOn = Object.values(state.cards).find(c => c.processing?.by === uid);
+  const workingOn = card.working ? state.cards[card.working] : undefined;
   const name = (id: string) => defOf(state, state.cards[id]).name;
   const owner = card.owner === null ? 'Shared' : state.players[card.owner].name;
-  const actions = state.pendingChoice ? { direct: [], targeted: [] } : cardActions(state, card, player);
-  const choice = state.pendingChoice?.options.includes(uid) ? state.pendingChoice : undefined;
+  const actions = cardActions(state, card, player);
   const fact = (label: string, value: ReactNode) => <><dt>{label}</dt><dd>{value}</dd></>;
-  const o2Prod = def.o2Produced !== undefined ? def.o2Produced + (card.adaptations.includes('oxygen-rich-adaptation') ? 2 : 0) : undefined;
+  const o2Prod = def.yield?.O2 !== undefined ? def.yield?.O2 + (card.adaptations.includes('oxygen-rich-adaptation') ? 2 : 0) : undefined;
   const apCost = def.kind === 'event' ? 0 : params.playApCost;
 
   return <Sheet label={`${def.name} closeup`} onClose={onClose}>
@@ -33,9 +32,8 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
         <h2>{def.name}{(card.adaptations.length > 0 || card.specialized) && <span className="cf__star"> <StarIcon /></span>}</h2>
         <p className="closeup__sub">{kindLabel(def)} · {owner} · {card.zone}{card.status ? ` · ${card.status}` : ''}</p>
 
-        {(actions.direct.length > 0 || actions.targeted.length > 0 || pickTarget || choice) && <div className="closeup__actions">
+        {(actions.direct.length > 0 || actions.targeted.length > 0 || pickTarget) && <div className="closeup__actions">
           {pickTarget && <button type="button" className="btn btn--primary" onClick={pickTarget.pick}>{pickTarget.label}</button>}
-          {choice && <ActionButton state={state} action={{ type: 'choose', player: choice.player, uid }} dispatch={dispatch} className="act--primary">Choose this organism</ActionButton>}
           {actions.targeted.map(kind => {
             const count = validTargets(state, kind, player, uid).length;
             const reason = count ? undefined : noTargetReason(state, kind, player, uid);
@@ -49,13 +47,12 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
         {actions.hint && <p className="closeup__hint">{actions.hint}</p>}
 
         <dl className="closeup__facts">
-          {def.kind !== 'token' && fact('Cost', <>{def.cost.C} C · {def.cost.N} N · {apCost} AP</>)}
-          {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each Day{!state.isDay && ' (Night now: none)'}</>)}
+          {fact('Cost', <>{def.cost.C} C · {def.cost.N} N · {apCost} AP</>)}
+          {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each round</>)}
           {def.o2PerRound !== undefined && fact('O₂ upkeep', <>−{def.o2PerRound} each round</>)}
           {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact('Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
           {card.zone !== 'hand' && fact('Stored', <PoolChips pool={card.stored} all />)}
-          {card.processing && fact('Processing', <>by {name(card.processing.by)}, {card.processing.roundsLeft} round{card.processing.roundsLeft === 1 ? '' : 's'} left</>)}
-          {workingOn && fact('Working on', <>{name(workingOn.uid)} ({workingOn.processing?.roundsLeft}r left)</>)}
+          {workingOn && fact('Working on', <>{name(workingOn.uid)}</>)}
           {!!card.marks && fact('Marks', <>{card.marks}/2{card.specialized ? ' · specialized' : ''}</>)}
           {!card.marks && card.specialized && fact('Marks', 'Specialized')}
           {def.kind === 'microbe' && def.subtype === 'bacteria' && card.zone === 'field' && fact('Bonus', card.flags.bacterialBonusUsed ? 'Used' : 'Ready')}

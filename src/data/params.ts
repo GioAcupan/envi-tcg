@@ -2,7 +2,7 @@ import type { Params } from '../engine/types';
 
 export const params: Params = {
   startingPool: { C: 10, N: 3, P: 0, O2: 7 },
-  winThreshold: { C: 50, N: 15, P: 2 },
+  winThreshold: { C: 50, N: 15, P: 1 },
   startingHand: 5,
   apPerTurn: 3,
   drawPerRound: 1,
@@ -11,10 +11,8 @@ export const params: Params = {
   eatApCost: 1,
   maxEatsPerRound: 1,
   detritivoreAssignApCost: 1,
-  processRounds: 2,
-  decomposeApCost: 1,
-  algalBloomPThreshold: 3,
-  fallenLeaves: { count: 3, stored: { C: 1, N: 0, P: 0, O2: 0 } },
+  algalBloomPThreshold: 2,
   firstPlayerAlternates: true,
   undoEnabled: true,
+  evolutionEnabled: true,
 };

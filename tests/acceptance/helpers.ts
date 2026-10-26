@@ -1,11 +1,11 @@
-import { applyAction, type GameState, type Params, type PlayerId, type Ruleset, type Zone } from '../../src/engine';
+import { applyAction, type GameState, type Params, type PlayerId, type Ruleset, type RefereeOp, type Zone } from '../../src/engine';
 import { cards } from '../../src/data/cards';
 import { params } from '../../src/data/params';
 
 /** Default data with events disabled, so random draws cannot change a scenario. */
 export function testRuleset(overrides: { cards?: Ruleset['cards']; params?: Partial<Params>; name?: string } = {}): Ruleset {
   return {
-    version: 1,
+    version: 2,
     name: overrides.name ?? 'Acceptance rules',
     cards: structuredClone(overrides.cards ?? cards.map(card => ({ ...card, copies: card.kind === 'event' ? 0 : card.copies }))),
     params: structuredClone({ ...params, ...overrides.params }),
@@ -38,4 +38,17 @@ export function play(state: GameState, player: PlayerId, defId: string, targetUi
   state = applyAction(state, { type: 'play', player, uid, targetUid });
   if (state.lastError) throw new Error(state.lastError);
   return { state, uid };
+}
+
+
+/** Finish a round through the normal two-turn seam. */
+export function round(state: GameState): GameState {
+  const first = state.activePlayer;
+  state = applyAction(state, { type: 'endTurn', player: first });
+  return applyAction(state, { type: 'endTurn', player: state.activePlayer });
+}
+
+/** Apply a referee operation without mutating a fixture. */
+export function ref(state: GameState, op: RefereeOp): GameState {
+  return applyAction(state, { type: 'referee', op });
 }
