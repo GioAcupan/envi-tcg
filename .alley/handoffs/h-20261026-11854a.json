@@ -1,0 +1,127 @@
+{
+  "schema": "alley-handoff/1",
+  "id": "h-20261026-11854a",
+  "kind": "report",
+  "created": "2026-10-26T14:29:08.439Z",
+  "summarized": true,
+  "parent": "h-20261026-a2a8ea",
+  "from": {
+    "person": "raphaelgioacupanz@gmail.com",
+    "host": "claude",
+    "model": null,
+    "session": "698deac6-7dfe-467d-a0b2-bf7019c6db43"
+  },
+  "to": null,
+  "repo": {
+    "base": "99bc1cd34c34a9bcb8777ab44718ef0841b0ddb4",
+    "head": "45f67f1e8df2c007eb28b77f5b66ac6a1d5f0ef9",
+    "branch": "lane/upd1-t3",
+    "worktree": ".worktrees/upd1-t3",
+    "dirty": [
+      "TASK.md"
+    ],
+    "salvage": {
+      "ref": "refs/alley/salvage/h-20261026-11854a",
+      "commit": "dde5446d08cfc31135b1257f1a1d86f9235005a1"
+    }
+  },
+  "work": {
+    "seeds": null,
+    "spec": null,
+    "plan": null,
+    "phase": null,
+    "wave": null,
+    "task": null
+  },
+  "contract": null,
+  "lessons": [],
+  "summary": "Editor card table now covers every UPDATE-1 CardDef field with decimal-capable inputs, the evolution checkbox and a 36/26 deck hint are in the params form, and Export/Import/Reset are kept. Interpretations screen already lists major entries first, so it is unchanged. Typecheck, test (77/77) and build all pass; commit 45f67f1 on lane/upd1-t3.",
+  "outcome": "succeeded",
+  "done": [
+    {
+      "what": "Card table rebuilt to CardDef columns (cost C/N/O2, biomass C/N/P, growth and yield C/N/P/O2, upkeep, release C/N/P, lifespan, tags, can eat, eats alive, copies, text); removed fields not present in the editor; optional nested pools drop empty keys and the whole object when empty.",
+      "evidence": [
+        {
+          "test": "npm run typecheck",
+          "result": "exit 0"
+        },
+        {
+          "test": "npm run build",
+          "result": "exit 0"
+        }
+      ]
+    },
+    {
+      "what": "NumberInput uses step=any, parses with Number, keeps the raw typed text while focused, and returns undefined for empty optional fields (0 for required fields).",
+      "evidence": [
+        {
+          "test": "npm test (tests/acceptance/ruleset.test.ts roundtrips fractions)",
+          "result": "pass"
+        },
+        {
+          "test": "UI event-level check (editing cost to 0.5 calls onChange)",
+          "result": "not run: no DOM test library installed; verified by code reading only"
+        }
+      ]
+    },
+    {
+      "what": "Params form: 'Evolution / adaptation mechanics' checkbox bound to params.evolutionEnabled with help text; deck total excludes adaptation cards when off and the hint expects 36 (on) or 26 (off).",
+      "evidence": [
+        {
+          "test": "npm test",
+          "result": "77 passed, 5 files"
+        },
+        {
+          "test": "UI event-level check (unchecking sets evolutionEnabled false)",
+          "result": "not run: verified by code reading only"
+        }
+      ]
+    },
+    {
+      "what": "Import failure message: 'Import failed: <importRuleset error>. The current ruleset is unchanged.' (trailing period de-duplicated); onChange is not called on failure. Export and Reset unchanged.",
+      "evidence": [
+        {
+          "test": "tests/acceptance/ruleset.test.ts U10 (version message exact)",
+          "result": "pass"
+        },
+        {
+          "test": "Import v1 UI smoke",
+          "result": "not run: verified by code reading only"
+        }
+      ]
+    },
+    {
+      "what": "Interpretations screen: major entries listed first under 'Questions for the rule authors', then 'Other inferences'. No change needed.",
+      "evidence": [
+        {
+          "test": "tests/acceptance/interpretations.test.ts U13",
+          "result": "pass"
+        }
+      ]
+    }
+  ],
+  "next": null,
+  "decisions": [
+    {
+      "text": "Required number fields still fall back to 0 when emptied (the brief said empty gives undefined), because Params and card fields are typed as required numbers.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "eatsAlive is stored as an explicit boolean (false when unchecked) rather than removed.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Deck total hint excludes adaptation-kind cards when evolution is off, and the table still lists them.",
+      "by": "agent-assumed"
+    },
+    {
+      "text": "Number input keeps the raw DOM text while focused so half-typed decimals are not overwritten; the draft is cleared on blur.",
+      "by": "agent-assumed"
+    }
+  ],
+  "gaps": [
+    "No DOM test environment (no jsdom or testing-library in node_modules), so the three UI acceptance behaviors (decimal onChange, evolution uncheck, v1 import message) were verified by reading the code, not by running them.",
+    "Alley CLI was located at the plugin cache path and used for context preview and graph impact; no Seeds or Mulch writes were made."
+  ],
+  "questions": []
+}
