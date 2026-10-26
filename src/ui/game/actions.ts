@@ -6,11 +6,11 @@ import { defOf } from '../common/Card';
 export type TargetKind = 'playOn' | 'eat' | 'assign';
 
 export const TARGET_VERB: Record<TargetKind, string> = {
-  playOn: 'Play on a target', eat: 'Eat', assign: 'Assign to dead matter',
+  playOn: 'Play on a target', eat: 'Eat', assign: 'Assign',
 };
 const PROMPT: Record<TargetKind | 'adaptation' | 'microbe' | 'detritivore', string> = {
-  playOn: 'tap a card to play it on', eat: 'tap its prey', assign: 'tap dead matter to process',
-  adaptation: 'tap your organism to adapt', microbe: 'tap detritus to decompose', detritivore: 'tap dead matter to process',
+  playOn: 'tap a card to play it on', eat: 'tap its prey', assign: 'tap a card to work',
+  adaptation: 'tap your organism to adapt', microbe: 'tap a dead card to assist', detritivore: 'tap a card to work',
 };
 
 /** What the board is waiting for, e.g. "tap its prey". Play-on-target wording follows the played card's kind. */
@@ -48,7 +48,7 @@ export function cardActions(state: GameState, card: CardInstance, player: Player
   if (card.owner !== player) return none;
   const def = defOf(state, card);
   if (card.zone === 'hand') {
-    const direct = def.kind === 'adaptation' ? [] : [{ label: def.kind === 'event' ? 'Play event' : 'Play card', action: { type: 'play', player, uid: card.uid } as Action }];
+    const direct = ['adaptation', 'microbe'].includes(def.kind) ? [] : [{ label: def.kind === 'event' ? 'Play event' : def.kind === 'detritivore' ? 'Play alone' : 'Play card', action: { type: 'play', player, uid: card.uid } as Action }];
     direct.push({ label: 'Discard & draw', action: { type: 'discardDraw', player, uid: card.uid } });
     return { direct, targeted: ['adaptation', 'microbe', 'detritivore'].includes(def.kind) ? ['playOn'] : [] };
   }

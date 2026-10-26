@@ -3,6 +3,7 @@ import { defaultRuleset, loadRuleset, saveRuleset } from './ruleset';
 import { GameScreen } from './ui/game/GameScreen';
 import { EditorScreen } from './ui/editor/EditorScreen';
 import { InterpretationsScreen } from './ui/interpretations/InterpretationsScreen';
+import type { Ruleset } from './engine';
 
 /** Screens are addressed by URL hash, so the game's own menu can link to them without extra props. */
 const SCREENS = [{ hash: '', label: 'Game' }, { hash: '#editor', label: 'Ruleset editor' }, { hash: '#interpretations', label: 'Interpretations' }];
@@ -22,8 +23,13 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
+  const changeRuleset = (r: Ruleset) => {
+    setRuleset(r);
+    try { saveRuleset(r); }
+    catch { /* Keep edits usable while storage is stubbed or unavailable. */ }
+  };
   return <>
-    <div className="app-game" hidden={hash !== ''}><GameScreen ruleset={ruleset} /></div>
+    <div className="app-game" hidden={hash !== ''}><GameScreen ruleset={ruleset} onRulesetChange={changeRuleset} /></div>
     {hash !== '' && <main className="app-page">
       <header className="app-bar">
         <h1>envi-tcg Playtest Simulator</h1>
@@ -31,11 +37,7 @@ export default function App() {
           {SCREENS.map(s => <a key={s.label} href={s.hash || '#'} aria-current={hash === s.hash ? 'page' : undefined}>{s.label}</a>)}
         </nav>
       </header>
-      {hash === '#editor' && <EditorScreen ruleset={ruleset} onChange={r => {
-        setRuleset(r);
-        try { saveRuleset(r); }
-        catch { /* Keep edits usable while storage is stubbed or unavailable. */ }
-      }} />}
+      {hash === '#editor' && <EditorScreen ruleset={ruleset} onChange={changeRuleset} />}
       {hash === '#interpretations' && <InterpretationsScreen />}
     </main>}
   </>;
