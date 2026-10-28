@@ -33,7 +33,7 @@ export function RefereePanel({ state, dispatch }: { state: GameState; dispatch: 
         <label>Destination<select aria-label="Destination" name="zone" defaultValue={card.zone}>{['deck', 'hand', 'field', 'attached', 'discard', 'removed'].map(z => <option key={z}>{z}</option>)}</select></label>
         <label>Owner<select aria-label="Owner" name="owner" defaultValue={card.owner}>{state.players.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select></label><button>Move card</button>
       </form>
-      {(['lifespanLeft', 'marks'] as const).map(field => <form key={field} onSubmit={e => submit(e, data => op({ kind: 'setCardField', uid, field, value: Number(data.get(field)) }))}><label>{field === 'lifespanLeft' ? 'Lifespan left' : 'Marks'}<input type="number" name={field} defaultValue={card[field] ?? 0} required /></label><button>Set {field === 'lifespanLeft' ? 'lifespan' : 'marks'}</button></form>)}
+      <form onSubmit={e => submit(e, data => op({ kind: 'setCardField', uid, field: 'lifespanLeft', value: Number(data.get('lifespanLeft')) }))}><label>Lifespan left<input type="number" name="lifespanLeft" defaultValue={card.lifespanLeft ?? 0} required /></label><button>Set lifespan</button></form>
       <form onSubmit={e => submit(e, data => op({ kind: 'setCardField', uid, field: 'stored', value: pool(data) }))}><fieldset><legend>Biomass</legend>{poolInputs(card.stored)}<button>Set biomass</button></fieldset></form>
     </div>}
   </section>;

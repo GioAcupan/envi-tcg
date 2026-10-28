@@ -46,8 +46,7 @@ export function createCard(state: GameState, defId: string, owner: PlayerId, zon
   let n = Object.keys(state.cards).length;
   while (state.cards[`c${n}`]) n++;
   const card: CardInstance = {
-    uid: `c${n}`, defId, owner, zone, stored: { C: 0, N: 0, P: 0, O2: 0 },
-    adaptations: [], marks: 0, eatsThisRound: 0, flags: {},
+    uid: `c${n}`, defId, owner, zone, stored: { C: 0, N: 0, P: 0, O2: 0 }, flags: {},
   };
   state.cards[card.uid] = card;
   move(state, card, zone);
@@ -104,52 +103,35 @@ export function algalBloom(state: GameState, player: PlayerId): void {
   }
 }
 
+/** Add to a pool and to `released`, the per-player tally of what one dead card gave this round. */
+export function credit(state: GameState, released: [Pool, Pool], player: PlayerId, delta: Partial<Pool>, reason: string): void {
+  gain(state, player, delta, reason);
+  for (const key of Object.keys(delta) as (keyof Pool)[]) released[player][key] += delta[key]!;
+}
+
 type Hook = (state: GameState, card: CardInstance, target?: CardInstance) => void;
 interface Ability {
-  onPlay?: Hook;
-  onPhotosynthesis?: Hook;
   onWork?: Hook;
-  onAssist?: (state: GameState, microbe: CardInstance, target: CardInstance, carbon: [number, number]) => void;
+  /** `carbon` is the C each player's detritivores released from `target` this round; `released` is everything each player got from it. */
+  onAssist?: (state: GameState, microbe: CardInstance, target: CardInstance, carbon: [number, number], released: [Pool, Pool]) => void;
   event?: Hook;
-  adaptationTarget?: 'producer' | 'consumer' | 'organism';
 }
 
 /** Card-specific hooks run once at their named lifecycle point on the engine's cloned state. */
 export const abilities: Record<string, Ability> = {
   'aquatic-grazer': { onWork: (s, c) => gain(s, c.owner, { P: -1 }, 'Aquatic Grazer removes excess P') },
   'carbon-bacteria': {
-    onAssist(s, _c, _target, carbon) {
-      for (const p of s.players) if (carbon[p.id]) gain(s, p.id, { C: carbon[p.id] }, 'Carbon Bacteria doubles released C');
+    onAssist(s, _c, _target, carbon, released) {
+      for (const p of s.players) if (carbon[p.id]) credit(s, released, p.id, { C: carbon[p.id] }, 'Carbon Bacteria doubles released C');
     },
   },
   'nitrifying-bacteria': {
-    onAssist(s, c, target) {
-      gain(s, c.owner, { N: target.stored.N }, 'Nitrifying Bacteria releases all remaining N');
+    onAssist(s, c, target, _carbon, released) {
+      credit(s, released, c.owner, { N: 2 * target.stored.N }, 'Nitrifying Bacteria doubles and releases all remaining N');
       target.stored.N = 0;
     },
   },
-  'phosphorus-bacteria': { onAssist: (s, c) => gain(s, c.owner, { P: 1 }, 'Phosphorus Bacteria') },
-  'nutrient-rich-adaptation': {
-    adaptationTarget: 'producer',
-    onPlay(s, _c, target) {
-      target!.stored.C++; target!.stored.N++;
-      note(s, `${definition(s, target!).name} stores +1 C and +1 N (Nutrient-Rich)`);
-    },
-  },
-  'oxygen-rich-adaptation': { adaptationTarget: 'producer' },
-  'p-accumulator-adaptation': {
-    adaptationTarget: 'producer',
-    onPhotosynthesis(s, c) { c.stored.P++; note(s, `${definition(s, c).name} stores +1 P (P-Accumulator)`); },
-  },
-  'consumer-specialization': {
-    adaptationTarget: 'consumer',
-    onPlay(s, _c, target) {
-      target!.specialized = true;
-      if (target!.lifespanLeft !== undefined) target!.lifespanLeft += 2;
-      note(s, `${definition(s, target!).name} specializes (+2 lifespan, two eats, +1 C per eat)`);
-    },
-  },
-  'protected-adaptation': { adaptationTarget: 'organism' },
+  'phosphorus-bacteria': { onAssist: (s, c, _target, _carbon, released) => credit(s, released, c.owner, { P: 1 }, 'Phosphorus Bacteria') },
   'strong-rainfall': { event(s) { for (const p of s.players) gain(s, p.id, { P: 1 }, 'Strong Rainfall'); for (const p of s.players) algalBloom(s, p.id); } },
   'drought': { event(s) { for (const effect of ['producerO2-1', 'noAquaticPlay', 'noAquaticPhotosynthesis'] as const) queueModifier(s, 'drought', effect); } },
   'heat-wave': { event: s => queueModifier(s, 'heat-wave', 'upkeep+1') },

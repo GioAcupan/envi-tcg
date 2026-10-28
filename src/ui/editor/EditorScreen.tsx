@@ -84,11 +84,8 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const { params } = ruleset;
-  // Adaptation cards are not part of the deck when evolution is off (the baseline).
-  const deckSize = params.evolutionEnabled ? 36 : 26;
-  const deckTotal = ruleset.cards
-    .filter(card => params.evolutionEnabled || card.kind !== 'adaptation')
-    .reduce((sum, card) => sum + card.copies, 0);
+  const deckSize = 26;
+  const deckTotal = ruleset.cards.reduce((sum, card) => sum + card.copies, 0);
 
   const setCard = (index: number, next: CardDef) =>
     onChange({ ...ruleset, cards: ruleset.cards.map((card, i) => (i === index ? next : card)) });
@@ -164,8 +161,8 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
     <div className="editor-params">
       {([
         ['startingHand', 'Starting hand'], ['apPerTurn', 'AP per turn'], ['drawPerRound', 'Draw per round'],
-        ['playApCost', 'Play AP cost'], ['discardDrawApCost', 'Discard and draw AP cost'], ['eatApCost', 'Eat AP cost'],
-        ['maxEatsPerRound', 'Max eats per round'], ['detritivoreAssignApCost', 'Detritivore assign AP cost'],
+        ['playApCost', 'Play AP cost'], ['discardDrawApCost', 'Discard and draw AP cost'],
+        ['detritivoreAssignApCost', 'Detritivore assign AP cost'],
         ['algalBloomPThreshold', 'Algal Bloom P threshold'],
       ] as [keyof Params, string][]).map(([key, label]) => (
         <label key={key} className="editor-field">
@@ -207,14 +204,6 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
           onChange={event => setParams({ undoEnabled: event.target.checked })} />
         Undo enabled
       </label>
-      <div className="editor-check-group">
-        <label className="editor-check">
-          <input type="checkbox" checked={params.evolutionEnabled} aria-describedby="evolution-help"
-            onChange={event => setParams({ evolutionEnabled: event.target.checked })} />
-          Evolution / adaptation mechanics
-        </label>
-        <p id="evolution-help" className="editor-help">Off = baseline: no Evolution cards in either deck, no specialization.</p>
-      </div>
     </div>
 
     <h3>Cards ({ruleset.cards.length} archetypes)</h3>
@@ -229,6 +218,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
             <th>Yield C</th><th>Yield N</th><th>Yield P</th><th>Yield O₂</th>
             <th>Upkeep O₂</th>
             <th>Release C</th><th>Release N</th><th>Release P</th>
+            <th>Takes C</th><th>Takes N</th><th>Takes P</th>
             <th>Lifespan</th><th>Tags</th><th>Can eat</th><th>Eats alive</th><th>Copies</th><th>Text</th>
           </tr>
         </thead>
@@ -257,6 +247,8 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
                 onChange={value => set(withField(card, 'o2PerRound', value))} /></td>
               <PoolCells label="Release" row={row} pool={card.release} nutrients={ORGANISM_NUTRIENTS}
                 onChange={pool => set(withField(card, 'release', pool))} />
+              <PoolCells label="Takes" row={row} pool={card.consumes} nutrients={ORGANISM_NUTRIENTS}
+                onChange={pool => set(withField(card, 'consumes', pool))} />
               <td><NumberInput label={`Lifespan ${row}`} value={card.lifespan}
                 onChange={value => set(withField(card, 'lifespan', value))} /></td>
               <td className="editor-col-list"><ListInput label={`Tags ${row}`} value={card.tags}

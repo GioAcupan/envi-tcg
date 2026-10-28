@@ -5,7 +5,7 @@ import { params } from '../../src/data/params';
 /** Default data with events disabled, so random draws cannot change a scenario. */
 export function testRuleset(overrides: { cards?: Ruleset['cards']; params?: Partial<Params>; name?: string } = {}): Ruleset {
   return {
-    version: 2,
+    version: 3,
     name: overrides.name ?? 'Acceptance rules',
     cards: structuredClone(overrides.cards ?? cards.map(card => ({ ...card, copies: card.kind === 'event' ? 0 : card.copies }))),
     params: structuredClone({ ...params, ...overrides.params }),

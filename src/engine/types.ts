@@ -1,22 +1,23 @@
 export type Nutrient = 'C' | 'N' | 'P' | 'O2';
 export type Pool = { C: number; N: number; P: number; O2: number };   // fractions allowed (costs of 0.5 N)
 
-export type CardKind = 'producer' | 'consumer' | 'detritivore' | 'microbe' | 'adaptation' | 'event';
+export type CardKind = 'producer' | 'detritivore' | 'microbe' | 'event';
 
 export interface CardDef {
   id: string;                 // stable slug; ability handlers key on it
   name: string;
   kind: CardKind;
-  subtype?: string;           // 'plant'|'algae'|'secondary'|'shredder'|'collector'|'grazer'|'bacteria'
+  subtype?: string;           // 'plant'|'algae'|'shredder'|'collector'|'grazer'|'bacteria'
   cost: { C: number; N: number; O2?: number };  // paid once from the pool on play (PDF shows these as negatives)
   biomass?: Pool;             // organisms: nutrients stored on the card when it is played
   growth?: Partial<Pool>;     // producers: added to the card's own biomass each round it photosynthesizes
   yield?: Partial<Pool>;      // producers: added to the owner's pool each round it photosynthesizes (O2 included)
-  o2PerRound?: number;        // detritivores and consumers: O2 upkeep each round
+  o2PerRound?: number;        // detritivores and microbes: O2 upkeep each round
   release?: Partial<Pool>;    // detritivores: moved from the worked card's biomass to the owner's pool each round
+  consumes?: Partial<Pool>;   // microbes: taken back from the owner's nutrients released from their card each round they assist
   lifespan?: number;          // rounds alive
   tags: string[];             // what the card is: 'plant','algae','aquatic','detritivore','animal',...
-  canEat?: string[];          // consumers: tags of living prey; detritivores: tags of cards they can work
+  canEat?: string[];          // detritivores: tags of cards they can work
   eatsAlive?: boolean;        // detritivores (grazers): may also work living cards that match canEat
   text: string;
   copies: number;             // copies in each player's deck
@@ -31,16 +32,13 @@ export interface Params {
   drawPerRound: number;             // 1
   playApCost: number;               // 1
   discardDrawApCost: number;        // 1
-  eatApCost: number;                // 1
-  maxEatsPerRound: number;          // 1
   detritivoreAssignApCost: number;  // 1
   algalBloomPThreshold: number;     // 2: Algal Bloom when a player's P is greater than this
   firstPlayerAlternates: boolean;   // true
   undoEnabled: boolean;             // true
-  evolutionEnabled: boolean;        // true; false = baseline: no adaptation cards in decks, no specialization marks
 }
 
-export interface Ruleset { version: 2; name: string; cards: CardDef[]; params: Params }
+export interface Ruleset { version: 3; name: string; cards: CardDef[]; params: Params }
 
 export type PlayerId = 0 | 1;
 export type Zone = 'deck' | 'hand' | 'field' | 'attached' | 'discard' | 'removed';
@@ -54,12 +52,8 @@ export interface CardInstance {
   status?: Status;
   lifespanLeft?: number;
   stored: Pool;                // biomass: what decomposition can release
-  attachedTo?: string;         // uid this card sits under: eaten prey under its eater, adaptation under its host, microbe on its dead card
+  attachedTo?: string;         // uid of the dead card a microbe sits on
   working?: string;            // detritivores: uid of the card it is breaking down (the card stays visible under it)
-  adaptations: string[];       // defIds of adaptations applied
-  marks: number;               // consumer specialization marks
-  specialized?: boolean;
-  eatsThisRound: number;
   flags: Record<string, boolean | number>;
 }
 
@@ -96,9 +90,8 @@ export interface GameState {
 }
 
 export type Action =
-  | { type: 'play'; player: PlayerId; uid: string; targetUid?: string }   // adaptations and microbes need a target; a detritivore may take one (assign on play)
+  | { type: 'play'; player: PlayerId; uid: string; targetUid?: string }   // microbes need a target; a detritivore may take one (assign on play)
   | { type: 'discardDraw'; player: PlayerId; uid: string }
-  | { type: 'eat'; player: PlayerId; eaterUid: string; preyUid: string }  // consumer eats a living organism
   | { type: 'assign'; player: PlayerId; detritivoreUid: string; targetUid: string }  // detritivore starts working a card
   | { type: 'endTurn'; player: PlayerId }
   | { type: 'referee'; op: RefereeOp };
@@ -108,7 +101,7 @@ export type RefereeOp =
   | { kind: 'setAp'; player: PlayerId; ap: number }
   | { kind: 'setStatus'; uid: string; status: Status }
   | { kind: 'moveCard'; uid: string; zone: Zone; owner?: PlayerId }
-  | { kind: 'setCardField'; uid: string; field: 'lifespanLeft' | 'marks' | 'stored'; value: number | Pool }
+  | { kind: 'setCardField'; uid: string; field: 'lifespanLeft' | 'stored'; value: number | Pool }
   | { kind: 'draw'; player: PlayerId }
   | { kind: 'setActivePlayer'; player: PlayerId }
   | { kind: 'endRound' };

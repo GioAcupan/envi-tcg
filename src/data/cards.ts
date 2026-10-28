@@ -13,7 +13,7 @@ export const cards: CardDef[] = [
     "lifespan": 3,
     "biomass": {
       "C": 6,
-      "N": 1,
+      "N": 2,
       "P": 0,
       "O2": 0
     },
@@ -43,7 +43,7 @@ export const cards: CardDef[] = [
     "lifespan": 4,
     "biomass": {
       "C": 6,
-      "N": 1,
+      "N": 2,
       "P": 0,
       "O2": 0
     },
@@ -73,7 +73,7 @@ export const cards: CardDef[] = [
     "lifespan": 4,
     "biomass": {
       "C": 6,
-      "N": 1,
+      "N": 2,
       "P": 0,
       "O2": 0
     },
@@ -104,7 +104,7 @@ export const cards: CardDef[] = [
     "lifespan": 3,
     "biomass": {
       "C": 6,
-      "N": 1,
+      "N": 2,
       "P": 0,
       "O2": 0
     },
@@ -353,6 +353,40 @@ export const cards: CardDef[] = [
     "art": "art/chironomid-larva.svg"
   },
   {
+    "id": "caddisfly-larva",
+    "name": "Caddisfly Larva",
+    "kind": "detritivore",
+    "subtype": "collector",
+    "cost": {
+      "C": 0,
+      "N": 0.5
+    },
+    "lifespan": 3,
+    "biomass": {
+      "C": 3,
+      "N": 1,
+      "P": 0,
+      "O2": 0
+    },
+    "o2PerRound": 1,
+    "release": {
+      "C": 1
+    },
+    "tags": [
+      "detritivore",
+      "animal",
+      "aquatic"
+    ],
+    "canEat": [
+      "plant",
+      "algae",
+      "animal"
+    ],
+    "text": "Releases 1 C; with a shredder on the same card, releases 1 extra C and 1 N.",
+    "copies": 1,
+    "art": "art/caddisfly-larva.svg"
+  },
+  {
     "id": "freshwater-snail",
     "name": "Freshwater Snail",
     "kind": "detritivore",
@@ -419,106 +453,25 @@ export const cards: CardDef[] = [
     "art": "art/aquatic-grazer.svg"
   },
   {
-    "id": "small-fish",
-    "name": "Small Fish",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "cost": {
-      "C": 3,
-      "N": 1
-    },
-    "lifespan": 4,
-    "biomass": {
-      "C": 3,
-      "N": 1,
-      "P": 0,
-      "O2": 0
-    },
-    "o2PerRound": 1,
-    "tags": [
-      "consumer",
-      "animal",
-      "aquatic"
-    ],
-    "canEat": [
-      "detritivore"
-    ],
-    "text": "Eats a living detritivore and takes its biomass.",
-    "copies": 1,
-    "art": "art/small-fish.svg"
-  },
-  {
-    "id": "frog",
-    "name": "Frog",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "cost": {
-      "C": 3,
-      "N": 2
-    },
-    "lifespan": 4,
-    "biomass": {
-      "C": 3,
-      "N": 2,
-      "P": 0,
-      "O2": 0
-    },
-    "o2PerRound": 1,
-    "tags": [
-      "consumer",
-      "animal"
-    ],
-    "canEat": [
-      "detritivore"
-    ],
-    "text": "Eats a living detritivore and takes its biomass.",
-    "copies": 1,
-    "art": "art/frog.svg"
-  },
-  {
-    "id": "predatory-insect",
-    "name": "Predatory Insect",
-    "kind": "consumer",
-    "subtype": "secondary",
-    "cost": {
-      "C": 2,
-      "N": 2
-    },
-    "lifespan": 3,
-    "biomass": {
-      "C": 2,
-      "N": 2,
-      "P": 0,
-      "O2": 0
-    },
-    "o2PerRound": 1,
-    "tags": [
-      "consumer",
-      "animal"
-    ],
-    "canEat": [
-      "detritivore"
-    ],
-    "text": "Eats a living detritivore and takes its biomass.",
-    "copies": 1,
-    "art": "art/predatory-insect.svg"
-  },
-  {
     "id": "carbon-bacteria",
     "name": "Carbon Bacteria",
     "kind": "microbe",
     "subtype": "bacteria",
     "cost": {
       "C": 0,
-      "N": 0,
-      "O2": 1
+      "N": 0
     },
     "tags": [
       "microbe"
     ],
-    "text": "Doubles C released this phase without taking extra biomass. Returns to hand after assisting a worker.",
-    "copies": 2,
-    "art": "art/carbon-bacteria.svg"
+    "text": "Doubles the C detritivores release from its dead card, without taking extra biomass. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
+    "copies": 3,
+    "art": "art/carbon-bacteria.svg",
+    "o2PerRound": 1,
+    "consumes": {
+      "C": 1,
+      "N": 0.5
+    }
   },
   {
     "id": "nitrifying-bacteria",
@@ -527,15 +480,19 @@ export const cards: CardDef[] = [
     "subtype": "bacteria",
     "cost": {
       "C": 0,
-      "N": 0,
-      "O2": 1
+      "N": 0
     },
     "tags": [
       "microbe"
     ],
-    "text": "Releases all remaining N from the dead card. Returns to hand after assisting a worker.",
-    "copies": 2,
-    "art": "art/nitrifying-bacteria.svg"
+    "text": "Releases all remaining N from its dead card, doubled. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
+    "copies": 3,
+    "art": "art/nitrifying-bacteria.svg",
+    "o2PerRound": 1,
+    "consumes": {
+      "C": 1,
+      "N": 0.5
+    }
   },
   {
     "id": "phosphorus-bacteria",
@@ -544,80 +501,19 @@ export const cards: CardDef[] = [
     "subtype": "bacteria",
     "cost": {
       "C": 0,
-      "N": 0,
-      "O2": 1
+      "N": 0
     },
     "tags": [
       "microbe"
     ],
-    "text": "Gives +1 P. Returns to hand after assisting a worker.",
+    "text": "Gives +1 P each round it assists. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
     "copies": 2,
-    "art": "art/phosphorus-bacteria.svg"
-  },
-  {
-    "id": "nutrient-rich-adaptation",
-    "name": "Nutrient-Rich Adaptation",
-    "kind": "adaptation",
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "tags": [],
-    "text": "Adds 1 C and 1 N to a producer biomass when attached.",
-    "copies": 2,
-    "art": "art/nutrient-rich-adaptation.svg"
-  },
-  {
-    "id": "oxygen-rich-adaptation",
-    "name": "Oxygen-Rich Adaptation",
-    "kind": "adaptation",
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "tags": [],
-    "text": "Producer yields 2 extra O2 each round.",
-    "copies": 2,
-    "art": "art/oxygen-rich-adaptation.svg"
-  },
-  {
-    "id": "p-accumulator-adaptation",
-    "name": "Phosphorus-Accumulator Adaptation",
-    "kind": "adaptation",
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "tags": [],
-    "text": "Producer grows 1 extra P biomass each round.",
-    "copies": 2,
-    "art": "art/p-accumulator-adaptation.svg"
-  },
-  {
-    "id": "consumer-specialization",
-    "name": "Consumer Specialization",
-    "kind": "adaptation",
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "tags": [],
-    "text": "Consumer with 2 marks gains 2 lifespan, can eat twice per round and gains 1 C per eat.",
-    "copies": 2,
-    "art": "art/consumer-specialization.svg"
-  },
-  {
-    "id": "protected-adaptation",
-    "name": "Protected Adaptation",
-    "kind": "adaptation",
-    "cost": {
-      "C": 2,
-      "N": 1
-    },
-    "tags": [],
-    "text": "An organism cannot be eaten. It still ages and pays upkeep.",
-    "copies": 2,
-    "art": "art/protected-adaptation.svg"
+    "art": "art/phosphorus-bacteria.svg",
+    "o2PerRound": 1,
+    "consumes": {
+      "C": 1,
+      "N": 0.5
+    }
   },
   {
     "id": "strong-rainfall",
@@ -628,7 +524,7 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "Each player gains 1 P, then checks for Algal Bloom.",
+    "text": "Each player gains 1 P, then checks for Algal Bloom. Shuffled back into its owner's deck when the round ends.",
     "copies": 1,
     "art": "art/strong-rainfall.svg"
   },
@@ -641,7 +537,7 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "This round: producers yield 1 less O2; no aquatic plays; aquatic plants cannot photosynthesize.",
+    "text": "This round: producers yield 1 less O2; no aquatic plays; aquatic plants cannot photosynthesize. Shuffled back into its owner's deck when the round ends.",
     "copies": 1,
     "art": "art/drought.svg"
   },
@@ -654,7 +550,7 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "This round all organisms pay 1 extra O2 upkeep, including producers.",
+    "text": "This round all organisms pay 1 extra O2 upkeep, including producers. Shuffled back into its owner's deck when the round ends.",
     "copies": 1,
     "art": "art/heat-wave.svg"
   },
@@ -667,7 +563,7 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "Each player loses a random living organism and gains 1 C; with none, gains 1 P.",
+    "text": "Each player loses a random living organism and gains 1 C; with none, gains 1 P. Shuffled back into its owner's deck when the round ends.",
     "copies": 1,
     "art": "art/flood.svg"
   }

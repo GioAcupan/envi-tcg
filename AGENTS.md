@@ -2,13 +2,13 @@
 
 ## Purpose
 
-A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; the current revision is [docs/UPDATE-1.pdf](docs/UPDATE-1.pdf), which replaces the first draft [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
+A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; the current revision is [docs/UPDATE-2.pdf](docs/UPDATE-2.pdf), which replaces [docs/UPDATE-1.pdf](docs/UPDATE-1.pdf) and the first draft [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
 
 ## Local contracts
 
-- The game rules in the latest revision ([docs/UPDATE-1.pdf](docs/UPDATE-1.pdf)) are the source of truth for game behavior; the app implements them and never redefines them. Where the latest revision is silent (no table for consumers or evolution cards), the first draft's values are carried over and listed as Interpretations.
+- The game rules in the latest revision ([docs/UPDATE-2.pdf](docs/UPDATE-2.pdf)) are the source of truth for game behavior; the app implements them and never redefines them. Where the latest revision is silent or contradicts itself, the earlier revisions' behavior is carried over and every assumption is listed in [src/data/interpretations.ts](src/data/interpretations.ts), which the app shows on its Interpretations screen.
 - The rules are a draft and their numbers change often (costs, lifespans, thresholds); each new revision arrives as a new `docs/UPDATE-<n>.pdf`.
-- `params.evolutionEnabled` off is the authors' baseline: no Evolution/Adaptation cards in either deck and no specialization marks.
+- UPDATE-2 removed consumers and Evolution/Adaptation cards; the app has no eating, adaptations or evolution switch. A ruleset whose cards or params change shape bumps `Ruleset.version` and the localStorage key, so stale saved rulesets fall back to the defaults.
 
 ## Work guidance
 

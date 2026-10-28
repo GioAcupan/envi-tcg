@@ -9,7 +9,7 @@ import { CardCloseup } from '../src/ui/game/CardCloseup';
 import { BoardCard } from '../src/ui/game/BoardCard';
 
 describe('card live facts', () => {
-  it('keeps printed hand stats but hides inactive rates for dead cards and eaten prey', () => {
+  it('keeps printed hand stats but hides inactive rates for dead cards', () => {
     const state = newGame(defaultRuleset(), 42);
     const card = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
     card.zone = 'hand';
@@ -18,27 +18,23 @@ describe('card live facts', () => {
       state, uid: card.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
     }));
     expect(face()).toContain('pill--o2');
-    for (const zone of ['field', 'attached'] as const) {
-      card.zone = zone;
-      card.status = zone === 'field' ? 'dead' : 'alive';
-      const html = closeup();
-      expect(html).toContain('Remaining biomass');
-      expect(html).toContain('no production');
-      for (const text of ['pill--o2', 'pill--life', 'Growth / round', 'Yield / round', 'rounds left']) expect(html).not.toContain(text);
-    }
+    card.zone = 'field'; card.status = 'dead';
+    const html = closeup();
+    expect(html).toContain('Remaining biomass');
+    expect(html).toContain('no production');
+    for (const text of ['pill--o2', 'pill--life', 'Growth / round', 'Yield / round', 'rounds left']) expect(html).not.toContain(text);
   });
   it('shows biomass only for organisms in stacks and closeups', () => {
     const state = newGame(defaultRuleset(), 42);
     const host = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
     host.zone = 'field'; host.status = 'dead';
-    for (const kind of ['microbe', 'adaptation'] as const) {
-      const card = Object.values(state.cards).find(c => state.ruleset.cards.find(d => d.id === c.defId)?.kind === kind)!;
-      card.zone = 'attached'; card.attachedTo = host.uid;
-      const html = renderToStaticMarkup(createElement(CardCloseup, {
-        state, uid: card.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
-      }));
-      expect(html).not.toContain('Biomass');
-    }
+    const card = Object.values(state.cards).find(c => state.ruleset.cards.find(d => d.id === c.defId)?.kind === 'microbe')!;
+    card.zone = 'attached'; card.attachedTo = host.uid;
+    const html = renderToStaticMarkup(createElement(CardCloseup, {
+      state, uid: card.uid, player: 0, dispatch: () => {}, onTarget: () => {}, onOpen: () => {}, onClose: () => {},
+    }));
+    expect(html).not.toContain('Biomass');
+    expect(html).toContain('Takes / round');
     const board = renderToStaticMarkup(createElement(BoardCard, { state, card: host, markOf: () => undefined, onTap: () => {}, onInspect: () => {} }));
     const stacks = board.split('stack-card').slice(1).join('stack-card');
     expect(stacks).toContain('Assisting');
@@ -50,7 +46,7 @@ describe('card live facts', () => {
   });
 });
 
-describe('UPDATE-1 tap targeting', () => {
+describe('tap targeting', () => {
   const setup = () => {
     const rules = defaultRuleset();
     rules.params.startingHand = 36;
@@ -77,16 +73,10 @@ describe('UPDATE-1 tap targeting', () => {
     expect(state.cards[worm.uid].working).toBe(plant.uid);
     expect(noTargetReason(state, 'playOn', 0, microbe.uid)).toBe('Not enough AP');
   });
-  it('lights detritivore prey for consumers and only own living producers for adaptations', () => {
+  it('offers living detritivores assignment and no eating', () => {
     let state = setup();
-    const own = (id: string) => Object.values(state.cards).find(c => c.owner === 0 && c.defId === id)!;
-    const plant = own('river-grass'), worm = own('aquatic-worm'), fish = own('small-fish'), adaptation = own('nutrient-rich-adaptation');
-    for (const card of [plant, worm, fish]) state = applyAction(state, { type: 'play', player: 0, uid: card.uid });
-    state = applyAction(state, { type: 'referee', op: { kind: 'setAp', player: 0, ap: 3 } });
-    const otherPlant = Object.values(state.cards).find(c => c.owner === 1 && c.defId === 'river-grass')!;
-    state = applyAction(state, { type: 'referee', op: { kind: 'moveCard', uid: otherPlant.uid, zone: 'field' } });
-    state = applyAction(state, { type: 'referee', op: { kind: 'setStatus', uid: otherPlant.uid, status: 'alive' } });
-    expect(validTargets(state, 'eat', 0, fish.uid)).toEqual([worm.uid]);
-    expect(validTargets(state, 'playOn', 0, adaptation.uid)).toEqual([plant.uid]);
+    const worm = Object.values(state.cards).find(c => c.owner === 0 && c.defId === 'aquatic-worm')!;
+    state = applyAction(state, { type: 'play', player: 0, uid: worm.uid });
+    expect(cardActions(state, state.cards[worm.uid], 0).targeted).toEqual(['assign']);
   });
 });

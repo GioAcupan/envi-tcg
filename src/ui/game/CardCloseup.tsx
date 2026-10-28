@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Action, GameState, PlayerId } from '../../engine';
 import { ActionButton } from '../common/ActionButton';
-import { art, attachmentsOf, CardFace, defOf, isInactiveOrganism, isOrganism, kindLabel, nutrientText, PoolChips, StarIcon, workersOf } from '../common/Card';
+import { art, attachmentsOf, CardFace, defOf, isInactiveOrganism, isOrganism, kindLabel, nutrientText, PoolChips, workersOf } from '../common/Card';
 import { Sheet } from '../common/Sheet';
 import { cardActions, noTargetReason, TARGET_VERB, validTargets, type TargetKind } from './actions';
 
@@ -23,14 +23,14 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
   const owner = state.players[card.owner].name;
   const actions = cardActions(state, card, player);
   const fact = (label: string, value: ReactNode) => <><dt>{label}</dt><dd>{value}</dd></>;
-  const o2Prod = def.yield?.O2 !== undefined ? def.yield?.O2 + (card.adaptations.includes('oxygen-rich-adaptation') ? 2 : 0) : undefined;
+  const o2Prod = def.yield?.O2;
   const apCost = def.kind === 'event' ? 0 : params.playApCost;
 
   return <Sheet label={`${def.name} closeup`} onClose={onClose}>
     <div className="closeup">
       <div className="closeup__card"><CardFace card={card} state={state} full /></div>
       <div className="closeup__info">
-        <h2>{def.name}{(card.adaptations.length > 0 || card.specialized) && <span className="cf__star"> <StarIcon /></span>}</h2>
+        <h2>{def.name}</h2>
         <p className="closeup__sub">{kindLabel(def)} · {owner} · {card.zone}{card.status ? ` · ${card.status}` : ''}</p>
 
         {(actions.direct.length > 0 || actions.targeted.length > 0 || pickTarget) && <div className="closeup__actions">
@@ -49,11 +49,12 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
 
         <dl className="closeup__facts">
           {fact('Cost', <>{def.cost.C} C · {def.cost.N} N{def.cost.O2 ? ` · ${def.cost.O2} O₂` : ''} · {apCost} AP</>)}
-          {inactive && fact('Activity', `${card.zone === 'attached' ? 'Eaten' : 'Dead'} — no production, upkeep or aging`)}
+          {inactive && fact('Activity', 'Dead — no production, upkeep or aging')}
           {!inactive && <>
             {def.growth && fact('Growth / round', nutrientText(def.growth))}
-            {def.yield && fact('Yield / round', nutrientText({ ...def.yield, O2: o2Prod }))}
+            {def.yield && fact('Yield / round', nutrientText(def.yield))}
             {def.release && fact('Release / round', nutrientText(def.release))}
+            {def.consumes && fact('Takes / round', <>{nutrientText(def.consumes)} of what its owner gets from its card</>)}
             {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each round</>)}
             {def.o2PerRound !== undefined && fact('O₂ upkeep', <>−{def.o2PerRound} each round</>)}
             {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact('Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
@@ -61,10 +62,7 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
           {isOrganism(def) && card.zone !== 'hand' && fact(inactive ? 'Remaining biomass' : 'Biomass', <PoolChips pool={card.stored} all />)}
           {def.kind === 'microbe' && card.zone === 'attached' && fact('Role', 'Assisting')}
           {workingOn && fact('Working on', <>{name(workingOn.uid)}</>)}
-          {!!card.marks && fact('Marks', <>{card.marks}/2{card.specialized ? ' · specialized' : ''}</>)}
-          {!card.marks && card.specialized && fact('Marks', 'Specialized')}
           {card.attachedTo && state.cards[card.attachedTo] && fact('Under', <button type="button" className="link" onClick={() => onOpen(card.attachedTo!)}>{name(card.attachedTo)}</button>)}
-          {card.adaptations.length > 0 && fact('Adaptations', <>⭐ {card.adaptations.map(id => state.ruleset.cards.find(d => d.id === id)?.name ?? id).join(', ')}</>)}
         </dl>
 
         {attachments.length > 0 && <section className="closeup__attached" aria-label="Attached cards">
@@ -72,7 +70,7 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
           <ul>{attachments.map(a => <li key={a.uid}>
             <button type="button" className="attached-row" onClick={() => onOpen(a.uid)}>
               <img src={art(defOf(state, a).art ?? a.defId)} alt="" />
-              <span>{defOf(state, a).kind === 'adaptation' ? '⭐ ' : ''}{defOf(state, a).name}{a.working === uid ? ' · working' : ''}</span>
+              <span>{defOf(state, a).name}{a.working === uid ? ' · working' : ''}</span>
               {isOrganism(defOf(state, a)) && <PoolChips pool={a.stored} />}
               {defOf(state, a).kind === 'microbe' && <span>Assisting</span>}
             </button>

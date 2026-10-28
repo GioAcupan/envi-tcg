@@ -8,11 +8,8 @@ export const params: Params = {
   drawPerRound: 1,
   playApCost: 1,
   discardDrawApCost: 1,
-  eatApCost: 1,
-  maxEatsPerRound: 1,
   detritivoreAssignApCost: 1,
   algalBloomPThreshold: 2,
   firstPlayerAlternates: true,
   undoEnabled: true,
-  evolutionEnabled: true,
 };

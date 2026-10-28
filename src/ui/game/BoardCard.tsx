@@ -6,19 +6,16 @@ export type Mark = 'source' | 'target' | 'dim' | undefined;
 
 const LONG_PRESS_MS = 450;
 
-/** A worked card remains underneath its workers; eaten prey remains underneath its consumer.
+/** A worked card remains underneath its detritivores and microbes (rule C.4).
  * Each exposed card is independently tappable and inspectable, including during targeting. */
 export function BoardCard({ card, state, markOf, onTap, onInspect }: {
   card: CardInstance; state: GameState; markOf: (c: CardInstance) => Mark;
   onTap: (c: CardInstance) => void; onInspect: (c: CardInstance) => void;
 }) {
-  const over = [...workersOf(state, card.uid), ...attachmentsOf(state, card.uid).filter(c => defOf(state, c).kind === 'microbe')];
-  const under = attachmentsOf(state, card.uid).filter(c => defOf(state, c).kind !== 'microbe');
-  return <div className={`slot${isSideways(card) ? ' slot--side' : ''}${over.length ? ' slot--worked' : ''}${under.length ? ' slot--prey' : ''}`}>
+  const over = [...workersOf(state, card.uid), ...attachmentsOf(state, card.uid)];
+  return <div className={`slot${isSideways(card) ? ' slot--side' : ''}${over.length ? ' slot--worked' : ''}`}>
     <CardButton card={card} state={state} mark={markOf(card)} onTap={() => onTap(card)} onInspect={() => onInspect(card)} />
     {over.length > 0 && <div className="slot__workers" aria-label="Working cards">{over.map(c =>
-      <CardButton key={c.uid} card={c} state={state} compact mark={markOf(c)} onTap={() => onTap(c)} onInspect={() => onInspect(c)} />)}</div>}
-    {under.length > 0 && <div className="slot__under" aria-label="Cards underneath">{under.map(c =>
       <CardButton key={c.uid} card={c} state={state} compact mark={markOf(c)} onTap={() => onTap(c)} onInspect={() => onInspect(c)} />)}</div>}
   </div>;
 }
@@ -33,7 +30,6 @@ function CardButton({ card, state, mark, compact, onTap, onInspect }: {
   const origin = useRef({ x: 0, y: 0 });
   const clear = () => window.clearTimeout(timer.current);
   const attachments = attachmentsOf(state, card.uid);
-  const adaptations = attachments.filter(a => defOf(state, a).kind === 'adaptation').length;
   const def = defOf(state, card);
   const status = statusLabel(card);
 
@@ -65,13 +61,10 @@ function CardButton({ card, state, mark, compact, onTap, onInspect }: {
     {compact ? <span className={`stack-card stack-card--${def.kind}`}>
       <strong>{def.name} <small>P{card.owner + 1}</small></strong>
       {isOrganism(def) && <span>Biomass {nutrientText(card.stored)}</span>}
-      {def.kind === 'microbe' && <span>Assisting</span>}
+      {def.kind === 'microbe' && <span>Assisting · Upkeep {def.o2PerRound ?? 0} O₂</span>}
       {isOrganism(def) && <span>{isInactiveOrganism(card, def)
-        ? `${card.zone === 'attached' ? 'Eaten' : 'Dead'} — no production`
+        ? 'Dead — no production'
         : [def.release ? `Release ${nutrientText(def.release)}` : '', def.o2PerRound !== undefined ? `Upkeep ${def.o2PerRound} O₂` : ''].filter(Boolean).join(' · ')}</span>}
     </span> : <CardFace card={card} state={state} />}
-    {!compact && adaptations > 0 && <span className="slot__badge" aria-hidden="true">
-      {adaptations > 0 && <span>⭐{adaptations}</span>}
-    </span>}
   </button>;
 }

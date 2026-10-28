@@ -159,7 +159,6 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
     <div className="center">
       <div className="center__status turn">
         <p><b>Round {state.round}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
-        {!state.ruleset.params.evolutionEnabled && <span className="evolution-chip">Evolution off</span>}
       </div>
       <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
         {events.length > 0 && <span className="center__mods">⚡ {events.map(e => e.copies > 1 ? `${e.name} ×${e.copies}` : e.name).join(' + ')} · this round</span>}
@@ -219,13 +218,6 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
           {events.length ? <ul className="mods">{events.map((e, i) => <li key={i}>
             <strong>{e.name}{e.copies > 1 ? ` ×${e.copies} (stacked)` : ''}</strong> — round {state.round} only, {e.who}; ends when this round ends: {e.effects.join('; ')}
           </li>)}</ul> : <p className="muted">None this round.</p>}
-        </section>
-        <section>
-          <h3>Evolution / adaptation cards</h3>
-          <label className="evolution-switch"><input type="checkbox" role="switch" checked={ruleset.params.evolutionEnabled}
-            onChange={e => onRulesetChange({ ...ruleset, params: { ...ruleset.params, evolutionEnabled: e.target.checked } })} />Evolution / adaptation cards</label>
-          <p className="muted">This change applies to the next new game.</p>
-          <button type="button" className="btn" onClick={startNewGame}>New game now</button>
         </section>
         <section>
           <h3>New game</h3>

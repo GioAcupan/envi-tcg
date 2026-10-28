@@ -7,13 +7,13 @@ export const art = (name: string) => `${import.meta.env.BASE_URL}${name.startsWi
 export const defOf = (state: GameState, card: CardInstance): CardDef =>
   state.ruleset.cards.find(d => d.id === card.defId)!;
 
-/** Only organisms carry biomass; microbes and adaptations have roles instead. */
+/** Only organisms carry biomass; microbes have roles instead. */
 export const isOrganism = (def: CardDef) =>
-  def.kind === 'producer' || def.kind === 'consumer' || def.kind === 'detritivore';
+  def.kind === 'producer' || def.kind === 'detritivore';
 
-/** Dead organisms and eaten prey retain biomass but no longer produce, pay upkeep or age. */
+/** Dead organisms retain biomass but no longer produce, pay upkeep or age. */
 export const isInactiveOrganism = (card: CardInstance, def: CardDef) =>
-  isOrganism(def) && ((card.zone === 'field' && card.status === 'dead') || card.zone === 'attached');
+  isOrganism(def) && card.zone === 'field' && card.status === 'dead';
 
 /** Rule C.2: dead cards on the board are turned sideways. */
 export const isSideways = (card: CardInstance) =>
@@ -33,29 +33,19 @@ export const nutrientText = (pool: Partial<Pool>) =>
 function KindIcon({ kind }: { kind: CardDef['kind'] }): ReactNode {
   const paths: Record<CardDef['kind'], ReactNode> = {
     producer: <><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></>,
-    consumer: <><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z" /><path d="M2 12l4.5-3.5v7L2 12Z" /></>,
     detritivore: <><path d="M4 15c2-4 6-6 11-5 3 .5 5 2.5 5 5 0 2-2 3.5-5 3.5-4 0-7-1.5-11-3.5Z" /><path d="M8 14v5M12 14v5M16 14v5" /></>,
     microbe: <><path d="M6 13a6 6 0 0 1 12 0H6Z" /><path d="M10 13v6a2 2 0 0 0 4 0v-6" /></>,
-    adaptation: <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />,
     event: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
   };
   return <svg className="cf__fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
-}
-
-export function StarIcon() {
-  return <svg className="ui-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-    <polygon points="8 1.2 10.1 5.5 14.8 6.2 11.4 9.5 12.2 14.2 8 12 3.8 14.2 4.6 9.5 1.2 6.2 5.9 5.5 8 1.2" />
-  </svg>;
 }
 
 /** Full archetype label. */
 export function kindLabel(def: CardDef): string {
   const sub = (def.subtype ?? def.kind).toUpperCase();
   if (def.kind === 'producer') return sub;
-  if (def.kind === 'consumer') return sub;
   if (def.kind === 'microbe') return def.subtype === 'fungus' ? 'FUNGI' : sub;
   if (def.kind === 'event') return 'WILD EVENT';
-  if (def.kind === 'adaptation') return 'ADAPTATION';
   if (def.kind === 'detritivore') return sub;
   return 'TOKEN';
 }
@@ -63,9 +53,7 @@ export function kindLabel(def: CardDef): string {
 /** Short label that fits a board-sized card header. */
 function shortKind(def: CardDef): string {
   if (def.kind === 'producer') return (def.subtype ?? 'plant').toUpperCase();
-  if (def.kind === 'consumer') return 'SECONDARY';
   if (def.kind === 'microbe') return def.subtype === 'fungus' ? 'FUNGI' : 'BACT.';
-  if (def.kind === 'adaptation') return 'ADAPT';
   if (def.kind === 'event') return 'EVENT';
   return (def.subtype ?? 'detrit.').toUpperCase();
 }
@@ -99,11 +87,9 @@ function Art({ card, def }: { card: CardInstance; def: CardDef }) {
 export function CardFace({ card, state, full }: { card: CardInstance; state: GameState; full?: boolean }) {
   const def = defOf(state, card);
   const inactive = isInactiveOrganism(card, def);
-  const upgraded = card.adaptations.length > 0 || !!card.specialized;
   const status = statusLabel(card);
-  const classes = `cf cf--${def.kind} cf--${card.status ?? 'none'}${upgraded ? ' cf--upgraded' : ''}${full ? ' cf--full' : ''}`;
-  const o2Prod = def.yield?.O2 !== undefined
-    ? def.yield?.O2 + (card.adaptations.includes('oxygen-rich-adaptation') ? 2 : 0) : undefined;
+  const classes = `cf cf--${def.kind} cf--${card.status ?? 'none'}${full ? ' cf--full' : ''}`;
+  const o2Prod = def.yield?.O2;
   const eats = (def.canEat ?? []).filter(t => t && t !== '–');
 
   if (!full && isSideways(card)) {
@@ -128,7 +114,7 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       </span>
       <span className="cf__kind">{full ? kindLabel(def) : shortKind(def)}</span>
     </span>
-    <span className="cf__name">{def.name}{upgraded && <span className="cf__star"><StarIcon /></span>}</span>
+    <span className="cf__name">{def.name}</span>
     <Art card={card} def={def} />
     {status && <span className={`cf__stamp cf__stamp--${card.status}`}>{status}</span>}
     <span className="cf__stats">
@@ -139,10 +125,11 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       </>}
       {isOrganism(def) && card.zone !== 'hand' && card.zone !== 'deck' && <span className="cf__biomass">{inactive ? 'Remaining biomass' : 'Biomass'} {nutrientText(card.stored)}</span>}
     </span>
-    {!inactive && (def.growth || def.yield || def.release) && <span className="cf__rates">
+    {!inactive && (def.growth || def.yield || def.release || def.consumes) && <span className="cf__rates">
       {def.growth && <span>Growth {nutrientText(def.growth)}</span>}
-      {def.yield && <span>Yield {nutrientText({ ...def.yield, O2: o2Prod })}</span>}
+      {def.yield && <span>Yield {nutrientText(def.yield)}</span>}
       {def.release && <span>Release {nutrientText(def.release)}</span>}
+      {def.consumes && <span>Takes {nutrientText(def.consumes)}</span>}
     </span>}
     {full && <>
       {(def.tags.length > 0 || eats.length > 0) && <span className="cf__meta">
