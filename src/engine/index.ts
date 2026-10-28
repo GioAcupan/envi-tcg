@@ -256,7 +256,16 @@ function environment(state: GameState): void {
       if (card.lifespanLeft <= 0) die(state, card, 'lifespan ended');
     }
   }
-  state.round++; state.modifiers = state.modifiers.filter(m => m.activeRound >= state.round); state.endedTurns = [];
+  state.round++;
+  // Say when an event ends, so two back-to-back Droughts read as two events rather than one long one.
+  // Each copy of an event queues one modifier per effect, so the copy count is the largest count of any one effect.
+  const ended = state.modifiers.filter(m => m.activeRound < state.round);
+  for (const source of new Set(ended.map(m => m.source))) {
+    const ofSource = ended.filter(m => m.source === source);
+    const copies = Math.max(...ofSource.map(m => ofSource.filter(o => o.effect === m.effect).length));
+    note(state, `${state.ruleset.cards.find(d => d.id === source)?.name ?? source}${copies > 1 ? ` ×${copies}` : ''} ends after round ${state.round - 1}`);
+  }
+  state.modifiers = state.modifiers.filter(m => m.activeRound >= state.round); state.endedTurns = [];
   if (state.ruleset.params.firstPlayerAlternates) state.firstPlayer = state.firstPlayer === 0 ? 1 : 0;
   state.activePlayer = state.firstPlayer;
   for (const player of state.players) player.ap = state.ruleset.params.apPerTurn;

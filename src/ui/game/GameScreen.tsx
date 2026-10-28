@@ -8,7 +8,7 @@ import { Sheet } from '../common/Sheet';
 import { BoardCard, type Mark } from './BoardCard';
 import { CardCloseup } from './CardCloseup';
 import { RefereePanel } from './RefereePanel';
-import { TARGET_VERB, targetedAction, targetPrompt, validTargets, type TargetKind } from './actions';
+import { activeEvents, TARGET_VERB, targetedAction, targetPrompt, validTargets, type TargetKind } from './actions';
 import './game.css';
 
 const NUTRIENTS: readonly Nutrient[] = ['C', 'N', 'P', 'O2'];
@@ -96,6 +96,7 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
   const open = !covered && closeup?.turn === turn && state.cards[closeup.uid] ? closeup.uid : '';
   const name = (uid: string) => defOf(state, state.cards[uid]).name;
   const last = state.log[state.log.length - 1];
+  const events = activeEvents(state);
 
   useEffect(() => {
     if (!hint) return;
@@ -161,7 +162,7 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
         {!state.ruleset.params.evolutionEnabled && <span className="evolution-chip">Evolution off</span>}
       </div>
       <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
-        {state.modifiers.length > 0 && <span className="center__mods">⚡ {state.modifiers.length} effect{state.modifiers.length === 1 ? '' : 's'}</span>}
+        {events.length > 0 && <span className="center__mods">⚡ {events.map(e => e.copies > 1 ? `${e.name} ×${e.copies}` : e.name).join(' + ')} · this round</span>}
         <span className="center__last">{last ? logText(last) : 'Log'}</span>
       </button>
     </div>
@@ -215,10 +216,9 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
         </section>
         <section>
           <h3>Environmental effects</h3>
-          {state.modifiers.length ? <ul className="mods">{state.modifiers.map((m, i) => <li key={`${m.id}-${i}`}>
-            <strong>{state.ruleset.cards.find(d => d.id === m.source)?.name ?? m.source}</strong>: {m.effect}
-            {m.activeRound !== undefined ? ` (round ${m.activeRound})` : ''}{m.player !== undefined ? ` · ${state.players[m.player].name}` : ' · both players'}
-          </li>)}</ul> : <p className="muted">None active or queued.</p>}
+          {events.length ? <ul className="mods">{events.map((e, i) => <li key={i}>
+            <strong>{e.name}{e.copies > 1 ? ` ×${e.copies} (stacked)` : ''}</strong> — round {state.round} only, {e.who}; ends when this round ends: {e.effects.join('; ')}
+          </li>)}</ul> : <p className="muted">None this round.</p>}
         </section>
         <section>
           <h3>Evolution / adaptation cards</h3>
