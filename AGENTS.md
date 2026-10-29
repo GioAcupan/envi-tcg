@@ -2,12 +2,13 @@
 
 ## Purpose
 
-A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; the current revision is [docs/UPDATE-2.pdf](docs/UPDATE-2.pdf), which replaces [docs/UPDATE-1.pdf](docs/UPDATE-1.pdf) and the first draft [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
+A web app for prototyping a student-designed ecology trading card game: players simulate matches and tune game parameters. The game's rules are authored outside this repository; the current revision is [docs/UPDATE-2.1.pdf](docs/UPDATE-2.1.pdf), which replaces [docs/UPDATE-2.pdf](docs/UPDATE-2.pdf), [docs/UPDATE-1.pdf](docs/UPDATE-1.pdf) and the first draft [docs/TCG_DRAFT.pdf](docs/TCG_DRAFT.pdf).
 
 ## Local contracts
 
-- The game rules in the latest revision ([docs/UPDATE-2.pdf](docs/UPDATE-2.pdf)) are the source of truth for game behavior; the app implements them and never redefines them. Where the latest revision is silent or contradicts itself, the earlier revisions' behavior is carried over and every assumption is listed in [src/data/interpretations.ts](src/data/interpretations.ts), which the app shows on its Interpretations screen.
-- The rules are a draft and their numbers change often (costs, lifespans, thresholds); each new revision arrives as a new `docs/UPDATE-<n>.pdf`.
+- The game rules in the latest revision ([docs/UPDATE-2.1.pdf](docs/UPDATE-2.1.pdf)) are the source of truth for game behavior; the app implements them and never redefines them. Where the latest revision is silent or contradicts itself, the earlier revisions' behavior is carried over and every assumption is listed in [src/data/interpretations.ts](src/data/interpretations.ts), which the app shows on its Interpretations screen.
+- The rules are a draft and their numbers change often (costs, lifespans, thresholds); each new revision arrives as a new `docs/UPDATE-<n>.pdf` (point releases as `UPDATE-<n>.<m>.pdf`).
+- Since UPDATE-2.1 a wild event affects only the player who drew it, can last more than one round (its card's `lifespan`), and the game shows an indicator whenever one is drawn.
 - UPDATE-2 removed consumers and Evolution/Adaptation cards; the app has no eating, adaptations or evolution switch. A ruleset whose cards or params change shape bumps `Ruleset.version` and the localStorage key, so stale saved rulesets fall back to the defaults.
 
 ## Work guidance

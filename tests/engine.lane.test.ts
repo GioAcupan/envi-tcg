@@ -65,10 +65,10 @@ describe('lane: public action boundaries and lifecycle', () => {
     state = ref(state, { kind: 'moveCard', uid: plant.uid, zone: 'hand' }); state = applyAction(state, { type: 'play', player: 0, uid: plant.uid });
     expect(state.cards[plant.uid].stored.C).toBe(6); expect(state.cards[plant.uid].lifespanLeft).toBe(4);
   });
-  it('alternates first player and resets AP; referee endRound uses the same flow', () => {
-    let state = newGame(testRuleset(), 1); state = round(state); expect(state.round).toBe(2); expect(state.activePlayer).toBe(1); expect(state.players.map(p => p.ap)).toEqual([3, 3]);
+  it('Player 1 acts first every round and AP resets; referee endRound uses the same flow', () => {
+    let state = newGame(testRuleset(), 1); state = round(state); expect(state.round).toBe(2); expect(state.activePlayer).toBe(0); expect(state.players.map(p => p.ap)).toEqual([3, 3]);
     state = ref(state, { kind: 'endRound' }); expect(state.round).toBe(3); expect(state.activePlayer).toBe(0);
-    const rules = testRuleset({ params: { firstPlayerAlternates: false } }); expect(round(newGame(rules, 1)).activePlayer).toBe(0);
+    const rules = testRuleset({ params: { firstPlayerAlternates: true } }); expect(round(newGame(rules, 1)).activePlayer).toBe(1);
   });
 });
 
@@ -93,10 +93,13 @@ describe('lane: assignment, decomposition and microbes', () => {
       const worker = play(state, 0, collector, animal.uid); expect(round(worker.state).cards[animal.uid].stored.C).toBe(2);
     }
   });
-  it('grazers work living algae and remove P only from the worker owner, floored at zero', () => {
-    const algae = play(newGame(testRuleset(), 1), 1, 'green-algae'); const grazer = play(algae.state, 0, 'aquatic-grazer', algae.uid);
-    let state = ref(grazer.state, { kind: 'setPool', player: 0, pool: { P: 0.5 } }); state = ref(state, { kind: 'setPool', player: 1, pool: { P: 1 } });
-    state = round(state); expect(state.players[0].pool.P).toBe(0); expect(state.players[1].pool.P).toBe(1); expect(state.cards[algae.uid].stored.C).toBe(2); expect(state.cards[grazer.uid].lifespanLeft).toBe(3);
+  it('Aquatic Grazer works dead producers only and removes P only from the worker owner, floored at zero', () => {
+    const algae = play(newGame(testRuleset(), 1), 1, 'green-algae'); const living = play(algae.state, 0, 'aquatic-grazer');
+    expect(checkAction(living.state, { type: 'assign', player: 0, detritivoreUid: living.uid, targetUid: algae.uid })).toMatch(/dead/);
+    const grazer = living; let state = ref(living.state, { kind: 'setStatus', uid: algae.uid, status: 'dead' });
+    state = applyAction(state, { type: 'assign', player: 0, detritivoreUid: grazer.uid, targetUid: algae.uid }); expect(state.lastError).toBeUndefined();
+    state = ref(state, { kind: 'setPool', player: 0, pool: { P: 0.5 } }); state = ref(state, { kind: 'setPool', player: 1, pool: { P: 1 } });
+    state = round(state); expect(state.players[0].pool.P).toBe(0); expect(state.players[1].pool.P).toBe(1); expect(state.cards[algae.uid].stored.C).toBe(1); expect(state.cards[grazer.uid].lifespanLeft).toBe(3);
   });
   it('grazed algae at zero C is shuffled into its deck and workers freed', () => {
     const rules = testRuleset(); rules.cards.find(c => c.id === 'green-algae')!.growth = {};
@@ -107,7 +110,7 @@ describe('lane: assignment, decomposition and microbes', () => {
     const plant = play(newGame(testRuleset(), 1), 1, 'river-grass'); let state = ref(plant.state, { kind: 'setStatus', uid: plant.uid, status: 'dead' });
     state = ref(state, { kind: 'setCardField', uid: plant.uid, field: 'stored', value: { C: 3, N: 5, P: 7, O2: 0 } });
     const shrimp = play(state, 0, 'freshwater-shrimp', plant.uid); const microbe = play(shrimp.state, 0, 'nitrifying-bacteria', plant.uid); state = round(microbe.state);
-    expect(state.players[0].pool.N).toBe(29.5); expect(state.cards[microbe.uid].zone).toBe('hand'); expect(state.cards[plant.uid].zone).toBe('deck'); expect(state.cards[plant.uid].stored).toEqual({ C: 0, N: 0, P: 0, O2: 0 }); expect(state.cards[shrimp.uid].working).toBeUndefined();
+    expect(state.players[0].pool.N).toBe(30); expect(state.cards[microbe.uid].zone).toBe('hand'); expect(state.cards[plant.uid].zone).toBe('deck'); expect(state.cards[plant.uid].stored).toEqual({ C: 0, N: 0, P: 0, O2: 0 }); expect(state.cards[shrimp.uid].working).toBeUndefined();
     const other = play(state, 1, 'emergent-plant'); state = ref(other.state, { kind: 'setStatus', uid: other.uid, status: 'dead' }); state = ref(state, { kind: 'setActivePlayer', player: 0 });
     expect(checkAction(state, { type: 'play', player: 0, uid: microbe.uid, targetUid: other.uid })).toBeNull();
   });
@@ -132,19 +135,20 @@ describe('lane: draws and events', () => {
     for (const uid of [...state.players[0].deck]) state = ref(state, { kind: 'moveCard', uid, zone: 'hand' });
     for (const uid of wanted) state = ref(state, { kind: 'moveCard', uid, zone: 'deck' });
     const ap = state.players[0].ap, before = state.players[0].hand.length; state = ref(state, { kind: 'draw', player: 0 });
-    expect(state.players[0].hand).toHaveLength(before + 1); expect(state.players[0].hand).toContain(wanted[2]); expect(wanted.slice(0, 2).map(uid => state.cards[uid].zone)).toEqual(['removed', 'removed']); expect(state.players[0].ap).toBe(ap); expect(state.modifiers).toMatchObject([{ effect: 'upkeep+1', activeRound: 1 }]); expect(state.players[0].pool.P).toBe(1); expect(state.players[1].pool.P).toBe(1);
+    expect(state.players[0].hand).toHaveLength(before + 1); expect(state.players[0].hand).toContain(wanted[2]); expect(wanted.slice(0, 2).map(uid => state.cards[uid].zone)).toEqual(['removed', 'removed']); expect(state.players[0].ap).toBe(ap); expect(state.modifiers).toMatchObject([{ effect: 'upkeep+1', player: 0, activeRound: 1 }, { effect: 'upkeep+1', player: 0, activeRound: 2 }]); expect(state.players[0].pool.P).toBe(1); expect(state.players[1].pool.P).toBe(0);
+    expect(state.drawnEvents.map(e => state.cards[e.uid].defId)).toEqual(['flood', 'heat-wave']);
   });
   it('round-start event draws apply to the new round', () => {
     let state = newGame(defaultRuleset(), 17); const uid = Object.values(state.cards).find(c => c.owner === 0 && c.defId === 'drought')!.uid;
     for (const c of [...state.players[0].deck]) state = ref(state, { kind: 'moveCard', uid: c, zone: 'hand' });
     state = ref(state, { kind: 'moveCard', uid, zone: 'deck' }); state = round(state);
-    expect(state.round).toBe(2); expect(state.modifiers.filter(m => m.source === 'drought').every(m => m.activeRound === 2)).toBe(true); expect(state.modifiers.some(m => m.source === 'drought')).toBe(true);
+    expect(state.round).toBe(2); expect(state.modifiers.filter(m => m.source === 'drought').map(m => [m.player, m.activeRound] as const).sort((a, b) => a[1] - b[1])).toEqual([[0, 2], [0, 2], [0, 2], [0, 3], [0, 3], [0, 3]]);
     state = ref(state, { kind: 'setActivePlayer', player: 0 }); state = give(state, 0, 'aquatic-plant'); const aquatic = state.players[0].hand.find(u => state.cards[u].defId === 'aquatic-plant')!;
     expect(checkAction(state, { type: 'play', player: 0, uid: aquatic })).toMatch(/Drought/);
   });
   it('event-only decks terminate opening hands and replacement draws', () => {
     const rules = testRuleset({ cards: defaultRuleset().cards.filter(c => c.kind === 'event') }); let state = newGame(rules, 2); expect(state.players[0].hand).toHaveLength(0);
-    state = ref(state, { kind: 'draw', player: 0 }); expect(state.players[0].deck).toHaveLength(0); expect(Object.values(state.cards).filter(c => c.owner === 0 && c.zone === 'removed')).toHaveLength(4); expect(state.players[0].hand).toHaveLength(0);
+    state = ref(state, { kind: 'draw', player: 0 }); expect(state.players[0].deck).toHaveLength(0); expect(Object.values(state.cards).filter(c => c.owner === 0 && c.zone === 'removed')).toHaveLength(5); expect(state.players[0].hand).toHaveLength(0);
   });
   it('upkeep uses play order and newly dead organisms can be recycled before aging', () => {
     const first = play(newGame(testRuleset(), 1), 0, 'freshwater-shrimp'); const second = play(first.state, 0, 'aquatic-worm'); let state = ref(second.state, { kind: 'setPool', player: 0, pool: { O2: 1 } });
@@ -161,13 +165,14 @@ describe('lane: fractional release and remaining event boundaries', () => {
     state = round(shrimp.state);
     expect(state.players[0].pool.C).toBe(before + 0.5); expect(state.cards[plant.uid].zone).toBe('deck'); expect(state.cards[shrimp.uid].lifespanLeft).toBe(4);
   });
-  it('Heat Wave adds one to detritivore upkeep and expires after this round', () => {
+  it('Heat Wave adds one to detritivore upkeep for two rounds, then expires', () => {
     const rules = testRuleset(); rules.cards.find(c => c.id === 'heat-wave')!.copies = 1;
     const first = play(newGame(rules, 1), 0, 'freshwater-shrimp'); const second = play(first.state, 0, 'aquatic-worm');
     let state = play(second.state, 0, 'heat-wave').state;
     state = ref(state, { kind: 'setPool', player: 0, pool: { O2: 3 } }); state = round(state);
-    expect(state.cards[first.uid].status).toBe('alive'); expect(state.cards[second.uid].status).toBe('dead'); expect(state.players[0].pool.O2).toBe(1); expect(state.modifiers).toHaveLength(0);
-    state = round(state); expect(state.cards[first.uid].status).toBe('alive'); expect(state.players[0].pool.O2).toBe(0);
+    expect(state.cards[first.uid].status).toBe('alive'); expect(state.cards[second.uid].status).toBe('dead'); expect(state.players[0].pool.O2).toBe(1); expect(state.modifiers).toHaveLength(1);
+    state = ref(state, { kind: 'setPool', player: 0, pool: { O2: 2 } }); state = round(state); expect(state.cards[first.uid].status).toBe('alive'); expect(state.players[0].pool.O2).toBe(0);
+    state = ref(state, { kind: 'setPool', player: 0, pool: { O2: 1 } }); state = round(state); expect(state.cards[first.uid].status).toBe('alive'); expect(state.players[0].pool.O2).toBe(0);
   });
   it('Drought allows algae to photosynthesize with one less O2', () => {
     const rules = testRuleset(); rules.cards.find(c => c.id === 'drought')!.copies = 1;

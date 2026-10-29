@@ -8,14 +8,14 @@ export interface CardDef {
   name: string;
   kind: CardKind;
   subtype?: string;           // 'plant'|'algae'|'shredder'|'collector'|'grazer'|'bacteria'
-  cost: { C: number; N: number; O2?: number };  // paid once from the pool on play (PDF shows these as negatives)
+  cost: { C: number; N: number; P?: number; O2?: number };  // paid once from the pool on play (PDF shows these as negatives)
   biomass?: Pool;             // organisms: nutrients stored on the card when it is played
   growth?: Partial<Pool>;     // producers: added to the card's own biomass each round it photosynthesizes
   yield?: Partial<Pool>;      // producers: added to the owner's pool each round it photosynthesizes (O2 included)
   o2PerRound?: number;        // detritivores and microbes: O2 upkeep each round
-  release?: Partial<Pool>;    // detritivores: moved from the worked card's biomass to the owner's pool each round
-  consumes?: Partial<Pool>;   // microbes: taken back from the owner's nutrients released from their card each round they assist
-  lifespan?: number;          // rounds alive
+  release?: Partial<Pool>;    // detritivores, and microbes working without one: moved from the worked card's biomass to the owner's pool each round
+  consumes?: Partial<Pool>;   // microbes: removed from their dead card's biomass (gained by nobody) each round they decompose it
+  lifespan?: number;          // rounds alive; events: rounds affected, counting the round drawn
   tags: string[];             // what the card is: 'plant','algae','aquatic','detritivore','animal',...
   canEat?: string[];          // detritivores: tags of cards they can work
   eatsAlive?: boolean;        // detritivores (grazers): may also work living cards that match canEat
@@ -34,11 +34,11 @@ export interface Params {
   discardDrawApCost: number;        // 1
   detritivoreAssignApCost: number;  // 1
   algalBloomPThreshold: number;     // 2: Algal Bloom when a player's P is greater than this
-  firstPlayerAlternates: boolean;   // true
+  firstPlayerAlternates: boolean;   // false: Player 1 acts first every round
   undoEnabled: boolean;             // true
 }
 
-export interface Ruleset { version: 3; name: string; cards: CardDef[]; params: Params }
+export interface Ruleset { version: 4; name: string; cards: CardDef[]; params: Params }
 
 export type PlayerId = 0 | 1;
 export type Zone = 'deck' | 'hand' | 'field' | 'attached' | 'discard' | 'removed';
@@ -64,12 +64,15 @@ export interface PlayerState {
 
 export type Phase = 'action' | 'gameOver';
 
-export interface Modifier {           // a wild event's effect for one round
+export interface Modifier {           // a wild event's effect for one round; a 2-round event queues one per round
   id: string; source: string;         // card defId
   effect: 'producerO2-1' | 'noAquaticPlay' | 'noAquaticPhotosynthesis' | 'upkeep+1';
-  player?: PlayerId;                  // undefined = both players
+  player?: PlayerId;                  // undefined = both players; events since UPDATE-2.1 affect only the drawer
   activeRound: number;                // the round it applies to (its Environmental Phase included)
 }
+
+/** A wild event drawn (or played) during the game, for the "event drawn" indicator. */
+export interface DrawnEvent { round: number; player: PlayerId; uid: string }
 
 export interface LogEntry { round: number; text: string }
 
@@ -83,6 +86,7 @@ export interface GameState {
   players: [PlayerState, PlayerState];
   cards: Record<string, CardInstance>;
   modifiers: Modifier[];
+  drawnEvents: DrawnEvent[];
   winner?: PlayerId | 'draw';
   log: LogEntry[];
   lastError?: string;

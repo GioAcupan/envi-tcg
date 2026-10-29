@@ -2,29 +2,27 @@ import { checkAction } from '../../engine';
 import type { Action, CardInstance, GameState, Modifier, PlayerId } from '../../engine';
 import { defOf } from '../common/Card';
 
-const EFFECT_TEXT: Record<Modifier['effect'], (n: number) => string> = {
-  'producerO2-1': n => `producers make ${n} less O₂`,
-  noAquaticPlay: () => 'aquatic cards cannot be played',
-  noAquaticPhotosynthesis: () => 'aquatic plants cannot photosynthesize',
-  'upkeep+1': n => `every organism pays ${n} more O₂ upkeep`,
+const EFFECT_TEXT: Record<Modifier['effect'], string> = {
+  'producerO2-1': 'producers make 1 less O₂',
+  noAquaticPlay: 'aquatic cards cannot be played',
+  noAquaticPhotosynthesis: 'aquatic plants cannot photosynthesize',
+  'upkeep+1': 'every organism pays 1 more O₂ upkeep',
 };
 
-/** This round's wild events for the game screen's event panel, one entry per event card name. A Drought queues three
- *  modifiers, which players read as one event; two Droughts drawn in the same round stack, so `copies` and the effect
- *  amounts count them. The count assumes every modifier affects both players, as all events do today; a
- *  player-specific modifier would need counting per player. */
-export function activeEvents(state: GameState): { name: string; copies: number; who: string; effects: string[] }[] {
+/** Wild events in effect this round for the game screen's event panel, one entry per event and player. A Drought
+ *  queues three modifiers per round it lasts, which players read as one event; events do not stack, so each
+ *  effect appears once. `roundsLeft` counts this round. */
+export function activeEvents(state: GameState): { name: string; who: string; roundsLeft: number; effects: string[] }[] {
   const current = state.modifiers.filter(m => m.activeRound === state.round);
-  return [...new Set(current.map(m => m.source))].map(source => {
-    const ofSource = current.filter(m => m.source === source);
-    const effects = [...new Set(ofSource.map(m => m.effect))];
-    const counts = effects.map(effect => ofSource.filter(m => m.effect === effect).length);
-    const players = [...new Set(ofSource.map(m => m.player))];
+  const keys = [...new Set(current.map(m => `${m.source}|${m.player ?? ''}`))];
+  return keys.map(key => {
+    const [source, player] = key.split('|');
+    const same = (m: Modifier) => m.source === source && String(m.player ?? '') === player;
     return {
       name: state.ruleset.cards.find(d => d.id === source)?.name ?? source,
-      copies: Math.max(...counts),
-      who: players.includes(undefined) ? 'both players' : players.map(p => state.players[p!].name).join(', '),
-      effects: effects.map((effect, i) => EFFECT_TEXT[effect](counts[i])),
+      who: player === '' ? 'both players' : state.players[Number(player) as PlayerId].name,
+      roundsLeft: 1 + Math.max(...state.modifiers.filter(same).map(m => m.activeRound)) - state.round,
+      effects: [...new Set(current.filter(same).map(m => m.effect))].map(effect => EFFECT_TEXT[effect]),
     };
   });
 }

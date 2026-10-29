@@ -109,8 +109,9 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       <span className="cf__cost">
         {def.cost.C > 0 && <span className="cf__cost-chip"><img src={art('c')} alt="C" />{def.cost.C}</span>}
         {def.cost.N > 0 && <span className="cf__cost-chip"><img src={art('n')} alt="N" />{def.cost.N}</span>}
+        {!!def.cost.P && <span className="cf__cost-chip"><img src={art('p')} alt="P" />{def.cost.P}</span>}
         {!!def.cost.O2 && <span className="cf__cost-chip"><img src={art('o2')} alt="O₂" />{def.cost.O2}</span>}
-        {!def.cost.C && !def.cost.N && !def.cost.O2 && <span className="cf__cost-chip">{def.kind === 'event' ? '0 AP' : `${state.ruleset.params.playApCost} AP`}</span>}
+        {!def.cost.C && !def.cost.N && !def.cost.P && !def.cost.O2 && <span className="cf__cost-chip">{def.kind === 'event' ? '0 AP' : `${state.ruleset.params.playApCost} AP`}</span>}
       </span>
       <span className="cf__kind">{full ? kindLabel(def) : shortKind(def)}</span>
     </span>
@@ -121,7 +122,7 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       {!inactive && <>
         {o2Prod !== undefined && <span className={`pill pill--o2`} title={`Produces ${o2Prod} O₂ each round`}><img src={art('o2')} alt="O₂" />+{o2Prod}</span>}
         {def.o2PerRound !== undefined && <span className={`pill pill--upkeep`} title={`Uses ${def.o2PerRound} O₂ each round`}><img src={art('o2')} alt="O₂" />−{def.o2PerRound}</span>}
-        {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title="Lifespan left">⏳{card.lifespanLeft ?? def.lifespan}</span>}
+        {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && <span className="pill pill--life" title={def.kind === 'event' ? 'Rounds it lasts' : 'Lifespan left'}>⏳{card.lifespanLeft ?? def.lifespan}</span>}
       </>}
       {isOrganism(def) && card.zone !== 'hand' && card.zone !== 'deck' && <span className="cf__biomass">{inactive ? 'Remaining biomass' : 'Biomass'} {nutrientText(card.stored)}</span>}
     </span>

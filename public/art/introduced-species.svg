@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Introduced Non-native Species: an invasive water hyacinth mat crowding out a wilting native reed -->
+  <rect width="160" height="120" rx="6" fill="#F4EFE4"/>
+  <!-- Water surface -->
+  <path d="M8 74C28 70 48 78 68 74S108 70 128 74 152 76 152 76" stroke="#2C6E8F" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M8 86C30 82 52 90 74 86S118 82 152 88" stroke="#2C6E8F" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+  <!-- Wilting native reed, bent and browned -->
+  <path d="M30 74C30 56 32 44 38 34C42 28 48 26 52 30" stroke="#8C6239" stroke-width="3" stroke-linecap="round"/>
+  <path d="M38 34C34 30 30 30 26 34" stroke="#A47C48" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M33 50C27 48 22 50 19 56" stroke="#A47C48" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Invasive mat: glossy bulbous leaves crowding the water -->
+  <g stroke="#1B221B" stroke-width="1.6">
+    <ellipse cx="72" cy="66" rx="12" ry="9" fill="#2F7D32"/>
+    <ellipse cx="92" cy="62" rx="13" ry="10" fill="#3E9142"/>
+    <ellipse cx="112" cy="66" rx="12" ry="9" fill="#2F7D32"/>
+    <ellipse cx="130" cy="68" rx="10" ry="8" fill="#3E9142"/>
+    <ellipse cx="84" cy="74" rx="11" ry="7" fill="#256B29"/>
+    <ellipse cx="104" cy="75" rx="11" ry="7" fill="#256B29"/>
+  </g>
+  <!-- Lavender flower spike rising above the mat -->
+  <path d="M100 56V30" stroke="#2F7D32" stroke-width="2.5" stroke-linecap="round"/>
+  <g stroke="#1B221B" stroke-width="1.2" fill="#9B7FD1">
+    <circle cx="100" cy="28" r="5"/>
+    <circle cx="94" cy="34" r="4.5"/>
+    <circle cx="106" cy="34" r="4.5"/>
+    <circle cx="100" cy="40" r="4.5"/>
+  </g>
+  <circle cx="100" cy="28" r="1.6" fill="#F2C94C"/>
+  <!-- Warning mark -->
+  <path d="M138 18L148 36H128Z" fill="#D9820B" stroke="#1B221B" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M138 24V30M138 33V34" stroke="#1B221B" stroke-width="2" stroke-linecap="round"/>
+</svg>

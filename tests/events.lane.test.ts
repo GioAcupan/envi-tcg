@@ -18,7 +18,7 @@ function droughtOnTop(state: GameState, player: PlayerId): GameState {
 }
 
 const endTurn = (state: GameState) => applyAction(state, { type: 'endTurn', player: state.activePlayer });
-const endsLines = (state: GameState, round: number) => state.log.filter(e => e.round === round && /Drought.* ends after round/.test(e.text));
+const endsLines = (state: GameState, round: number) => state.log.filter(e => e.round === round && /Drought ends for .* after round/.test(e.text));
 
 function droughtRules() {
   const rules = testRuleset(); rules.cards.find(c => c.id === 'drought')!.copies = 1;
@@ -26,31 +26,31 @@ function droughtRules() {
 }
 
 describe('Drought duration', () => {
-  it('a Drought drawn at round start covers both turns of that round only, and its end is logged once', () => {
+  it('a Drought drawn at round start covers that round and the next for its drawer only, and its end is logged once', () => {
     let state = droughtOnTop(newGame(droughtRules(), 3), 0);
     state = endTurn(endTurn(state));                       // round 1 ends; the draw reveals Drought for round 2
     const droughtRound = state.round;
-    expect(aquaticBlocked(state, 0) && aquaticBlocked(state, 1)).toBe(true);   // first turn of the Drought round
-    state = endTurn(state);
-    expect(aquaticBlocked(state, 0) && aquaticBlocked(state, 1)).toBe(true);   // second turn of the Drought round
-    expect(endsLines(state, droughtRound)).toHaveLength(0);
-    state = endTurn(state);
-    expect(state.round).toBe(droughtRound + 1);
-    expect(aquaticBlocked(state, 0) || aquaticBlocked(state, 1)).toBe(false);  // gone in the next round
-    expect(state.modifiers).toHaveLength(0);
-    expect(endsLines(state, droughtRound + 1).map(e => e.text)).toEqual([`Round ${droughtRound + 1}: Drought ends after round ${droughtRound}`]);
+    for (const _turn of [1, 2, 3, 4]) {                    // both turns of the Drought round and of the next one
+      expect(aquaticBlocked(state, 0)).toBe(true); expect(aquaticBlocked(state, 1)).toBe(false);
+      state = endTurn(state);
+    }
+    expect(state.round).toBe(droughtRound + 2);
+    expect(endsLines(state, droughtRound + 1)).toHaveLength(0);
+    expect(aquaticBlocked(state, 0)).toBe(false);
+    expect(endsLines(state, droughtRound + 2).map(e => e.text)).toEqual([`Round ${droughtRound + 2}: Drought ends for Player 1 after round ${droughtRound + 1}; shuffled back into their deck`]);
   });
 
-  it('two Droughts drawn in the same round stack, show as ×2 and end with one log line', () => {
+  it('each player\'s Drought shows separately in the event panel with its rounds left', () => {
     let state = droughtOnTop(droughtOnTop(newGame(droughtRules(), 3), 0), 1);
     state = endTurn(endTurn(state));
-    const droughtRound = state.round;
-    expect(activeEvents(state)).toEqual([{
-      name: 'Drought', copies: 2, who: 'both players',
-      effects: ['producers make 2 less O₂', 'aquatic cards cannot be played', 'aquatic plants cannot photosynthesize'],
-    }]);
+    const effects = ['producers make 1 less O₂', 'aquatic cards cannot be played', 'aquatic plants cannot photosynthesize'];
+    expect(activeEvents(state)).toEqual([
+      { name: 'Drought', who: 'Player 1', roundsLeft: 2, effects },
+      { name: 'Drought', who: 'Player 2', roundsLeft: 2, effects },
+    ]);
+    state = endTurn(endTurn(state));
+    expect(activeEvents(state).map(e => e.roundsLeft)).toEqual([1, 1]);
     state = endTurn(endTurn(state));
     expect(activeEvents(state)).toEqual([]);
-    expect(endsLines(state, droughtRound + 1).map(e => e.text)).toEqual([`Round ${droughtRound + 1}: Drought ×2 ends after round ${droughtRound}`]);
   });
 });

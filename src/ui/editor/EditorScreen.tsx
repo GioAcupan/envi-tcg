@@ -84,7 +84,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const { params } = ruleset;
-  const deckSize = 26;
+  const deckSize = 27;
   const deckTotal = ruleset.cards.reduce((sum, card) => sum + card.copies, 0);
 
   const setCard = (index: number, next: CardDef) =>
@@ -212,7 +212,7 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
         <thead>
           <tr>
             <th>Name</th><th>Kind</th><th>Subtype</th>
-            <th>Cost C</th><th>Cost N</th><th>Cost O₂</th>
+            <th>Cost C</th><th>Cost N</th><th>Cost P</th><th>Cost O₂</th>
             <th>Biomass C</th><th>Biomass N</th><th>Biomass P</th>
             <th>Growth C</th><th>Growth N</th><th>Growth P</th><th>Growth O₂</th>
             <th>Yield C</th><th>Yield N</th><th>Yield P</th><th>Yield O₂</th>
@@ -235,6 +235,8 @@ export function EditorScreen({ ruleset, onChange }: { ruleset: Ruleset; onChange
                 onChange={value => set({ ...card, cost: withField(card.cost, 'C', value) })} /></td>
               <td><NumberInput label={`Cost N ${row}`} required value={card.cost.N}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'N', value) })} /></td>
+              <td><NumberInput label={`Cost P ${row}`} value={card.cost.P}
+                onChange={value => set({ ...card, cost: withField(card.cost, 'P', value) })} /></td>
               <td><NumberInput label={`Cost O2 ${row}`} value={card.cost.O2}
                 onChange={value => set({ ...card, cost: withField(card.cost, 'O2', value) })} /></td>
               <PoolCells label="Biomass" row={row} pool={card.biomass} nutrients={ORGANISM_NUTRIENTS}

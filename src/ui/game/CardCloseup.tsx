@@ -48,7 +48,7 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
         {actions.hint && <p className="closeup__hint">{actions.hint}</p>}
 
         <dl className="closeup__facts">
-          {fact('Cost', <>{def.cost.C} C · {def.cost.N} N{def.cost.O2 ? ` · ${def.cost.O2} O₂` : ''} · {apCost} AP</>)}
+          {fact('Cost', <>{def.cost.C} C · {def.cost.N} N{def.cost.P ? ` · ${def.cost.P} P` : ''}{def.cost.O2 ? ` · ${def.cost.O2} O₂` : ''} · {apCost} AP</>)}
           {inactive && fact('Activity', 'Dead — no production, upkeep or aging')}
           {!inactive && <>
             {def.growth && fact('Growth / round', nutrientText(def.growth))}
@@ -57,7 +57,7 @@ export function CardCloseup({ state, uid, player, pickTarget, dispatch, onTarget
             {def.consumes && fact('Takes / round', <>{nutrientText(def.consumes)} of what its owner gets from its card</>)}
             {o2Prod !== undefined && fact('O₂ made', <>+{o2Prod} each round</>)}
             {def.o2PerRound !== undefined && fact('O₂ upkeep', <>−{def.o2PerRound} each round</>)}
-            {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact('Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
+            {(card.lifespanLeft !== undefined || def.lifespan !== undefined) && fact(def.kind === 'event' ? 'Lasts' : 'Lifespan', card.lifespanLeft !== undefined ? `${card.lifespanLeft} of ${def.lifespan ?? card.lifespanLeft} rounds left` : `${def.lifespan} rounds`)}
           </>}
           {isOrganism(def) && card.zone !== 'hand' && fact(inactive ? 'Remaining biomass' : 'Biomass', <PoolChips pool={card.stored} all />)}
           {def.kind === 'microbe' && card.zone === 'attached' && fact('Role', 'Assisting')}

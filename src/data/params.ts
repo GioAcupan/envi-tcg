@@ -10,6 +10,6 @@ export const params: Params = {
   discardDrawApCost: 1,
   detritivoreAssignApCost: 1,
   algalBloomPThreshold: 2,
-  firstPlayerAlternates: true,
+  firstPlayerAlternates: false,
   undoEnabled: true,
 };

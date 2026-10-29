@@ -514,6 +514,32 @@
 .pass-device .btn:not(.btn--primary) { background: transparent; color: var(--ink-on-dark); border-color: var(--ink-on-dark); box-shadow: none; }
 .pass-device .btn--primary { background: var(--arch-organism-header); border-color: var(--arch-organism-border); }
 
+/* Shown over the board when a wild event is drawn (UPDATE-2.1 indicator). */
+.event-drawn {
+  --w: min(42vw, (100dvh - 260px) * 0.62, 260px);
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--bg-header);
+  color: var(--ink-on-dark);
+  overflow-y: auto;
+}
+.event-drawn h2 { margin: 0; font-family: var(--font-display); font-size: var(--text-2xl); }
+.event-drawn__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.event-drawn figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: calc(var(--w) + 40px); }
+.event-drawn__card { width: var(--w); animation: event-drawn-in 360ms ease-out; }
+.event-drawn figcaption { font-size: var(--text-sm); opacity: 0.9; }
+.event-drawn .btn { min-width: 200px; }
+@keyframes event-drawn-in { from { transform: translateY(16px) rotate(-3deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .event-drawn__card { animation: none; } }
+
 /* --- Sheets: closeup (centered) and menu drawer (right edge) --- */
 .sheet-backdrop {
   position: fixed;

@@ -83,10 +83,14 @@ export function die(state: GameState, card: CardInstance, reason: string): void 
   note(state, `${state.players[card.owner].name}'s ${definition(state, card).name} died: ${reason}`);
 }
 
-/** Events last through the current round's Environmental Phase. */
-export function queueModifier(state: GameState, source: string, effect: Modifier['effect']): void {
-  state.modifiers.push({ id: `m${state.round}-${state.log.length}-${state.modifiers.length}`, source, effect, activeRound: state.round });
-  note(state, `${source}: ${effect} this round`);
+/** An event's effect on the drawer for `rounds` rounds starting now, each through its Environmental Phase.
+ *  Rounds already covered by the same effect are not doubled: wild events do not stack. */
+export function queueModifier(state: GameState, source: string, effect: Modifier['effect'], player: PlayerId, rounds: number): void {
+  for (let activeRound = state.round; activeRound < state.round + rounds; activeRound++) {
+    if (state.modifiers.some(m => m.source === source && m.effect === effect && m.player === player && m.activeRound === activeRound)) continue;
+    state.modifiers.push({ id: `m${activeRound}-${state.log.length}-${state.modifiers.length}`, source, effect, player, activeRound });
+  }
+  note(state, `${source}: ${effect} for ${state.players[player].name}, ${rounds === 1 ? 'this round' : `${rounds} rounds`}`);
 }
 
 /** Each check doubles C/N/P of every living algae above the owner's P threshold, unless a snail lives there. */
@@ -103,47 +107,55 @@ export function algalBloom(state: GameState, player: PlayerId): void {
   }
 }
 
-/** Add to a pool and to `released`, the per-player tally of what one dead card gave this round. */
-export function credit(state: GameState, released: [Pool, Pool], player: PlayerId, delta: Partial<Pool>, reason: string): void {
-  gain(state, player, delta, reason);
-  for (const key of Object.keys(delta) as (keyof Pool)[]) released[player][key] += delta[key]!;
-}
-
 type Hook = (state: GameState, card: CardInstance, target?: CardInstance) => void;
 interface Ability {
   onWork?: Hook;
-  /** `carbon` is the C each player's detritivores released from `target` this round; `released` is everything each player got from it. */
-  onAssist?: (state: GameState, microbe: CardInstance, target: CardInstance, carbon: [number, number], released: [Pool, Pool]) => void;
+  /** A microbe in a round a detritivore released from `target`; `carbon` is the C each player's detritivores released. */
+  onAssist?: (state: GameState, microbe: CardInstance, target: CardInstance, carbon: [number, number]) => void;
+  /** A microbe in a round no detritivore released from `target`; without it, the microbe releases its `release` from the card. */
+  onAlone?: Hook;
+  /** A wild event; `card.owner` drew it and is the only player it affects. */
   event?: Hook;
 }
+
+const rounds = (state: GameState, card: CardInstance) => definition(state, card).lifespan ?? 1;
 
 /** Card-specific hooks run once at their named lifecycle point on the engine's cloned state. */
 export const abilities: Record<string, Ability> = {
   'aquatic-grazer': { onWork: (s, c) => gain(s, c.owner, { P: -1 }, 'Aquatic Grazer removes excess P') },
   'carbon-bacteria': {
-    onAssist(s, _c, _target, carbon, released) {
-      for (const p of s.players) if (carbon[p.id]) credit(s, released, p.id, { C: carbon[p.id] }, 'Carbon Bacteria doubles released C');
+    onAssist(s, _c, _target, carbon) {
+      for (const p of s.players) if (carbon[p.id]) gain(s, p.id, { C: carbon[p.id] }, 'Carbon Bacteria doubles released C');
     },
   },
   'nitrifying-bacteria': {
-    onAssist(s, c, target, _carbon, released) {
-      credit(s, released, c.owner, { N: 2 * target.stored.N }, 'Nitrifying Bacteria doubles and releases all remaining N');
+    onAssist(s, c, target) {
+      gain(s, c.owner, { N: 2 * target.stored.N }, 'Nitrifying Bacteria doubles and releases all remaining N');
       target.stored.N = 0;
     },
   },
-  'phosphorus-bacteria': { onAssist: (s, c, _target, _carbon, released) => credit(s, released, c.owner, { P: 1 }, 'Phosphorus Bacteria') },
-  'strong-rainfall': { event(s) { for (const p of s.players) gain(s, p.id, { P: 1 }, 'Strong Rainfall'); for (const p of s.players) algalBloom(s, p.id); } },
-  'drought': { event(s) { for (const effect of ['producerO2-1', 'noAquaticPlay', 'noAquaticPhotosynthesis'] as const) queueModifier(s, 'drought', effect); } },
-  'heat-wave': { event: s => queueModifier(s, 'heat-wave', 'upkeep+1') },
+  // The only card that makes P (UPDATE-2.1), so its P is created rather than taken from the card.
+  'phosphorus-bacteria': {
+    onAssist: (s, c) => gain(s, c.owner, { P: 1 }, 'Phosphorus Bacteria'),
+    onAlone: (s, c) => gain(s, c.owner, { P: 1 }, 'Phosphorus Bacteria'),
+  },
+  'strong-rainfall': { event(s, c) { gain(s, c.owner, { P: 1 }, 'Strong Rainfall'); algalBloom(s, c.owner); } },
+  'drought': { event(s, c) { for (const effect of ['producerO2-1', 'noAquaticPlay', 'noAquaticPhotosynthesis'] as const) queueModifier(s, 'drought', effect, c.owner, rounds(s, c)); } },
+  'heat-wave': { event: (s, c) => queueModifier(s, 'heat-wave', 'upkeep+1', c.owner, rounds(s, c)) },
   'flood': {
-    event(s) {
-      for (const p of s.players) {
-        const organisms = living(s, p.id);
-        if (organisms.length) {
-          die(s, organisms[Math.floor(random(s) * organisms.length)], 'Flood');
-          gain(s, p.id, { C: 1 }, 'Flood');
-        } else gain(s, p.id, { P: 1 }, 'Flood: no living organism');
-      }
+    event(s, c) {
+      const organisms = living(s, c.owner);
+      if (organisms.length) {
+        die(s, organisms[Math.floor(random(s) * organisms.length)], 'Flash Flood');
+        gain(s, c.owner, { C: 1 }, 'Flash Flood');
+      } else gain(s, c.owner, { P: 1 }, 'Flash Flood: no living organism');
+    },
+  },
+  'introduced-species': {
+    event(s, c) {
+      const organisms = living(s, c.owner), none = !organisms.length;
+      for (let i = 0; i < 2 && organisms.length; i++) die(s, organisms.splice(Math.floor(random(s) * organisms.length), 1)[0], 'Introduced Non-native Species');
+      gain(s, c.owner, none ? { C: -10, N: -4 } : { C: -5, N: -2 }, `Introduced Non-native Species${none ? ': no living organism, doubled' : ''}`);
     },
   },
 };

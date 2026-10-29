@@ -1,5 +1,5 @@
 import type { Ruleset, GameState, Action, CardInstance, PlayerId, RefereeOp, Modifier, Pool } from './types';
-import { abilities, algalBloom, createCard, credit, definition, die, gain, living, move, note, shuffle } from './abilities';
+import { abilities, algalBloom, createCard, definition, die, gain, living, move, note, shuffle } from './abilities';
 export * from './types';
 
 /** Build a fresh game with seeded, shuffled decks and starting pools/AP. Opening events are shuffled back
@@ -12,7 +12,7 @@ export function newGame(ruleset: Ruleset, seed: number, names?: [string, string]
   }));
   const state: GameState = {
     ruleset: structuredClone(ruleset), seed, rngState: seed >>> 0, round: 1,
-    firstPlayer: 0, activePlayer: 0, phase: 'action', cards: {}, modifiers: [], log: [],
+    firstPlayer: 0, activePlayer: 0, phase: 'action', cards: {}, modifiers: [], drawnEvents: [], log: [],
     players: [players[0], players[1]],
   };
   for (const player of state.players) {
@@ -54,7 +54,7 @@ export function checkAction(state: GameState, action: Action): string | null {
     if (def.kind === 'event') return null;
     const ap = params.playApCost + (def.kind === 'detritivore' && action.targetUid ? params.detritivoreAssignApCost : 0);
     if (player.ap < ap) return 'Not enough AP';
-    if (player.pool.C < def.cost.C || player.pool.N < def.cost.N || player.pool.O2 < (def.cost.O2 ?? 0)) return 'Not enough nutrients';
+    if (player.pool.C < def.cost.C || player.pool.N < def.cost.N || player.pool.P < (def.cost.P ?? 0) || player.pool.O2 < (def.cost.O2 ?? 0)) return 'Not enough nutrients';
     if (def.tags.includes('aquatic') && modifiers(state, 'noAquaticPlay', action.player).length) return 'Drought prevents playing aquatic cards this round';
     const target = action.targetUid ? state.cards[action.targetUid] : undefined;
     if (def.kind === 'microbe') return target?.zone === 'field' && target.status === 'dead' ? null : 'Choose a dead card in the field';
@@ -81,11 +81,14 @@ export function applyAction(state: GameState, action: Action): GameState {
       const card = next.cards[action.uid], def = definition(next, card);
       const target = action.targetUid ? next.cards[action.targetUid] : undefined;
       note(next, `${next.players[action.player].name} plays ${def.name}`);
-      // A played event waits out its round like a drawn one, then goes back into the deck.
-      if (def.kind === 'event') { move(next, card, 'removed'); abilities[def.id]?.event?.(next, card); break; }
+      // A played event waits out its rounds like a drawn one, then goes back into the deck.
+      if (def.kind === 'event') { resolveEvent(next, card); break; }
       const ap = params.playApCost + (def.kind === 'detritivore' && target ? params.detritivoreAssignApCost : 0);
       next.players[action.player].ap -= ap;
-      gain(next, action.player, { C: -def.cost.C, N: -def.cost.N, O2: -(def.cost.O2 ?? 0) }, `${def.name} cost; ${ap} AP`);
+      const cost: Partial<Pool> = { C: -def.cost.C, N: -def.cost.N };
+      if (def.cost.P) cost.P = -def.cost.P;
+      if (def.cost.O2) cost.O2 = -def.cost.O2;
+      gain(next, action.player, cost, `${def.name} cost; ${ap} AP`);
       card.stored = { C: 0, N: 0, P: 0, O2: 0, ...def.biomass };
       card.flags = {}; delete card.status; delete card.lifespanLeft;
       if (def.kind === 'microbe') {
@@ -151,8 +154,17 @@ function recycle(state: GameState, card: CardInstance): void {
   note(state, `${definition(state, card).name} is fully decomposed and shuffled back into ${state.players[card.owner].name}'s deck`);
 }
 
+/** A wild event affects its drawer now, then waits in 'removed' until its last affected round ends. */
+function resolveEvent(state: GameState, card: CardInstance): void {
+  const def = definition(state, card);
+  move(state, card, 'removed');
+  card.flags.activeUntil = state.round + (def.lifespan ?? 1) - 1;
+  state.drawnEvents.push({ round: state.round, player: card.owner, uid: card.uid });
+  abilities[def.id]?.event?.(state, card);
+}
+
 /** Draw one non-event, resolving drawn events without AP and using the state RNG to recycle discard.
- *  Drawn events wait in 'removed' until the round ends, so an event-only deck always terminates. */
+ *  Drawn events wait in 'removed' while they last, so an event-only deck always terminates. */
 function draw(state: GameState, playerId: PlayerId): void {
   const player = state.players[playerId];
   while (true) {
@@ -164,9 +176,8 @@ function draw(state: GameState, playerId: PlayerId): void {
     const card = state.cards[player.deck[0]], def = definition(state, card);
     note(state, `${player.name} draws ${def.name}`);
     if (def.kind !== 'event') { move(state, card, 'hand'); break; }
-    move(state, card, 'removed');
-    note(state, `${def.name} resolves immediately (no AP); draw a replacement`);
-    abilities[def.id]?.event?.(state, card);
+    note(state, `${def.name} resolves immediately for ${player.name} (no AP); draw a replacement`);
+    resolveEvent(state, card);
   }
 }
 
@@ -200,9 +211,9 @@ function environment(state: GameState): void {
   }
   const worked = new Set<string>();
   for (const target of Object.values(state.cards).filter(c => c.zone === 'field')) {
-    const workers = living(state).filter(c => c.working === target.uid);
-    if (!workers.length) continue;
-    const carbon: [number, number] = [0, 0], released: [Pool, Pool] = [{ C: 0, N: 0, P: 0, O2: 0 }, { C: 0, N: 0, P: 0, O2: 0 }];
+    const workers = living(state).filter(c => c.working === target.uid), microbes = microbesOn(state, target);
+    if (!workers.length && !microbes.length) continue;
+    const carbon: [number, number] = [0, 0];
     let acted = false;
     const paired = workers.some(c => definition(state, c).subtype === 'shredder');
     for (const worker of workers) {
@@ -216,17 +227,28 @@ function environment(state: GameState): void {
       }
       if (!Object.values(delta).some(n => n > 0)) continue;
       acted = true; worked.add(worker.uid); carbon[worker.owner] += delta.C ?? 0;
-      credit(state, released, worker.owner, delta, `${def.name} releases biomass from ${definition(state, target).name}`);
+      gain(state, worker.owner, delta, `${def.name} releases biomass from ${definition(state, target).name}`);
       abilities[def.id]?.onWork?.(state, worker, target);
     }
-    // Microbes stay on their card until it is fully decomposed, assisting each round a detritivore releases from it.
-    if (acted) for (const microbe of microbesOn(state, target)) {
-      const def = definition(state, microbe);
-      abilities[microbe.defId]?.onAssist?.(state, microbe, target, carbon, released);
-      // A microbe takes its share only from what its owner got from this card, never from nutrients already collected.
-      const take: Partial<Pool> = {};
-      for (const key of Object.keys(def.consumes ?? {}) as (keyof Pool)[]) take[key] = -Math.min(def.consumes![key]!, released[microbe.owner][key]);
-      if (Object.values(take).some(n => n < 0)) credit(state, released, microbe.owner, take, `${def.name} consumes part of the released nutrients`);
+    // UPDATE-2.1: microbes decompose their card every round until it is gone; with a detritivore they double
+    // instead of releasing their own amount. Either way they eat part of the card's remaining biomass.
+    for (const microbe of microbes) {
+      const def = definition(state, microbe), ability = abilities[microbe.defId];
+      if (acted) ability?.onAssist?.(state, microbe, target, carbon);
+      else if (ability?.onAlone) ability.onAlone(state, microbe, target);
+      else {
+        const delta: Partial<Pool> = {};
+        for (const key of Object.keys(def.release ?? {}) as (keyof Pool)[]) {
+          delta[key] = Math.min(def.release![key]!, target.stored[key]); target.stored[key] -= delta[key]!;
+        }
+        if (Object.values(delta).some(n => n > 0)) gain(state, microbe.owner, delta, `${def.name} releases biomass from ${definition(state, target).name}`);
+      }
+      const eaten: string[] = [];
+      for (const key of Object.keys(def.consumes ?? {}) as (keyof Pool)[]) {
+        const amount = Math.min(def.consumes![key]!, target.stored[key]);
+        target.stored[key] -= amount; if (amount > 0) eaten.push(`${amount} ${key}`);
+      }
+      if (eaten.length) note(state, `${def.name} consumes ${eaten.join(', ')} of ${definition(state, target).name}'s biomass`);
     }
     if (target.stored.C <= 0) {
       if (isAlive(target)) die(state, target, 'biomass depleted by grazing');
@@ -241,19 +263,16 @@ function environment(state: GameState): void {
     }
   }
   state.round++;
-  // Say when an event ends, so two back-to-back Droughts read as two events rather than one long one.
-  // Each copy of an event queues one modifier per effect, so the copy count is the largest count of any one effect.
-  const ended = state.modifiers.filter(m => m.activeRound < state.round);
-  for (const source of new Set(ended.map(m => m.source))) {
-    const ofSource = ended.filter(m => m.source === source);
-    const copies = Math.max(...ofSource.map(m => ofSource.filter(o => o.effect === m.effect).length));
-    note(state, `${state.ruleset.cards.find(d => d.id === source)?.name ?? source}${copies > 1 ? ` ×${copies}` : ''} ends after round ${state.round - 1}`);
-  }
   state.modifiers = state.modifiers.filter(m => m.activeRound >= state.round); state.endedTurns = [];
-  // UPDATE-2: a wild event applies for one round, then is shuffled back into its owner's deck.
+  // A wild event lasts its rounds, then is shuffled back into its owner's deck. Saying when it ends keeps
+  // back-to-back Droughts reading as two events rather than one long one.
   for (const player of state.players) {
-    const events = Object.values(state.cards).filter(c => c.owner === player.id && c.zone === 'removed' && definition(state, c).kind === 'event');
-    for (const card of events) { move(state, card, 'deck'); note(state, `${definition(state, card).name} is shuffled back into ${player.name}'s deck`); }
+    const events = Object.values(state.cards).filter(c => c.owner === player.id && c.zone === 'removed' && definition(state, c).kind === 'event' &&
+      Number(c.flags.activeUntil ?? 0) < state.round);
+    for (const card of events) {
+      move(state, card, 'deck');
+      note(state, `${definition(state, card).name} ends for ${player.name} after round ${state.round - 1}; shuffled back into their deck`);
+    }
     if (events.length) shuffle(state, player.deck);
   }
   if (state.ruleset.params.firstPlayerAlternates) state.firstPlayer = state.firstPlayer === 0 ? 1 : 0;

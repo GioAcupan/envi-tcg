@@ -130,7 +130,8 @@ export const cards: CardDef[] = [
     "subtype": "algae",
     "cost": {
       "C": 1,
-      "N": 0.5
+      "N": 0.5,
+      "P": 2
     },
     "lifespan": 2,
     "biomass": {
@@ -151,7 +152,7 @@ export const cards: CardDef[] = [
       "algae",
       "aquatic"
     ],
-    "text": "Grows 1 C and 1 N biomass; produces 3 O2 and 1 C each round.",
+    "text": "Costs 2 P to play. Grows 1 C and 1 N biomass; produces 3 O2 and 1 C each round.",
     "copies": 1,
     "art": "art/green-algae.svg"
   },
@@ -194,7 +195,8 @@ export const cards: CardDef[] = [
     "subtype": "algae",
     "cost": {
       "C": 1,
-      "N": 0.5
+      "N": 0.5,
+      "P": 2
     },
     "lifespan": 2,
     "biomass": {
@@ -216,7 +218,7 @@ export const cards: CardDef[] = [
       "algae",
       "aquatic"
     ],
-    "text": "Grows 1 C and 1 N biomass; produces 3 O2, 1 C and 1 N each round.",
+    "text": "Costs 2 P to play. Grows 1 C and 1 N biomass; produces 3 O2, 1 C and 1 N each round.",
     "copies": 1,
     "art": "art/cyanobacteria.svg"
   },
@@ -445,10 +447,10 @@ export const cards: CardDef[] = [
       "aquatic"
     ],
     "canEat": [
+      "plant",
       "algae"
     ],
-    "eatsAlive": true,
-    "text": "Releases 1 C from living or dead algae and removes 1 P from its owner pool.",
+    "text": "Releases 1 C from a dead plant or algae and removes 1 P from its owner pool.",
     "copies": 1,
     "art": "art/aquatic-grazer.svg"
   },
@@ -464,13 +466,16 @@ export const cards: CardDef[] = [
     "tags": [
       "microbe"
     ],
-    "text": "Doubles the C detritivores release from its dead card, without taking extra biomass. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
+    "text": "Alone: releases 1 C a round from its dead card. With a detritivore: doubles the C the detritivores release instead. Takes 1 C and 0.5 N of its dead card's biomass each round. Returns to hand when the card is fully decomposed.",
     "copies": 3,
     "art": "art/carbon-bacteria.svg",
     "o2PerRound": 1,
     "consumes": {
       "C": 1,
       "N": 0.5
+    },
+    "release": {
+      "C": 1
     }
   },
   {
@@ -485,13 +490,16 @@ export const cards: CardDef[] = [
     "tags": [
       "microbe"
     ],
-    "text": "Releases all remaining N from its dead card, doubled. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
+    "text": "Alone: releases 1 N a round from its dead card. With a detritivore: releases all remaining N, doubled, instead. Takes 1 C and 0.5 N of its dead card's biomass each round. Returns to hand when the card is fully decomposed.",
     "copies": 3,
     "art": "art/nitrifying-bacteria.svg",
     "o2PerRound": 1,
     "consumes": {
       "C": 1,
       "N": 0.5
+    },
+    "release": {
+      "N": 1
     }
   },
   {
@@ -506,7 +514,7 @@ export const cards: CardDef[] = [
     "tags": [
       "microbe"
     ],
-    "text": "Gives +1 P each round it assists. Takes 1 C and 0.5 N of what its owner gets. Stays until the card is fully decomposed, then returns to hand.",
+    "text": "Gives +1 P each round it decomposes its dead card, alone or with a detritivore. Takes 1 C and 0.5 N of its dead card's biomass each round. Returns to hand when the card is fully decomposed.",
     "copies": 2,
     "art": "art/phosphorus-bacteria.svg",
     "o2PerRound": 1,
@@ -524,9 +532,10 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "Each player gains 1 P, then checks for Algal Bloom. Shuffled back into its owner's deck when the round ends.",
+    "text": "You gain 1 P, then check for Algal Bloom. Shuffled back into your deck when it ends.",
     "copies": 1,
-    "art": "art/strong-rainfall.svg"
+    "art": "art/strong-rainfall.svg",
+    "lifespan": 1
   },
   {
     "id": "drought",
@@ -537,9 +546,10 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "This round: producers yield 1 less O2; no aquatic plays; aquatic plants cannot photosynthesize. Shuffled back into its owner's deck when the round ends.",
+    "text": "This round and next, for you: producers yield 1 less O2; no aquatic plays; aquatic plants cannot photosynthesize. Shuffled back into your deck when it ends.",
     "copies": 1,
-    "art": "art/drought.svg"
+    "art": "art/drought.svg",
+    "lifespan": 2
   },
   {
     "id": "heat-wave",
@@ -550,21 +560,37 @@ export const cards: CardDef[] = [
       "N": 0
     },
     "tags": [],
-    "text": "This round all organisms pay 1 extra O2 upkeep, including producers. Shuffled back into its owner's deck when the round ends.",
+    "text": "This round and next, your organisms pay 1 extra O2 upkeep, including producers. Shuffled back into your deck when it ends.",
     "copies": 1,
-    "art": "art/heat-wave.svg"
+    "art": "art/heat-wave.svg",
+    "lifespan": 2
   },
   {
     "id": "flood",
-    "name": "Flood",
+    "name": "Flash Flood",
     "kind": "event",
     "cost": {
       "C": 0,
       "N": 0
     },
     "tags": [],
-    "text": "Each player loses a random living organism and gains 1 C; with none, gains 1 P. Shuffled back into its owner's deck when the round ends.",
+    "text": "One of your living organisms dies at random and you gain 1 C; with none, you gain 1 P. Shuffled back into your deck when it ends.",
     "copies": 1,
-    "art": "art/flood.svg"
+    "art": "art/flood.svg",
+    "lifespan": 1
+  },
+  {
+    "id": "introduced-species",
+    "name": "Introduced Non-native Species",
+    "kind": "event",
+    "cost": {
+      "C": 0,
+      "N": 0
+    },
+    "lifespan": 1,
+    "tags": [],
+    "text": "Two of your living organisms die at random and you lose 5 C and 2 N; with no living organism, you lose 10 C and 4 N. Shuffled back into your deck when it ends.",
+    "copies": 1,
+    "art": "art/introduced-species.svg"
   }
 ];

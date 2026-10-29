@@ -3,7 +3,7 @@ import { checkAction } from '../../engine';
 import type { Action, CardInstance, GameState, LogEntry, Nutrient, PlayerState, Pool, Ruleset } from '../../engine';
 import { useGame } from '../useGame';
 import { ActionButton } from '../common/ActionButton';
-import { art, defOf, isSideways } from '../common/Card';
+import { art, CardFace, defOf, isSideways } from '../common/Card';
 import { Sheet } from '../common/Sheet';
 import { BoardCard, type Mark } from './BoardCard';
 import { CardCloseup } from './CardCloseup';
@@ -83,6 +83,7 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
   const [targeting, setTargeting] = useState<{ turn: string; kind: TargetKind; source: string } | null>(null);
   const [drawer, setDrawer] = useState<Drawer | null>(null);
   const [hint, setHint] = useState<{ text: string; at: number } | null>(null);
+  const [seenEvents, setSeenEvents] = useState(state.drawnEvents.length);
   const ticks = usePoolTicks(state.players);
 
   const player = state.activePlayer;
@@ -97,7 +98,11 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
   const name = (uid: string) => defOf(state, state.cards[uid]).name;
   const last = state.log[state.log.length - 1];
   const events = activeEvents(state);
+  // Wild events drawn since the players last acknowledged one (UPDATE-2.1 asks for an indicator).
+  const freshEvents = state.drawnEvents.slice(seenEvents);
 
+  // Undo and new games shorten the list; never leave the seen mark past its end.
+  useEffect(() => { if (seenEvents > state.drawnEvents.length) setSeenEvents(state.drawnEvents.length); }, [state.drawnEvents.length]);
   useEffect(() => {
     if (!hint) return;
     const t = window.setTimeout(() => setHint(null), 2600);
@@ -161,7 +166,7 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
         <p><b>Round {state.round}</b><span>{over ? 'Game over' : `${state.players[state.activePlayer].name}'s turn`}</span></p>
       </div>
       <button type="button" className="center__log" onClick={() => setDrawer('log')} aria-label="Open the log">
-        {events.length > 0 && <span className="center__mods">⚡ {events.map(e => e.copies > 1 ? `${e.name} ×${e.copies}` : e.name).join(' + ')} · this round</span>}
+        {events.length > 0 && <span className="center__mods">⚡ {events.map(e => `${e.name} (${e.who}${e.roundsLeft > 1 ? `, ${e.roundsLeft} rounds` : ''})`).join(' + ')}</span>}
         <span className="center__last">{last ? logText(last) : 'Log'}</span>
       </button>
     </div>
@@ -193,6 +198,18 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
       {game.canUndo && <button type="button" className="btn" onClick={game.undo}>Undo last action</button>}
     </div>}
 
+    {!covered && freshEvents.length > 0 && <div className="event-drawn" role="dialog" aria-modal="true" aria-labelledby="event-drawn-title">
+      <h2 id="event-drawn-title">⚡ Wild event{freshEvents.length > 1 ? 's' : ''} drawn</h2>
+      <div className="event-drawn__list">{freshEvents.map((e, i) => {
+        const rounds = defOf(state, state.cards[e.uid]).lifespan ?? 1;
+        return <figure key={i}>
+          <div className="event-drawn__card"><CardFace card={state.cards[e.uid]} state={state} full /></div>
+          <figcaption><b>{state.players[e.player].name}</b> drew {name(e.uid)}. It affects only {state.players[e.player].name}, {rounds > 1 ? `for ${rounds} rounds` : 'this round'}.</figcaption>
+        </figure>;
+      })}</div>
+      <button type="button" className="btn btn--primary" autoFocus onClick={() => setSeenEvents(state.drawnEvents.length)}>OK</button>
+    </div>}
+
     {open && <CardCloseup
       state={state} uid={open} player={player} dispatch={dispatch}
       pickTarget={aim && valid.includes(open) ? { label: `Choose as target for ${name(aim.source)}`, pick: () => dispatch(targetedAction(aim.kind, player, aim.source, open)) } : undefined}
@@ -216,7 +233,7 @@ export function GameScreen({ ruleset, onRulesetChange }: { ruleset: Ruleset; onR
         <section>
           <h3>Environmental effects</h3>
           {events.length ? <ul className="mods">{events.map((e, i) => <li key={i}>
-            <strong>{e.name}{e.copies > 1 ? ` ×${e.copies} (stacked)` : ''}</strong> — round {state.round} only, {e.who}; ends when this round ends: {e.effects.join('; ')}
+            <strong>{e.name}</strong> — {e.who} only; {e.roundsLeft > 1 ? `${e.roundsLeft} rounds left, counting this one` : 'ends when this round ends'}: {e.effects.join('; ')}
           </li>)}</ul> : <p className="muted">None this round.</p>}
         </section>
         <section>

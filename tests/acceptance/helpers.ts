@@ -5,7 +5,7 @@ import { params } from '../../src/data/params';
 /** Default data with events disabled, so random draws cannot change a scenario. */
 export function testRuleset(overrides: { cards?: Ruleset['cards']; params?: Partial<Params>; name?: string } = {}): Ruleset {
   return {
-    version: 3,
+    version: 4,
     name: overrides.name ?? 'Acceptance rules',
     cards: structuredClone(overrides.cards ?? cards.map(card => ({ ...card, copies: card.kind === 'event' ? 0 : card.copies }))),
     params: structuredClone({ ...params, ...overrides.params }),
@@ -34,7 +34,7 @@ export function play(state: GameState, player: PlayerId, defId: string, targetUi
   const uid = state.players[player].hand.find(uid => state.cards[uid].defId === defId)!;
   state = applyAction(state, { type: 'referee', op: { kind: 'setActivePlayer', player } });
   state = applyAction(state, { type: 'referee', op: { kind: 'setAp', player, ap: 20 } });
-  state = applyAction(state, { type: 'referee', op: { kind: 'setPool', player, pool: { C: 30, N: 20, P: 0, O2: 50 } } });
+  state = applyAction(state, { type: 'referee', op: { kind: 'setPool', player, pool: { C: 30, N: 20, P: 2, O2: 50 } } });
   state = applyAction(state, { type: 'play', player, uid, targetUid });
   if (state.lastError) throw new Error(state.lastError);
   return { state, uid };
