@@ -1,11 +1,11 @@
-// Assumptions where docs/UPDATE-2.1.pdf is silent or contradicts itself, shown in-app for the rule authors to check.
+// Assumptions where docs/UPDATE-3.pdf is silent or contradicts itself, shown in-app for the rule authors to check.
 export interface Interpretation { id: string; topic: string; text: string; major: boolean }
 
 export const interpretations: Interpretation[] = [
   {
     "id": "R1",
-    "topic": "Deck size and stale counts",
-    "text": "UPDATE-2.1's archetype and deck sections still list stale counts (16 organisms, 36 cards; 16 + 8 + 5 is 29). Used the tables instead: 7 producers, 7 detritivores, 8 microbes (Carbon ×3, Nitrifying ×3, Phosphorus ×2) and 5 wild events, so 27 cards per deck.",
+    "topic": "Deck size",
+    "text": "UPDATE-3 gives copy counts in the tables (\"x2\", \"x3\"); a card with no count has 1 copy. That makes 8 plants, 6 algae, 12 detritivores, 8 microbes (Carbon ×3, Nitrifying ×3, Phosphorus ×2) and 5 wild events (one of each), so 39 cards per deck.",
     "major": true
   },
   {
@@ -34,14 +34,26 @@ export const interpretations: Interpretation[] = [
   },
   {
     "id": "R6",
-    "topic": "Wild events affect only the drawer",
-    "text": "Per the summary, every wild event affects only the player who drew it, including Strong Rainfall's +1 P (its table row still says \"all players\"). Drought and Heat Wave last 2 rounds (the one drawn in and the next); the others 1. An event card stays out until its effect ends, then is shuffled back into its owner's deck, so the same event never stacks.",
+    "topic": "Wild events happen once",
+    "text": "Every wild event affects only the player who drew it, including Strong Rainfall's +1 P (its table row still says \"all players\"). Drought and Heat Wave last 2 rounds (the one drawn in and the next); the others 1. \"Only happen once and is put to the discarded deck\": the card stays out while its effect lasts, so the same event never stacks, then goes to its owner's discard. Like any discarded card it comes back when the deck runs out and the discard is reshuffled.",
     "major": true
   },
   {
     "id": "R7",
     "topic": "Introduced Non-native Species",
     "text": "\"Two random played cards (except microbes)\" are two of the drawer's living organisms (fewer if they have fewer). The drawer then loses 5 C and 2 N, or 10 C and 4 N if they had no living organism; pools never go below 0.",
+    "major": true
+  },
+  {
+    "id": "R8",
+    "topic": "Where dead cards go",
+    "text": "The summary says dead cards (except microbes) now go to the discard, while C.2 still says a fully decomposed card is reshuffled into the deck. Followed the summary, and only once a card is fully decomposed: a dead card stays on the field as decaying matter until then, otherwise nothing could break it down. Microbes on it return to their owners' hands.",
+    "major": true
+  },
+  {
+    "id": "R9",
+    "topic": "Which plants are aquatic",
+    "text": "Drought stops aquatic plants photosynthesizing and blocks aquatic plays, but the renamed plants do not say which are aquatic. Duck Lettuce and Hydrilla (submerged) and Water Hyacinth and Pond Fern (floating) are aquatic; Indian Lotus, rooted with leaves above the water, is the emergent plant that keeps working through Drought. Algae and detritivores stay aquatic.",
     "major": true
   },
   {
@@ -52,26 +64,26 @@ export const interpretations: Interpretation[] = [
   },
   {
     "id": "I2",
-    "topic": "Aquatic Grazer",
-    "text": "\"When consuming dead producers\": Aquatic Grazer now works dead plants and dead algae (no longer living algae), releases 1 C (unstated) and removes 1 P from its owner's pool.",
+    "topic": "Mayfly Nymph",
+    "text": "\"When consuming dead producers\": the Mayfly Nymph works dead plants and dead algae (not living algae), releases 1 C (unstated) and removes 1 P from its owner's pool.",
     "major": false
   },
   {
     "id": "I3",
     "topic": "Algae P cost",
-    "text": "Green Algae and Cyanobacteria cost 2 P to play (\"about 2\" read as exactly 2); Diatoms cost none.",
+    "text": "Green Algae and Cyanobacteria cost 1 P to play; Diatoms cost none.",
     "major": false
   },
   {
     "id": "I4",
-    "topic": "Plant nitrogen",
-    "text": "Plants store 2 N per the table; the worked example's \"7 C, 1 N\" is read as left over from an earlier revision.",
+    "topic": "Renamed cards",
+    "text": "The renamed cards keep their old rules: Common Caridina and Red Worm are the shredders, Sludge Worm, Harlequin Fly and Net-spinning Caddisfly the collectors, Susong Pilipit the snail grazer and Mayfly Nymph the P-removing grazer. All plants now store 8 C and 2 N.",
     "major": false
   },
   {
     "id": "I5",
     "topic": "Decomposition end",
-    "text": "A worked card is fully decomposed when its stored C reaches 0; leftover N is lost with it. It is shuffled back into its owner's deck and plays again with fresh printed biomass. Its detritivores stay on the field, free to work another card.",
+    "text": "A worked card is fully decomposed when its stored C reaches 0; leftover N is lost with it. Its detritivores stay on the field, free to work another card.",
     "major": false
   },
   {
@@ -83,7 +95,7 @@ export const interpretations: Interpretation[] = [
   {
     "id": "I7",
     "topic": "Drawing events",
-    "text": "Each deck holds one of each of the 5 wild events. Opening-hand events are shuffled back and replaced; a drawn event resolves for no AP, a replacement is drawn, and the game shows who drew which event.",
+    "text": "Opening-hand events are shuffled back and replaced; a drawn event resolves for no AP, a replacement is drawn, and the game shows who drew which event.",
     "major": false
   },
   {
@@ -95,13 +107,13 @@ export const interpretations: Interpretation[] = [
   {
     "id": "I9",
     "topic": "Collectors",
-    "text": "All three collectors, Caddisfly Larva included, release 1 C from a dead plant, algae or animal, plus 1 C and 1 N when a shredder works the same card.",
+    "text": "All three collectors release 1 C from a dead plant, algae or animal, plus 1 C and 1 N when a shredder works the same card.",
     "major": false
   },
   {
     "id": "I10",
     "topic": "Algal Bloom and events",
-    "text": "At each Environmental Phase (and immediately on the drawer's Strong Rainfall), a player with P > 2 and at least one living algae has each living algae's biomass doubled; a living Freshwater Snail prevents it. Flash Flood kills a random living organism of the drawer and gives +1 C, or +1 P with none. Heat Wave's +1 O2 applies to producers and detritivores, not microbes. Drought stops aquatic plants (not algae) photosynthesizing.",
+    "text": "At each Environmental Phase (and immediately on the drawer's Strong Rainfall), a player with P > 2 and at least one living algae has each living algae's biomass doubled; a living Susong Pilipit prevents it. Flash Flood kills a random living organism of the drawer and gives +1 C, or +1 P with none. Heat Wave's +1 O2 applies to producers and detritivores, not microbes. Drought stops aquatic plants (not algae) photosynthesizing.",
     "major": false
   },
   {

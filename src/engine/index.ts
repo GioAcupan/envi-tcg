@@ -81,7 +81,7 @@ export function applyAction(state: GameState, action: Action): GameState {
       const card = next.cards[action.uid], def = definition(next, card);
       const target = action.targetUid ? next.cards[action.targetUid] : undefined;
       note(next, `${next.players[action.player].name} plays ${def.name}`);
-      // A played event waits out its rounds like a drawn one, then goes back into the deck.
+      // A played event waits out its rounds like a drawn one, then goes to the discard.
       if (def.kind === 'event') { resolveEvent(next, card); break; }
       const ap = params.playApCost + (def.kind === 'detritivore' && target ? params.detritivoreAssignApCost : 0);
       next.players[action.player].ap -= ap;
@@ -143,15 +143,15 @@ function assign(state: GameState, worker: CardInstance, target: CardInstance): v
 const microbesOn = (state: GameState, card: CardInstance) =>
   Object.values(state.cards).filter(c => c.zone === 'attached' && c.attachedTo === card.uid);
 
-/** UPDATE-2: a fully decomposed card is shuffled back into its owner's deck and its microbes return to their
- *  owners' hands; biomass left on it is lost. */
+/** UPDATE-3: a fully decomposed card goes to its owner's discard and its microbes return to their owners'
+ *  hands; biomass left on it is lost. */
 function recycle(state: GameState, card: CardInstance): void {
   for (const microbe of microbesOn(state, card)) {
     move(state, microbe, 'hand'); note(state, `${definition(state, microbe).name} returns to ${state.players[microbe.owner].name}'s hand`);
   }
   card.stored = { C: 0, N: 0, P: 0, O2: 0 };
-  move(state, card, 'deck'); shuffle(state, state.players[card.owner].deck);
-  note(state, `${definition(state, card).name} is fully decomposed and shuffled back into ${state.players[card.owner].name}'s deck`);
+  move(state, card, 'discard');
+  note(state, `${definition(state, card).name} is fully decomposed and goes to ${state.players[card.owner].name}'s discard`);
 }
 
 /** A wild event affects its drawer now, then waits in 'removed' until its last affected round ends. */
@@ -264,16 +264,15 @@ function environment(state: GameState): void {
   }
   state.round++;
   state.modifiers = state.modifiers.filter(m => m.activeRound >= state.round); state.endedTurns = [];
-  // A wild event lasts its rounds, then is shuffled back into its owner's deck. Saying when it ends keeps
-  // back-to-back Droughts reading as two events rather than one long one.
+  // UPDATE-3: a wild event happens once; it lasts its rounds, then goes to its owner's discard. Saying when it
+  // ends keeps back-to-back Droughts reading as two events rather than one long one.
   for (const player of state.players) {
     const events = Object.values(state.cards).filter(c => c.owner === player.id && c.zone === 'removed' && definition(state, c).kind === 'event' &&
       Number(c.flags.activeUntil ?? 0) < state.round);
     for (const card of events) {
-      move(state, card, 'deck');
-      note(state, `${definition(state, card).name} ends for ${player.name} after round ${state.round - 1}; shuffled back into their deck`);
+      move(state, card, 'discard');
+      note(state, `${definition(state, card).name} ends for ${player.name} after round ${state.round - 1}; put in their discard`);
     }
-    if (events.length) shuffle(state, player.deck);
   }
   if (state.ruleset.params.firstPlayerAlternates) state.firstPlayer = state.firstPlayer === 0 ? 1 : 0;
   state.activePlayer = state.firstPlayer;

@@ -116,6 +116,7 @@ export function CardFace({ card, state, full }: { card: CardInstance; state: Gam
       <span className="cf__kind">{full ? kindLabel(def) : shortKind(def)}</span>
     </span>
     <span className="cf__name">{def.name}</span>
+    {full && def.species && <span className="cf__species">{def.species}</span>}
     <Art card={card} def={def} />
     {status && <span className={`cf__stamp cf__stamp--${card.status}`}>{status}</span>}
     <span className="cf__stats">

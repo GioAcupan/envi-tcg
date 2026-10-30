@@ -11,7 +11,7 @@ import { BoardCard } from '../src/ui/game/BoardCard';
 describe('card live facts', () => {
   it('keeps printed hand stats but hides inactive rates for dead cards', () => {
     const state = newGame(defaultRuleset(), 42);
-    const card = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
+    const card = Object.values(state.cards).find(c => c.defId === 'duck-lettuce')!;
     card.zone = 'hand';
     const face = () => renderToStaticMarkup(createElement(CardFace, { state, card, full: true }));
     const closeup = () => renderToStaticMarkup(createElement(CardCloseup, {
@@ -26,7 +26,7 @@ describe('card live facts', () => {
   });
   it('shows biomass only for organisms in stacks and closeups', () => {
     const state = newGame(defaultRuleset(), 42);
-    const host = Object.values(state.cards).find(c => c.defId === 'emergent-plant')!;
+    const host = Object.values(state.cards).find(c => c.defId === 'duck-lettuce')!;
     host.zone = 'field'; host.status = 'dead';
     const card = Object.values(state.cards).find(c => state.ruleset.cards.find(d => d.id === c.defId)?.kind === 'microbe')!;
     card.zone = 'attached'; card.attachedTo = host.uid;
@@ -63,7 +63,7 @@ describe('tap targeting', () => {
   it('uses the engine for assign-on-play AP and microbe targets', () => {
     let state = setup();
     const find = (id: string) => Object.values(state.cards).find(c => c.owner === 0 && c.defId === id)!;
-    const plant = find('emergent-plant'), worm = find('aquatic-worm'), microbe = find('carbon-bacteria');
+    const plant = find('duck-lettuce'), worm = find('aquatic-worm'), microbe = find('carbon-bacteria');
     state = applyAction(state, { type: 'play', player: 0, uid: plant.uid });
     state = applyAction(state, { type: 'referee', op: { kind: 'setStatus', uid: plant.uid, status: 'dead' } });
     expect(validTargets(state, 'playOn', 0, microbe.uid)).toContain(plant.uid);

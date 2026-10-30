@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none">
+  <!-- Pond Fern: Azolla mats of tiny overlapping scale-leaved fronds floating on the surface, fine roots below -->
+  <rect width="160" height="120" rx="6" fill="#E6F3F5"/>
+  <!-- Open water column below surface -->
+  <rect x="0" y="56" width="160" height="64" rx="4" fill="#B5DEE6"/>
+  <path d="M0 100C40 94 120 106 160 98V120H0V100Z" fill="#98CED9"/>
+  <path d="M6 56H154" stroke="#0D7A8A" stroke-width="2" stroke-dasharray="6 4"/>
+  <!-- Short hair-like roots hanging from each frond -->
+  <g stroke="#1B221B" stroke-width="1.4" stroke-linecap="round">
+    <path d="M36 60V74M44 60V70M58 60V76M80 60V72M92 60V78M108 60V70M122 60V76M132 60V68"/>
+  </g>
+  <!-- Floating fronds: branched clusters of tiny overlapping leaves, reddish tips -->
+  <g stroke="#1B221B" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M24 56C26 46 36 42 44 48C50 40 62 42 64 52C66 56 60 58 50 58C40 58 28 60 24 56Z" fill="#4E8C4A"/>
+    <path d="M70 56C70 44 84 38 92 46C100 38 114 42 114 54C112 58 100 58 90 58C80 58 72 60 70 56Z" fill="#3A7537"/>
+    <path d="M112 56C114 48 124 44 130 50C136 44 146 48 144 56C140 58 132 58 124 58C118 58 112 60 112 56Z" fill="#68A864"/>
+  </g>
+  <g fill="#1B221B" opacity="0.35">
+    <circle cx="34" cy="52" r="2"/><circle cx="42" cy="54" r="2"/><circle cx="54" cy="50" r="2"/>
+    <circle cx="80" cy="50" r="2"/><circle cx="90" cy="54" r="2"/><circle cx="102" cy="48" r="2"/>
+    <circle cx="124" cy="52" r="2"/><circle cx="134" cy="54" r="2"/>
+  </g>
+  <g fill="#B5543A">
+    <circle cx="46" cy="47" r="2.4"/><circle cx="62" cy="51" r="2.2"/><circle cx="92" cy="45" r="2.4"/>
+    <circle cx="112" cy="52" r="2.2"/><circle cx="130" cy="49" r="2.4"/>
+  </g>
+</svg>

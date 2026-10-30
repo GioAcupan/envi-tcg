@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { defaultRuleset, importRuleset, loadRuleset, saveRuleset } from '../src/ruleset';
 
-const KEY = 'envi-tcg.ruleset.v4';
+const KEY = 'envi-tcg.ruleset.v5';
 const originalStorage = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
 
 /** Installs a minimal localStorage on globalThis and returns its backing map. */
@@ -50,20 +50,20 @@ describe('ruleset storage (lane T1)', () => {
 describe('lane: Appendix B default data', () => {
   it('has exactly the revised archetypes and card counts', () => {
     const r = defaultRuleset();
-    expect(r.version).toBe(4); expect(r.cards).toHaveLength(22); expect(new Set(r.cards.map(c => c.id)).size).toBe(22);
-    expect(Object.fromEntries(['producer', 'detritivore', 'microbe', 'event'].map(kind => [kind, r.cards.filter(c => c.kind === kind).reduce((n, c) => n + c.copies, 0)]))).toEqual({ producer: 7, detritivore: 7, microbe: 8, event: 5 });
+    expect(r.version).toBe(5); expect(r.cards).toHaveLength(23); expect(new Set(r.cards.map(c => c.id)).size).toBe(23);
+    expect(Object.fromEntries(['producer', 'detritivore', 'microbe', 'event'].map(kind => [kind, r.cards.filter(c => c.kind === kind).reduce((n, c) => n + c.copies, 0)]))).toEqual({ producer: 14, detritivore: 12, microbe: 8, event: 5 });
     for (const c of r.cards) expect(c.art).toBe(`art/${c.id}.svg`);
     expect(r.params).toEqual({ startingPool: { C: 10, N: 3, P: 0, O2: 7 }, winThreshold: { C: 50, N: 15, P: 1 }, startingHand: 5, apPerTurn: 3, drawPerRound: 1, playApCost: 1, discardDrawApCost: 1, detritivoreAssignApCost: 1, algalBloomPThreshold: 2, firstPlayerAlternates: false, undoEnabled: true });
   });
   it.each([
-    ['emergent-plant', 2, 3, 6, 2, 2, 0], ['river-grass', 2, 4, 6, 2, 2, 0],
-    ['aquatic-plant', 2, 4, 6, 2, 2, 0], ['free-floating-plant', 2, 3, 6, 2, 2, 0],
+    ['duck-lettuce', 2, 3, 8, 2, 2, 0], ['hydrilla', 2, 4, 8, 2, 2, 0], ['water-hyacinth', 2, 4, 8, 2, 2, 0],
+    ['indian-lotus', 2, 3, 8, 2, 2, 0], ['pond-fern', 2, 3, 8, 2, 2, 0],
     ['green-algae', 1, 2, 2, 0, 3, 1], ['diatoms', 2, 1, 2, 0, 4, 1], ['cyanobacteria', 1, 2, 2, 0, 3, 1],
   ] as const)('%s has exact printed producer stats', (id, costC, life, biomassC, biomassN, oxygen, growthN) => {
     const c = defaultRuleset().cards.find(c => c.id === id)!;
-    expect(c.cost).toEqual(['green-algae', 'cyanobacteria'].includes(id) ? { C: costC, N: 0.5, P: 2 } : { C: costC, N: 0.5 }); expect(c.lifespan).toBe(life); expect(c.biomass).toEqual({ C: biomassC, N: biomassN, P: 0, O2: 0 });
+    expect(c.cost).toEqual(['green-algae', 'cyanobacteria'].includes(id) ? { C: costC, N: 0.5, P: 1 } : { C: costC, N: 0.5 }); expect(c.lifespan).toBe(life); expect(c.biomass).toEqual({ C: biomassC, N: biomassN, P: 0, O2: 0 });
     expect(c.growth).toEqual(growthN ? { C: 1, N: growthN } : { C: 1 }); expect(c.yield).toEqual(id === 'cyanobacteria' ? { O2: oxygen, C: 1, N: 1 } : { O2: oxygen, C: 1 });
-    expect(c.tags).toEqual(['emergent-plant', 'river-grass'].includes(id) ? ['plant'] : ['aquatic-plant', 'free-floating-plant'].includes(id) ? ['plant', 'aquatic'] : ['algae', 'aquatic']);
+    expect(c.tags).toEqual(id === 'indian-lotus' ? ['plant'] : c.subtype === 'plant' ? ['plant', 'aquatic'] : ['algae', 'aquatic']);
   });
   it.each([
     ['freshwater-shrimp', 4, 'shredder', 3, ['plant'], false], ['aquatic-worm', 3, 'shredder', 2, ['plant'], false],

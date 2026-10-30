@@ -610,6 +610,7 @@
 .cf--full { height: auto; min-height: calc(var(--w) * 1.4); }
 .cf--full .cf__head { font-size: 5.6cqi; padding: 2.5cqi 3.5cqi; }
 .cf--full .cf__name { font-size: 8cqi; -webkit-line-clamp: 3; }
+.cf--full .cf__species { flex: none; padding: 0 3.5cqi 2cqi; margin-top: -1.5cqi; font-size: 5.4cqi; font-style: italic; opacity: 0.8; }
 .cf--full .cf__art { flex: none; aspect-ratio: 4 / 3; }
 .cf--full .cf__stats { font-size: 5.4cqi; gap: 2cqi; padding: 3cqi 3.5cqi 2cqi; }
 .cf--full .cf__stamp { top: 38%; font-size: 7cqi; }

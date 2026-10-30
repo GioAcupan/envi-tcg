@@ -2,7 +2,7 @@ import type { CardDef, Ruleset } from '../engine/types';
 import { cards } from '../data/cards';
 import { params } from '../data/params';
 
-const STORAGE_KEY = 'envi-tcg.ruleset.v4';
+const STORAGE_KEY = 'envi-tcg.ruleset.v5';
 
 type Obj = Record<string, unknown>;
 
@@ -69,7 +69,7 @@ export function exportRuleset(r: Ruleset): string {
   return JSON.stringify(r, null, 2);
 }
 
-/** Parse a share file. Fills missing version 4 params/card fields from the defaults;
+/** Parse a share file. Fills missing version 5 params/card fields from the defaults;
  *  returns { ok: false, error } for non-JSON, wrong version, or a card missing id/name/kind. */
 export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { ok: false; error: string } {
   let parsed: unknown;
@@ -79,7 +79,7 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
     return { ok: false, error: 'Not valid JSON' };
   }
   if (!isObject(parsed)) return { ok: false, error: 'Not a ruleset object' };
-  if (parsed.version !== 4) return { ok: false, error: 'This file was made for an earlier rules version; reset to defaults or import a version 4 file.' };
+  if (parsed.version !== 5) return { ok: false, error: 'This file was made for an earlier rules version; reset to defaults or import a version 5 file.' };
   if (!Array.isArray(parsed.cards)) return { ok: false, error: 'cards must be an array' };
 
   const importedCards: CardDef[] = [];
@@ -93,7 +93,7 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
 
   const ruleset = {
     ...parsed,
-    version: 4,
+    version: 5,
     name: typeof parsed.name === 'string' ? parsed.name : 'Imported ruleset',
     cards: importedCards,
     params: fillDefaults(parsed.params, params),
@@ -103,6 +103,6 @@ export function importRuleset(json: string): { ok: true; ruleset: Ruleset } | { 
 
 /** The built-in default ruleset (from src/data). */
 export function defaultRuleset(): Ruleset {
-  const ruleset: Ruleset = { version: 4, name: 'PDF defaults', cards, params };
+  const ruleset: Ruleset = { version: 5, name: 'PDF defaults', cards, params };
   return structuredClone(ruleset);
 }

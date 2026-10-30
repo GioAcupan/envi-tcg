@@ -93,12 +93,13 @@ export function queueModifier(state: GameState, source: string, effect: Modifier
   note(state, `${source}: ${effect} for ${state.players[player].name}, ${rounds === 1 ? 'this round' : `${rounds} rounds`}`);
 }
 
-/** Each check doubles C/N/P of every living algae above the owner's P threshold, unless a snail lives there. */
+/** Each check doubles C/N/P of every living algae above the owner's P threshold, unless a snail (Susong Pilipit) lives there. */
 export function algalBloom(state: GameState, player: PlayerId): void {
   const algae = living(state, player).filter(c => definition(state, c).tags.includes('algae'));
   if (state.players[player].pool.P <= state.ruleset.params.algalBloomPThreshold || !algae.length) return;
-  if (living(state, player).some(c => c.defId === 'freshwater-snail')) {
-    note(state, `${state.players[player].name}'s Freshwater Snail prevents Algal Bloom`);
+  const snail = living(state, player).find(c => c.defId === 'freshwater-snail');
+  if (snail) {
+    note(state, `${state.players[player].name}'s ${definition(state, snail).name} prevents Algal Bloom`);
     return;
   }
   for (const card of algae) {
@@ -122,7 +123,7 @@ const rounds = (state: GameState, card: CardInstance) => definition(state, card)
 
 /** Card-specific hooks run once at their named lifecycle point on the engine's cloned state. */
 export const abilities: Record<string, Ability> = {
-  'aquatic-grazer': { onWork: (s, c) => gain(s, c.owner, { P: -1 }, 'Aquatic Grazer removes excess P') },
+  'aquatic-grazer': { onWork: (s, c) => gain(s, c.owner, { P: -1 }, `${definition(s, c).name} removes excess P`) },
   'carbon-bacteria': {
     onAssist(s, _c, _target, carbon) {
       for (const p of s.players) if (carbon[p.id]) gain(s, p.id, { C: carbon[p.id] }, 'Carbon Bacteria doubles released C');

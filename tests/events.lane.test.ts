@@ -27,7 +27,7 @@ function droughtRules() {
 
 describe('Drought duration', () => {
   it('a Drought drawn at round start covers that round and the next for its drawer only, and its end is logged once', () => {
-    let state = droughtOnTop(newGame(droughtRules(), 3), 0);
+    let state = droughtOnTop(give(newGame(droughtRules(), 3), 1, 'drought'), 0);   // Player 2's Drought waits in hand
     state = endTurn(endTurn(state));                       // round 1 ends; the draw reveals Drought for round 2
     const droughtRound = state.round;
     for (const _turn of [1, 2, 3, 4]) {                    // both turns of the Drought round and of the next one
@@ -37,7 +37,7 @@ describe('Drought duration', () => {
     expect(state.round).toBe(droughtRound + 2);
     expect(endsLines(state, droughtRound + 1)).toHaveLength(0);
     expect(aquaticBlocked(state, 0)).toBe(false);
-    expect(endsLines(state, droughtRound + 2).map(e => e.text)).toEqual([`Round ${droughtRound + 2}: Drought ends for Player 1 after round ${droughtRound + 1}; shuffled back into their deck`]);
+    expect(endsLines(state, droughtRound + 2).map(e => e.text)).toEqual([`Round ${droughtRound + 2}: Drought ends for Player 1 after round ${droughtRound + 1}; put in their discard`]);
   });
 
   it('each player\'s Drought shows separately in the event panel with its rounds left', () => {

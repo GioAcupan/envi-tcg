@@ -6,6 +6,7 @@ export type CardKind = 'producer' | 'detritivore' | 'microbe' | 'event';
 export interface CardDef {
   id: string;                 // stable slug; ability handlers key on it
   name: string;
+  species?: string;           // scientific name, shown in the closeup
   kind: CardKind;
   subtype?: string;           // 'plant'|'algae'|'shredder'|'collector'|'grazer'|'bacteria'
   cost: { C: number; N: number; P?: number; O2?: number };  // paid once from the pool on play (PDF shows these as negatives)
@@ -38,7 +39,7 @@ export interface Params {
   undoEnabled: boolean;             // true
 }
 
-export interface Ruleset { version: 4; name: string; cards: CardDef[]; params: Params }
+export interface Ruleset { version: 5; name: string; cards: CardDef[]; params: Params }
 
 export type PlayerId = 0 | 1;
 export type Zone = 'deck' | 'hand' | 'field' | 'attached' | 'discard' | 'removed';
