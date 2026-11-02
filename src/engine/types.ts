@@ -27,7 +27,7 @@ export interface CardDef {
 
 export interface Params {
   startingPool: Pool;               // 10 C / 3 N / 0 P / 7 O2
-  winThreshold: { C: number; N: number; P: number };   // 50 / 15 / 1
+  winThreshold: { C: number; N: number; P: number };   // 50 / 15 / 3
   startingHand: number;             // 5
   apPerTurn: number;                // 3
   drawPerRound: number;             // 1

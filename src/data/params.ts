@@ -2,7 +2,7 @@ import type { Params } from '../engine/types';
 
 export const params: Params = {
   startingPool: { C: 10, N: 3, P: 0, O2: 7 },
-  winThreshold: { C: 50, N: 15, P: 1 },
+  winThreshold: { C: 50, N: 15, P: 3 },   // the rule authors raised P from UPDATE-3's 1 (interpretation I12)
   startingHand: 5,
   apPerTurn: 3,
   drawPerRound: 1,

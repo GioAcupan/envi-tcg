@@ -53,7 +53,7 @@ describe('lane: Appendix B default data', () => {
     expect(r.version).toBe(5); expect(r.cards).toHaveLength(23); expect(new Set(r.cards.map(c => c.id)).size).toBe(23);
     expect(Object.fromEntries(['producer', 'detritivore', 'microbe', 'event'].map(kind => [kind, r.cards.filter(c => c.kind === kind).reduce((n, c) => n + c.copies, 0)]))).toEqual({ producer: 14, detritivore: 12, microbe: 8, event: 5 });
     for (const c of r.cards) expect(c.art).toBe(`art/${c.id}.svg`);
-    expect(r.params).toEqual({ startingPool: { C: 10, N: 3, P: 0, O2: 7 }, winThreshold: { C: 50, N: 15, P: 1 }, startingHand: 5, apPerTurn: 3, drawPerRound: 1, playApCost: 1, discardDrawApCost: 1, detritivoreAssignApCost: 1, algalBloomPThreshold: 2, firstPlayerAlternates: false, undoEnabled: true });
+    expect(r.params).toEqual({ startingPool: { C: 10, N: 3, P: 0, O2: 7 }, winThreshold: { C: 50, N: 15, P: 3 }, startingHand: 5, apPerTurn: 3, drawPerRound: 1, playApCost: 1, discardDrawApCost: 1, detritivoreAssignApCost: 1, algalBloomPThreshold: 2, firstPlayerAlternates: false, undoEnabled: true });
   });
   it.each([
     ['duck-lettuce', 2, 3, 8, 2, 2, 0], ['hydrilla', 2, 4, 8, 2, 2, 0], ['water-hyacinth', 2, 4, 8, 2, 2, 0],

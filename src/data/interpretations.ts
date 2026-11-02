@@ -121,5 +121,11 @@ export const interpretations: Interpretation[] = [
     "topic": "Deck recycling and turn defaults",
     "text": "Empty deck: reshuffle the discard pile (PDF A); no hand limit; unspent AP is lost; 1 draw per player per round.",
     "major": false
+  },
+  {
+    "id": "I12",
+    "topic": "Phosphorus to win",
+    "text": "UPDATE-3's Winning Conditions ask for 1 P; the rule authors have since raised it to 3 P (50 C / 15 N / 3 P), ahead of the next revision. Note that reaching 3 P passes the Algal Bloom threshold (P > 2).",
+    "major": false
   }
 ];

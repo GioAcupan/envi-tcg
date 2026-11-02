@@ -171,8 +171,8 @@ describe('U8 Algal Bloom', () => {
 });
 
 describe('U9 victory', () => {
-  it('wins at 50 C / 15 N / 1 P but not a fractional amount short', () => {
-    let state = ref(newGame(testRuleset(), 1), { kind: 'setPool', player: 0, pool: { C: 49.5, N: 15, P: 1 } }); expect(state.phase).toBe('action');
+  it('wins at 50 C / 15 N / 3 P but not a fractional amount short', () => {
+    let state = ref(newGame(testRuleset(), 1), { kind: 'setPool', player: 0, pool: { C: 49.5, N: 15, P: 3 } }); expect(state.phase).toBe('action');
     state = ref(state, { kind: 'setPool', player: 0, pool: { C: 50 } }); expect(state.winner).toBe(0); expect(state.phase).toBe('gameOver');
   });
 });

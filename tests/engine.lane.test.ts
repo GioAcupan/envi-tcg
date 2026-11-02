@@ -43,7 +43,7 @@ describe('lane: public action boundaries and lifecycle', () => {
     state = ref(state, { kind: 'setStatus', uid: plant.uid, status: 'alive' }); expect(state.cards[plant.uid].status).toBe('alive');
     state = ref(state, { kind: 'setAp', player: 1, ap: 6 }); expect(state.players[1].ap).toBe(6);
     state = ref(state, { kind: 'setActivePlayer', player: 1 }); expect(state.activePlayer).toBe(1);
-    state = ref(state, { kind: 'setPool', player: 0, pool: { C: 50, N: 15, P: 1 } }); expect(state.winner).toBe(0);
+    state = ref(state, { kind: 'setPool', player: 0, pool: { C: 50, N: 15, P: 3 } }); expect(state.winner).toBe(0);
     state = ref(state, { kind: 'setPool', player: 0, pool: { C: 49.5 } }); expect(state.winner).toBeUndefined(); expect(state.phase).toBe('action');
     expect(state.log.every(l => l.text.startsWith(`Round ${l.round}: `))).toBe(true);
   });

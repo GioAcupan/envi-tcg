@@ -391,10 +391,10 @@ dialog h2 img { width: 28px; height: 28px; }
     { k: 'O', name: 'Oxygen', sym: 'O₂', icon: '../art/o2.svg', step: 1 },
   ];
   const WIN_KEYS = ['C', 'N', 'P'];
-  // Point Management System: starting nutrients, win goals (UPDATE-3) and the limits past which consequences trigger.
+  // Point Management System: starting nutrients, win goals and the limits past which consequences trigger.
   const DEFAULTS = {
     start: { C: 10, N: 3, P: 0, O: 7 },
-    goal: { C: 50, N: 15, P: 1 },
+    goal: { C: 50, N: 15, P: 3 }, // the rule authors raised P from UPDATE-3's 1 to 3
     limit: { C: 60, N: 20, P: 5 },
     penalty: { C: 10, O: 5 },
   };
@@ -422,6 +422,7 @@ dialog h2 img { width: 28px; height: 28px; }
       if (!s.players.every(p => typeof p.name === 'string' && okNums(p.v, ['C', 'N', 'P', 'O']))) return null;
       const st = s.settings;
       if (!st || !okNums(st.start, ['C', 'N', 'P', 'O']) || !okNums(st.goal, WIN_KEYS) || !okNums(st.limit, WIN_KEYS) || !okNums(st.penalty, ['C', 'O'])) return null;
+      if (st.goal.P === 1) st.goal.P = 3; // games saved before the P goal changed carry the old default
       return { settings: st, players: s.players, face: !!s.face };
     } catch { return null; }
   }
