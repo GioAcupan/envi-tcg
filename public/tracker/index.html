@@ -104,10 +104,6 @@ button { cursor: pointer; }
 .tbtn svg { width: 20px; height: 20px; flex: none; }
 .tbtn:disabled { opacity: .4; cursor: default; }
 .tbtn[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
-.seg { display: inline-flex; border: 1px solid var(--btn-line); border-radius: 12px; overflow: hidden; background: var(--btn-bg); }
-.seg span { align-self: center; padding: 0 8px 0 12px; font-size: 14px; color: var(--muted); font-weight: 600; }
-.seg button { min-width: 42px; min-height: 42px; border: 0; background: none; font-weight: 700; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
 @media (max-width: 720px) { .tbtn .lbl { display: none; } .tbtn { padding: 0 11px; } }
 
 /* ---------- board ---------- */
@@ -120,7 +116,6 @@ button { cursor: pointer; }
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   align-content: start;
 }
-.board.n4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); }
 body.face { height: 100dvh; overflow: hidden; }
 .board.face { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; min-height: 0; align-content: stretch; }
 .board.face .player { overflow: auto; min-height: 0; }
@@ -333,10 +328,6 @@ dialog h2 img { width: 28px; height: 28px; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
       <span class="lbl">Undo</span>
     </button>
-    <div class="seg" role="group" aria-label="Number of players">
-      <span>Players</span>
-      <button data-count="1">1</button><button data-count="2">2</button><button data-count="3">3</button><button data-count="4">4</button>
-    </div>
     <button class="tbtn" id="face" aria-pressed="false" title="Seat two players across the table: the top half turns upside down">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
       <span class="lbl">Face to face</span>
@@ -419,7 +410,7 @@ dialog h2 img { width: 28px; height: 28px; }
     try {
       const s = JSON.parse(localStorage.getItem(KEY));
       const okNums = (o, keys) => o && keys.every(k => Number.isFinite(o[k]));
-      if (!s || !Array.isArray(s.players) || s.players.length < 1 || s.players.length > 4) return null;
+      if (!s || !Array.isArray(s.players) || s.players.length !== 2) return null;
       if (!s.players.every(p => typeof p.name === 'string' && okNums(p.v, ['C', 'N', 'P', 'O']))) return null;
       const st = s.settings;
       if (!st || !okNums(st.start, ['C', 'N', 'P', 'O']) || !okNums(st.goal, WIN_KEYS) || !okNums(st.limit, WIN_KEYS) || !okNums(st.penalty, ['C', 'O'])) return null;
@@ -452,9 +443,8 @@ dialog h2 img { width: 28px; height: 28px; }
   const plus = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg>';
 
   function build() {
-    const n = S.players.length;
-    const face = S.face && n === 2;
-    board.className = `board n${n}${face ? ' face' : ''}`;
+    const face = S.face;
+    board.className = `board${face ? ' face' : ''}`;
     document.body.classList.toggle('face', face);
     board.innerHTML = S.players.map((p, i) => `
       <section class="player" data-i="${i}">
@@ -646,7 +636,7 @@ dialog h2 img { width: 28px; height: 28px; }
     document.getElementById('edit-icon').src = r.icon;
     document.getElementById('edit-title').textContent = `${r.name} · ${name}`;
     editInput.value = S.players[i].v[k];
-    edit.classList.toggle('flipped', S.face && S.players.length === 2 && i === 0);
+    edit.classList.toggle('flipped', S.face && i === 0);
     edit.showModal();
     editInput.select();
   }
@@ -692,19 +682,7 @@ dialog h2 img { width: 28px; height: 28px; }
 
   // ---------- top bar ----------
   const faceBtn = document.getElementById('face');
-  function syncTools() {
-    document.querySelectorAll('[data-count]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.count) === S.players.length)));
-    faceBtn.hidden = S.players.length !== 2;
-    faceBtn.setAttribute('aria-pressed', String(S.face));
-  }
-  document.querySelectorAll('[data-count]').forEach(b => b.addEventListener('click', () => {
-    const n = Number(b.dataset.count);
-    if (n === S.players.length) return;
-    snap();
-    while (S.players.length < n) S.players.push(newPlayer(S.players.length, S.settings));
-    S.players.length = n;
-    save(); build();
-  }));
+  function syncTools() { faceBtn.setAttribute('aria-pressed', String(S.face)); }
   faceBtn.addEventListener('click', () => { S.face = !S.face; save(); build(); });
   document.getElementById('new-game').addEventListener('click', () => {
     if (!confirm('Start a new game? Every player goes back to the starting nutrients.')) return;
