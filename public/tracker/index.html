@@ -349,10 +349,7 @@ dialog h2 img { width: 28px; height: 28px; }
   <form id="edit-form">
     <h2><img id="edit-icon" alt=""><span id="edit-title"></span></h2>
     <input id="edit-input" type="number" inputmode="numeric" min="0" step="1" aria-label="New value">
-    <div class="chips">
-      <button type="button" data-add="-10">−10</button><button type="button" data-add="-5">−5</button><button type="button" data-add="-1">−1</button>
-      <button type="button" data-add="1">+1</button><button type="button" data-add="5">+5</button><button type="button" data-add="10">+10</button>
-    </div>
+    <div class="chips"></div>
     <div class="actions">
       <button type="button" class="btn" data-close>Cancel</button>
       <button type="submit" class="btn primary">Set</button>
@@ -381,10 +378,11 @@ dialog h2 img { width: 28px; height: 28px; }
 (() => {
   const KEY = 'envi-nutrient-tracker-v1';
   const RES = [
-    { k: 'C', name: 'Carbon', sym: 'C', icon: '../art/c.svg' },
-    { k: 'N', name: 'Nitrogen', sym: 'N', icon: '../art/n.svg' },
-    { k: 'P', name: 'Phosphorus', sym: 'P', icon: '../art/p.svg' },
-    { k: 'O', name: 'Oxygen', sym: 'O₂', icon: '../art/o2.svg' },
+    { k: 'C', name: 'Carbon', sym: 'C', icon: '../art/c.svg', step: 1 },
+    // Nearly every card costs 0.5 N, so nitrogen moves in halves.
+    { k: 'N', name: 'Nitrogen', sym: 'N', icon: '../art/n.svg', step: 0.5 },
+    { k: 'P', name: 'Phosphorus', sym: 'P', icon: '../art/p.svg', step: 1 },
+    { k: 'O', name: 'Oxygen', sym: 'O₂', icon: '../art/o2.svg', step: 1 },
   ];
   const WIN_KEYS = ['C', 'N', 'P'];
   // Point Management System: starting nutrients, win goals (UPDATE-3) and the limits past which consequences trigger.
@@ -402,6 +400,10 @@ dialog h2 img { width: 28px; height: 28px; }
   const byKey = Object.fromEntries(RES.map(r => [r.k, r]));
   const clone = o => JSON.parse(JSON.stringify(o));
   const int = (x, min = 0) => { const n = Math.round(Number(x)); return Number.isFinite(n) ? Math.max(min, n) : min; };
+  const half = x => { const n = Math.round(Number(x) * 2) / 2; return Number.isFinite(n) ? Math.max(0, n) : 0; };
+  // 3.5 → "3½", 0.5 → "½", -1.5 → "−1½"
+  const fmt = v => { const a = Math.abs(v), w = Math.trunc(a), h = a % 1 ? '½' : ''; return (v < 0 ? '−' : '') + (w || !h ? w : '') + h; };
+  const signed = d => (d > 0 ? '+' : '') + fmt(d);
 
   const newPlayer = (i, settings) => ({ name: `Player ${i + 1}`, v: { ...settings.start } });
   const fresh = () => ({ settings: clone(DEFAULTS), players: [0, 1].map(i => newPlayer(i, DEFAULTS)), face: false });
@@ -455,7 +457,7 @@ dialog h2 img { width: 28px; height: 28px; }
         <div class="p-body">
           <div class="res-list">${RES.map(r => `
             <div class="res" data-k="${r.k}">
-              <button class="step minus" data-d="-1" aria-label="Remove 1 ${r.name}">${minus}</button>
+              <button class="step minus" data-d="-${r.step}" aria-label="Remove ${fmt(r.step)} ${r.name}">${minus}</button>
               <div class="res-body">
                 <div class="res-top">
                   <img src="${r.icon}" alt="">
@@ -465,7 +467,7 @@ dialog h2 img { width: 28px; height: 28px; }
                 <div class="pips" aria-hidden="true"></div>
                 <div class="foot"></div>
               </div>
-              <button class="step plus" data-d="1" aria-label="Add 1 ${r.name}">${plus}</button>
+              <button class="step plus" data-d="${r.step}" aria-label="Add ${fmt(r.step)} ${r.name}">${plus}</button>
             </div>`).join('')}
           </div>
           <div class="karma">
@@ -510,10 +512,10 @@ dialog h2 img { width: 28px; height: 28px; }
     if (k === 'O') return v === 0 ? ['warn', 'Out of oxygen'] : ['', 'Not needed to win'];
     const st = S.settings, g = st.goal[k], l = st.limit[k], sym = byKey[k].sym, u = unitFor(l);
     const scale = u > 1 ? ` · 1 dot = ${u} ${sym}` : '';
-    if (v > l) return ['bad', `${v - l} over the ${l} ${sym} limit → ${KARMA[k].title.toLowerCase()}${scale}`];
-    if (v === l) return ['warn', `At the limit · 1 more triggers ${KARMA[k].title.toLowerCase()}`];
-    if (v >= g) return ['good', `Goal reached · ${l - v} to the limit${scale}`];
-    return ['', `${g - v} to goal · limit ${l}${scale}`];
+    if (v > l) return ['bad', `${fmt(v - l)} over the ${l} ${sym} limit → ${KARMA[k].title.toLowerCase()}${scale}`];
+    if (v === l) return ['warn', `At the limit · any more triggers ${KARMA[k].title.toLowerCase()}`];
+    if (v >= g) return ['good', `Goal reached · ${fmt(l - v)} to the limit${scale}`];
+    return ['', `${fmt(g - v)} to goal · limit ${l}${scale}`];
   }
 
   function render(i) {
@@ -523,8 +525,8 @@ dialog h2 img { width: 28px; height: 28px; }
     for (const r of RES) {
       const row = el.querySelector(`.res[data-k="${r.k}"]`), v = p.v[r.k];
       const valEl = row.querySelector('.val');
-      if (valEl.textContent !== String(v)) {
-        valEl.textContent = v;
+      if (valEl.textContent !== fmt(v)) {
+        valEl.textContent = fmt(v);
         valEl.classList.remove('bump'); void valEl.offsetWidth; valEl.classList.add('bump');
       }
       row.querySelector('.of').textContent = r.k === 'O' ? '' : `/${st.goal[r.k]}`;
@@ -567,7 +569,7 @@ dialog h2 img { width: 28px; height: 28px; }
     const key = i + k, o = deltas[key] || (deltas[key] = { n: 0, t: 0 });
     const el = board.querySelector(`.player[data-i="${i}"] .res[data-k="${k}"] .delta`);
     o.n += d; clearTimeout(o.t);
-    el.textContent = (o.n > 0 ? '+' : '') + o.n;
+    el.textContent = signed(o.n);
     el.classList.toggle('show', o.n !== 0);
     o.t = setTimeout(() => { el.classList.remove('show'); o.n = 0; }, 1500);
   }
@@ -636,18 +638,22 @@ dialog h2 img { width: 28px; height: 28px; }
     document.getElementById('edit-icon').src = r.icon;
     document.getElementById('edit-title').textContent = `${r.name} · ${name}`;
     editInput.value = S.players[i].v[k];
+    editInput.step = r.step;
+    editInput.inputMode = r.step < 1 ? 'decimal' : 'numeric';
+    const chips = r.step < 1 ? [-5, -1, -0.5, 0.5, 1, 5] : [-10, -5, -1, 1, 5, 10];
+    edit.querySelector('.chips').innerHTML = chips.map(c => `<button type="button" data-add="${c}">${signed(c)}</button>`).join('');
     edit.classList.toggle('flipped', S.face && i === 0);
     edit.showModal();
     editInput.select();
   }
   edit.querySelector('.chips').addEventListener('click', e => {
     const b = e.target.closest('[data-add]');
-    if (b) editInput.value = Math.max(0, int(editInput.value) + Number(b.dataset.add));
+    if (b) editInput.value = half(half(editInput.value) + Number(b.dataset.add));
   });
   document.getElementById('edit-form').addEventListener('submit', e => {
     e.preventDefault();
     if (editing) {
-      const { i, k } = editing, next = int(editInput.value), cur = S.players[i].v[k];
+      const { i, k } = editing, next = half(editInput.value), cur = S.players[i].v[k];
       if (next !== cur) { snap(); change(i, k, next - cur); }
     }
     edit.close();
@@ -659,7 +665,7 @@ dialog h2 img { width: 28px; height: 28px; }
   function fillSettings(st) {
     rows.innerHTML = RES.map(r => `
       <tr><td><img src="${r.icon}" alt="">${r.name}</td>
-        <td><input type="number" inputmode="numeric" min="0" data-f="start" data-k="${r.k}" value="${st.start[r.k]}" aria-label="${r.name} start"></td>
+        <td><input type="number" inputmode="decimal" min="0" step="any" data-f="start" data-k="${r.k}" value="${st.start[r.k]}" aria-label="${r.name} start"></td>
         ${r.k === 'O' ? '<td>—</td><td>—</td>' : `
         <td><input type="number" inputmode="numeric" min="0" data-f="goal" data-k="${r.k}" value="${st.goal[r.k]}" aria-label="${r.name} win goal"></td>
         <td><input type="number" inputmode="numeric" min="1" data-f="limit" data-k="${r.k}" value="${st.limit[r.k]}" aria-label="${r.name} limit"></td>`}
@@ -672,7 +678,7 @@ dialog h2 img { width: 28px; height: 28px; }
   document.getElementById('settings-form').addEventListener('submit', e => {
     e.preventDefault();
     const st = clone(S.settings);
-    rows.querySelectorAll('input').forEach(inp => { st[inp.dataset.f][inp.dataset.k] = int(inp.value, inp.dataset.f === 'limit' ? 1 : 0); });
+    rows.querySelectorAll('input').forEach(inp => { st[inp.dataset.f][inp.dataset.k] = inp.dataset.f === 'limit' ? int(inp.value, 1) : half(inp.value); });
     st.penalty = { C: int(document.getElementById('pen-C').value), O: int(document.getElementById('pen-O').value) };
     S.settings = st;
     save(); build();
