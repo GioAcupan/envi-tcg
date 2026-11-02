@@ -371,6 +371,8 @@ dialog h2 img { width: 28px; height: 28px; }
       <tbody id="settings-rows"></tbody>
     </table>
     <div class="pen">Heat wave with nothing to sacrifice: lose <input id="pen-C" type="number" inputmode="numeric" min="0" aria-label="Carbon lost"> C and <input id="pen-O" type="number" inputmode="numeric" min="0" aria-label="Oxygen lost"> O₂</div>
+    <div class="pen">Algae bloom from extra N: lose <input id="pen-N" type="number" inputmode="decimal" min="0" step="any" aria-label="Nitrogen lost"> N after the round</div>
+    <div class="pen">Algae bloom from extra P: lose <input id="pen-P" type="number" inputmode="numeric" min="0" aria-label="Phosphorus lost"> P after the round</div>
     <p class="note">You win once carbon, nitrogen and phosphorus all reach their goals. Going over a limit triggers that nutrient's consequence (the rules table prints “&lt; 60 C”; the tracker reads it as “more than 60”, since points can go past the win goal). New starting values apply from the next new game.</p>
     <div class="actions">
       <button type="button" class="btn left" id="restore">Rule defaults</button>
@@ -396,12 +398,16 @@ dialog h2 img { width: 28px; height: 28px; }
     start: { C: 10, N: 3, P: 0, O: 7 },
     goal: { C: 50, N: 15, P: 3 }, // the rule authors raised P from UPDATE-3's 1 to 3
     limit: { C: 60, N: 20, P: 5 },
-    penalty: { C: 10, O: 5 },
+    // C and O: heat wave with nothing to sacrifice; N and P: algae bloom from extra N or P, taken after the round.
+    penalty: { C: 10, O: 5, N: 10, P: 3 },
   };
   const KARMA = {
-    C: { title: 'Heat wave', text: 'Sacrifice 2 living detritivores or 1 consumer.' },
-    N: { title: 'Algae bloom', text: 'If you have living algae, every algae card you play gets double biomass, but detritivore and consumer actions can’t be used until the next round.' },
-    P: { title: 'Toxic cyanobacteria', text: 'If you have a living cyanobacteria in play, it poisons your other plants: sacrifice 1 living plant or detritivore. It can also trigger an algae bloom.' },
+    C: { title: 'Heat wave', lose: ['C', 'O'], button: 'Nothing to sacrifice',
+      text: pen => `Sacrifice 2 living detritivores or 1 consumer. If you have nothing to sacrifice, lose ${pen.C} C and ${pen.O} O₂.` },
+    N: { title: 'Algae bloom', lose: ['N'], button: 'Round over after a bloom',
+      text: pen => `If you have living algae, every algae card you play gets double biomass, but detritivore and consumer actions can’t be used until the next round. If the bloom happens, lose ${pen.N} N after the round.` },
+    P: { title: 'Toxic cyanobacteria', lose: ['P'], button: 'Round over after a bloom',
+      text: pen => `If you have a living cyanobacteria in play, it poisons your other plants: sacrifice 1 living plant. It can also trigger an algae bloom; if it does, lose ${pen.P} P after the round.` },
   };
   const byKey = Object.fromEntries(RES.map(r => [r.k, r]));
   const clone = o => JSON.parse(JSON.stringify(o));
@@ -421,6 +427,7 @@ dialog h2 img { width: 28px; height: 28px; }
       if (!s || !Array.isArray(s.players) || s.players.length !== 2) return null;
       if (!s.players.every(p => typeof p.name === 'string' && okNums(p.v, ['C', 'N', 'P', 'O']))) return null;
       const st = s.settings;
+      if (st && st.penalty) st.penalty = { ...DEFAULTS.penalty, ...st.penalty }; // saves from before the bloom penalties
       if (!st || !okNums(st.start, ['C', 'N', 'P', 'O']) || !okNums(st.goal, WIN_KEYS) || !okNums(st.limit, WIN_KEYS) || !okNums(st.penalty, ['C', 'O'])) return null;
       if (st.goal.P === 1) st.goal.P = 3; // games saved before the P goal changed carry the old default
       return { settings: st, players: s.players, face: !!s.face };
@@ -554,15 +561,14 @@ dialog h2 img { width: 28px; height: 28px; }
     // Every scenario is always explained; the triggered ones are highlighted.
     box.innerHTML = WIN_KEYS.map(k => {
       const on = active.includes(k), r = byKey[k];
-      const text = k === 'C'
-        ? `${KARMA.C.text} If you have nothing to sacrifice, lose ${fmt(st.penalty.C)} C and ${fmt(st.penalty.O)} O₂.`
-        : KARMA[k].text;
+      const pen = Object.fromEntries(Object.entries(st.penalty).map(([x, n]) => [x, fmt(n)]));
+      const lose = KARMA[k].lose.map(x => `−${pen[x]} ${byKey[x].sym}`).join(', ');
       return `
       <article class="kcard${on ? ' on' : ''}${on && !was.includes(k) ? ' fresh' : ''}" data-k="${k}">
         <h4>${KARMA[k].title}${on ? '<span class="tag">Triggered</span>' : ''}</h4>
         <p class="trig">${on ? `${r.name} is over ${st.limit[k]} ${r.sym}` : `If ${r.name.toLowerCase()} goes over ${st.limit[k]} ${r.sym}`}</p>
-        <p>${text}</p>
-        ${on && k === 'C' ? `<button class="penalty">Nothing to sacrifice: −${fmt(st.penalty.C)} C, −${fmt(st.penalty.O)} O₂</button>` : ''}
+        <p>${KARMA[k].text(pen)}</p>
+        ${on ? `<button class="penalty">${KARMA[k].button}: ${lose}</button>` : ''}
       </article>`;
     }).join('');
   }
@@ -628,10 +634,11 @@ dialog h2 img { width: 28px; height: 28px; }
     if (pen) {
       const { i } = where(pen), p = S.players[i], st = S.settings;
       snap();
-      const c = Math.min(p.v.C, st.penalty.C), o = Math.min(p.v.O, st.penalty.O);
-      p.v.C -= c; p.v.O -= o;
-      if (c) showDelta(i, 'C', -c);
-      if (o) showDelta(i, 'O', -o);
+      for (const x of KARMA[pen.closest('.kcard').dataset.k].lose) {
+        const n = Math.min(p.v[x], st.penalty[x]);
+        p.v[x] -= n;
+        if (n) showDelta(i, x, -n);
+      }
       render(i); save();
     }
   });
@@ -683,8 +690,7 @@ dialog h2 img { width: 28px; height: 28px; }
         <td><input type="number" inputmode="numeric" min="0" data-f="goal" data-k="${r.k}" value="${st.goal[r.k]}" aria-label="${r.name} win goal"></td>
         <td><input type="number" inputmode="numeric" min="1" data-f="limit" data-k="${r.k}" value="${st.limit[r.k]}" aria-label="${r.name} limit"></td>`}
       </tr>`).join('');
-    document.getElementById('pen-C').value = st.penalty.C;
-    document.getElementById('pen-O').value = st.penalty.O;
+    for (const x of ['C', 'O', 'N', 'P']) document.getElementById(`pen-${x}`).value = st.penalty[x];
   }
   document.getElementById('open-settings').addEventListener('click', () => { fillSettings(S.settings); settings.showModal(); });
   document.getElementById('restore').addEventListener('click', () => fillSettings(DEFAULTS));
@@ -692,7 +698,7 @@ dialog h2 img { width: 28px; height: 28px; }
     e.preventDefault();
     const st = clone(S.settings);
     rows.querySelectorAll('input').forEach(inp => { st[inp.dataset.f][inp.dataset.k] = inp.dataset.f === 'limit' ? int(inp.value, 1) : half(inp.value); });
-    st.penalty = { C: int(document.getElementById('pen-C').value), O: int(document.getElementById('pen-O').value) };
+    st.penalty = Object.fromEntries(['C', 'O', 'N', 'P'].map(x => [x, half(document.getElementById(`pen-${x}`).value)]));
     S.settings = st;
     save(); build();
     settings.close();
