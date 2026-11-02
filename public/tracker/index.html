@@ -256,10 +256,15 @@ body.face { height: 100dvh; overflow: hidden; }
 .calm { margin: 0; color: var(--muted); font-size: 14.5px; }
 .kcards { display: grid; gap: 8px; }
 .kcard {
-  border-left: 5px solid var(--acc);
-  background: var(--danger-tint);
+  border-left: 5px solid color-mix(in srgb, var(--acc) 45%, transparent);
+  background: var(--res-bg);
   border-radius: 10px;
   padding: 9px 12px 11px;
+}
+.kcard.on { border-left-color: var(--acc); background: var(--danger-tint); box-shadow: inset 0 0 0 2px var(--danger); }
+.kcard .tag {
+  margin-left: 8px; padding: 1px 8px; border-radius: 999px; vertical-align: 2px;
+  background: var(--danger); color: #fff; font-size: 12px; font-weight: 700;
 }
 .kcard.fresh { animation: slide .35s ease-out; }
 @keyframes slide { from { opacity: 0; transform: translateY(-6px); } }
@@ -267,7 +272,8 @@ body.face { height: 100dvh; overflow: hidden; }
 .kcard[data-k="N"] { --acc: var(--nitrogen); }
 .kcard[data-k="P"] { --acc: var(--phos); }
 .kcard h4 { margin: 0; font-size: 16px; font-weight: 800; }
-.kcard .trig { margin: 1px 0 4px; font-size: 13px; color: var(--danger); font-weight: 700; }
+.kcard .trig { margin: 1px 0 4px; font-size: 13px; color: var(--muted); font-weight: 700; }
+.kcard.on .trig { color: var(--danger); }
 .kcard p { margin: 0; font-size: 14.5px; }
 .penalty {
   margin-top: 9px; min-height: 42px; padding: 0 12px;
@@ -471,8 +477,8 @@ dialog h2 img { width: 28px; height: 28px; }
             </div>`).join('')}
           </div>
           <div class="karma">
-            <h3>Karma</h3>
-            <p class="sub">Consequences of going over a limit</p>
+            <h3>Consequences</h3>
+            <p class="sub">What happens when a nutrient goes over its limit</p>
             <div class="kcards"></div>
           </div>
         </div>
@@ -544,14 +550,20 @@ dialog h2 img { width: 28px; height: 28px; }
     const was = prevKarma[i] ? prevKarma[i].active : active;
     prevKarma[i] = { sig, active };
     const box = el.querySelector('.kcards');
-    box.innerHTML = active.length ? active.map(k => `
-      <article class="kcard${was.includes(k) ? '' : ' fresh'}" data-k="${k}">
-        <h4>${KARMA[k].title}</h4>
-        <p class="trig">${byKey[k].name} is over ${st.limit[k]} ${byKey[k].sym}</p>
-        <p>${KARMA[k].text}</p>
-        ${k === 'C' ? `<button class="penalty">Nothing to sacrifice: −${st.penalty.C} C, −${st.penalty.O} O₂</button>` : ''}
-      </article>`).join('')
-      : `<p class="calm">None. Keep carbon at ${st.limit.C} or less, nitrogen at ${st.limit.N} or less and phosphorus at ${st.limit.P} or less.</p>`;
+    // Every scenario is always explained; the triggered ones are highlighted.
+    box.innerHTML = WIN_KEYS.map(k => {
+      const on = active.includes(k), r = byKey[k];
+      const text = k === 'C'
+        ? `${KARMA.C.text} If you have nothing to sacrifice, lose ${fmt(st.penalty.C)} C and ${fmt(st.penalty.O)} O₂.`
+        : KARMA[k].text;
+      return `
+      <article class="kcard${on ? ' on' : ''}${on && !was.includes(k) ? ' fresh' : ''}" data-k="${k}">
+        <h4>${KARMA[k].title}${on ? '<span class="tag">Triggered</span>' : ''}</h4>
+        <p class="trig">${on ? `${r.name} is over ${st.limit[k]} ${r.sym}` : `If ${r.name.toLowerCase()} goes over ${st.limit[k]} ${r.sym}`}</p>
+        <p>${text}</p>
+        ${on && k === 'C' ? `<button class="penalty">Nothing to sacrifice: −${fmt(st.penalty.C)} C, −${fmt(st.penalty.O)} O₂</button>` : ''}
+      </article>`;
+    }).join('');
   }
 
   // ---------- changing values ----------
